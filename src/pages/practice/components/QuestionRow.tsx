@@ -1,4 +1,6 @@
 
+import { useNavigate } from 'react-router-dom';
+
 interface QuestionRowProps {
     id: number;
     title: string;
@@ -8,14 +10,30 @@ interface QuestionRowProps {
 }
 
 export default function QuestionRow({ id, title, difficulty, points, isCompleted }: QuestionRowProps) {
+    const navigate = useNavigate();
     const difficultyColor = {
         Easy: 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400',
         Medium: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400',
         Hard: 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400',
     };
 
+    const openQuestion = () => navigate(`/practice/${id}`);
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openQuestion();
+        }
+    };
+
     return (
-        <div className="flex items-center justify-between p-4 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800 last:border-0">
+        <div
+            role="button"
+            tabIndex={0}
+            onClick={openQuestion}
+            onKeyDown={handleKeyDown}
+            className="flex items-center justify-between p-4 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800 last:border-0 cursor-pointer"
+        >
             <div className="flex items-center flex-1 min-w-0">
                 <div className="flex-shrink-0 mr-4">
                     <input

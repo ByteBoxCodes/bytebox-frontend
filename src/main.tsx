@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./App.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import PracticePage from "./pages/practice/PracticePage.tsx";
+import PracticeQuestionPage from "./pages/practice/PracticeQuestionPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/practice",
         element: <PracticePage />,
+      },
+      {
+        path: "/practice/:questionId",
+        element: <PracticeQuestionPage />,
       },
     ],
   },
