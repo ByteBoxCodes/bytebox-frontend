@@ -1,9 +1,13 @@
+import { Outlet } from "react-router-dom"
+import Header from "./components/Header"
+import { ThemeProvider } from "./context/ThemeContext"
 
 function App() {
   return (
-    <div>
-      hello world
-    </div>
+    <ThemeProvider>
+      <Header />
+      <Outlet />
+    </ThemeProvider>
   )
 }
 
