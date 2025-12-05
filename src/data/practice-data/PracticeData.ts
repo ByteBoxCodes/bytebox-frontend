@@ -1,9 +1,16 @@
+interface TestCase {
+  input: string;
+  expectedOutput: string;
+  comparison?: "exact" | "contains";
+}
+
 interface Question {
   id: number;
   title: string;
   difficulty: "Easy" | "Medium" | "Hard";
   points: number;
   isCompleted: boolean;
+  testCases?: TestCase[];
 }
 
 interface Topic {
@@ -23,6 +30,11 @@ export const practiceData: Topic[] = [
         difficulty: "Easy" as const,
         points: 10,
         isCompleted: true,
+        testCases: [
+          { input: "5", expectedOutput: "Positive", comparison: "contains" },
+          { input: "-3", expectedOutput: "Negative", comparison: "contains" },
+          { input: "0", expectedOutput: "Zero", comparison: "contains" },
+        ],
       },
       {
         id: 2,
