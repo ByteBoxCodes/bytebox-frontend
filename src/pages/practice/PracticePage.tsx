@@ -1,7 +1,7 @@
 import DashboardStats from "./components/DashboardStats";
 import TopicAccordion from "./components/TopicAccordion";
 import RightSidebar from "./components/RightSidebar";
-import { practiceData } from "../../data/practice-data/PracticeData";
+import { practiceData } from "../../constants/practice-data/PracticeData";
 
 
 export default function PracticePage() {

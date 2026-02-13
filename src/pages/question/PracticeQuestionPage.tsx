@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
-import { practiceData } from "../../data/practice-data/PracticeData";
+import { practiceData } from "../../constants/practice-data/PracticeData";
 
 const languageOptions = [
     { label: "JavaScript", value: "javascript", snippet: "// Write your JavaScript solution here\n" },
