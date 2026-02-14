@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
 
 export default function Header() {
@@ -6,9 +7,9 @@ export default function Header() {
             <div className="px-4 w-full sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     <div className="shrink-0">
-                        <a href="/" title="" className="flex rounded outline-none focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2">
+                        <Link to="/" title="" className="flex rounded outline-none focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2">
                             <span className="text-2xl font-bold text-(--text-primary) font-pj">BaseMint</span>
-                        </a>
+                        </Link>
                     </div>
 
                     <div className="flex lg:hidden">
@@ -22,21 +23,21 @@ export default function Header() {
 
                     <div className="hidden lg:flex lg:ml-16 lg:items-center lg:justify-center lg:space-x-10">
                         <div className="flex items-center space-x-12">
-                            <a href="/practice" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Practice </a>
+                            <Link to="/problems" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Problems </Link>
 
-                            <a href="#" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Leaderboard </a>
+                            <Link to="#" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Leaderboard </Link>
 
-                            <a href="#" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Challenges </a>
+                            <Link to="#" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Challenges </Link>
                         </div>
 
                         <div className="w-px h-5 bg-(--border-primary)"></div>
 
                         <ThemeToggle />
 
-                        <a href="#" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Login </a>
+                        <Link to="/login" title="" className="text-base font-medium text-(--text-primary) transition-all duration-200 rounded focus:outline-none font-pj hover:text-opacity-50 focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2"> Login </Link>
 
-                        <a
-                            href="#"
+                        <Link
+                            to="/signup"
                             title=""
                             className="
                             px-5
@@ -58,7 +59,7 @@ export default function Header() {
                             role="button"
                         >
                             Create free account
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

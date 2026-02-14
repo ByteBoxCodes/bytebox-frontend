@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
     return (
@@ -29,14 +30,14 @@ const HeroSection = () => {
                             </div>
 
                             <div className="mt-8 sm:flex sm:items-center sm:justify-center lg:justify-start sm:space-x-5 lg:mt-12">
-                                <a
-                                    href="#"
+                                <Link
+                                    to="/problems"
                                     title=""
                                     className="inline-flex items-center px-8 py-4 text-lg font-bold text-(--btn-primary-text) transition-all duration-200 bg-(--btn-primary-bg) border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--btn-primary-ring) font-pj justif-center hover:bg-(--btn-primary-hover)"
                                     role="button"
                                 >
                                     Start Coding
-                                </a>
+                                </Link>
 
                                 <a
                                     href="#"
