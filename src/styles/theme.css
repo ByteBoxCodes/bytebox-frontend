@@ -1,0 +1,84 @@
+:root {
+  /* Generic Theme Variables */
+  /* Backgrounds */
+  --bg-primary: #ffffff; /* white */
+  --bg-secondary: #f9fafb; /* gray-50 */
+
+  --bg-tertiary: #f3f4f6; /* gray-100 */
+  --bg-card: #ffffff; /* white */
+
+  /* Text */
+  --text-primary: #111827; /* gray-900 */
+  --text-secondary: #4b5563; /* gray-600 */
+  --text-tertiary: #9ca3af; /* gray-400 */
+  --text-inverse: #ffffff; /* white */
+
+  /* Borders */
+  --border-primary: #d1d5db; /* gray-300 */
+
+  /* Components */
+  --pattern-opacity: 1;
+  --avatar-ring: #ffffff; /* white */
+
+  /* Primary Button */
+  --btn-primary-bg: #111827; /* gray-900 */
+  --btn-primary-text: #ffffff; /* white */
+  --btn-primary-hover: #4b5563; /* gray-600 */
+  --btn-primary-ring: #111827; /* gray-900 */
+
+  /* Secondary Button */
+  --btn-secondary-text: #111827; /* gray-900 */
+  --btn-secondary-hover-bg: #e5e7eb; /* gray-200 */
+  --btn-secondary-ring: #d1d5db; /* gray-300 */
+}
+
+/* Dark Mode Overrides */
+.dark {
+  /* Backgrounds */
+  --bg-primary: #111827; /* gray-900 */
+  --bg-secondary: #111827; /* gray-900 (same as primary in dark for hero case, or use slightly lighter if needed) - keeping as per previous hero-bg (gray-900) */
+
+  --bg-tertiary: #1f2937; /* gray-800 */
+  --bg-card: #111827; /* gray-900 */
+
+  /* Text */
+  --text-primary: #ffffff; /* white */
+  --text-secondary: #d1d5db; /* gray-300 */
+  --text-tertiary: #9ca3af; /* gray-400 */
+  --text-inverse: #111827; /* gray-900 */
+
+  /* Borders */
+  --border-primary: #374151; /* gray-700 */
+
+  /* Components */
+  --pattern-opacity: 0.2;
+  --avatar-ring: #1f2937; /* gray-800 */
+
+  /* Primary Button */
+  --btn-primary-bg: #ffffff; /* white */
+  --btn-primary-text: #111827; /* gray-900 */
+  --btn-primary-hover: #e5e7eb; /* gray-200 */
+  --btn-primary-ring: #ffffff; /* white */
+
+  /* Secondary Button */
+  --btn-secondary-text: #ffffff; /* white */
+  --btn-secondary-hover-bg: #1f2937; /* gray-800 */
+
+  /* Ring stays same or define if needed */
+
+  /* Status: Success (Easy / Completed) */
+  --status-success-bg: rgba(22, 101, 52, 0.3); /* green-900/30 */
+  --status-success-text: #4ade80; /* green-400 */
+
+  /* Status: Warning (Medium / Tips) */
+  --status-warning-bg: rgba(202, 138, 4, 0.3); /* yellow-900/30 */
+  --status-warning-text: #facc15; /* yellow-400 */
+
+  /* Status: Error (Hard) */
+  --status-error-bg: rgba(220, 38, 38, 0.3); /* red-900/30 */
+  --status-error-text: #f87171; /* red-400 */
+
+  /* Status: Info (Updates) */
+  --status-info-bg: rgba(37, 99, 235, 0.3); /* blue-900/30 */
+  --status-info-text: #60a5fa; /* blue-400 */
+}

@@ -12,9 +12,9 @@ interface QuestionRowProps {
 export default function QuestionRow({ id, title, difficulty, points, isCompleted }: QuestionRowProps) {
     const navigate = useNavigate();
     const difficultyColor = {
-        Easy: 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400',
-        Medium: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400',
-        Hard: 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400',
+        Easy: 'text-(--status-success-text) bg-(--status-success-bg)',
+        Medium: 'text-(--status-warning-text) bg-(--status-warning-bg)',
+        Hard: 'text-(--status-error-text) bg-(--status-error-bg)',
     };
 
     const openQuestion = () => navigate(`/practice/${id}`);
@@ -32,22 +32,22 @@ export default function QuestionRow({ id, title, difficulty, points, isCompleted
             tabIndex={0}
             onClick={openQuestion}
             onKeyDown={handleKeyDown}
-            className="flex items-center justify-between p-4 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800 last:border-0 cursor-pointer"
+            className="flex items-center justify-between p-4 transition-colors duration-200 hover:bg-(--bg-tertiary)/50 border-b border-(--border-primary) last:border-0 cursor-pointer"
         >
             <div className="flex items-center flex-1 min-w-0">
-                <div className="flex-shrink-0 mr-4">
+                <div className="shrink-0 mr-4">
                     <input
                         type="checkbox"
                         checked={isCompleted}
                         readOnly
-                        className="w-5 h-5 text-gray-900 border-gray-300 rounded focus:ring-gray-900 dark:bg-gray-700 dark:border-gray-600"
+                        className="w-5 h-5 text-(--text-primary) border-(--border-primary) rounded focus:ring-(--btn-primary-ring) bg-transparent"
                     />
                 </div>
-                <div className="flex-shrink-0 w-8 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <div className="shrink-0 w-8 text-sm font-medium text-(--text-secondary)">
                     {id}.
                 </div>
                 <div className="flex-1 min-w-0">
-                    <p className="text-base font-medium text-gray-900 dark:text-white truncate font-pj">
+                    <p className="text-base font-medium text-(--text-primary) truncate font-pj">
                         {title}
                     </p>
                 </div>
@@ -57,7 +57,7 @@ export default function QuestionRow({ id, title, difficulty, points, isCompleted
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${difficultyColor[difficulty]}`}>
                     {difficulty}
                 </span>
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 text-right">
+                <span className="text-sm font-medium text-(--text-secondary) w-16 text-right">
                     {points} pts
                 </span>
             </div>

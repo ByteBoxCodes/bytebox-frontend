@@ -286,7 +286,6 @@ export default function PracticeQuestionPage() {
     }
 
     const {
-        topic: { title: topicTitle },
         question,
     } = questionEntry;
 

@@ -1,9 +1,9 @@
 
 const HeroSection = () => {
     return (
-        <div className="relative bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+        <div className="relative bg-(--bg-secondary) transition-colors duration-200">
             <div className="absolute bottom-0 right-0 overflow-hidden lg:inset-y-0">
-                <img className="w-auto h-full opacity-100 dark:opacity-20 transition-opacity duration-200" src="https://d33wubrfki0l68.cloudfront.net/1e0fc04f38f5896d10ff66824a62e466839567f8/699b5/images/hero/3/background-pattern.png" alt="" />
+                <img className="w-auto h-full opacity-(--pattern-opacity) transition-opacity duration-200" src="https://d33wubrfki0l68.cloudfront.net/1e0fc04f38f5896d10ff66824a62e466839567f8/699b5/images/hero/3/background-pattern.png" alt="" />
             </div>
 
             <section className="relative py-12 sm:py-16 lg:pt-20 lg:pb-36">
@@ -11,20 +11,20 @@ const HeroSection = () => {
                     <div className="grid grid-cols-1 gap-y-8 lg:items-center lg:grid-cols-2 sm:gap-y-20 xl:grid-cols-5">
                         <div className="text-center xl:col-span-2 lg:text-left md:px-16 lg:px-0">
                             <div className="max-w-sm mx-auto sm:max-w-md md:max-w-full">
-                                <h1 className="text-4xl font-bold leading-tight text-gray-900 dark:text-white sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight font-pj">Master Programming Fundamentals</h1>
+                                <h1 className="text-4xl font-bold leading-tight text-(--text-primary) sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight font-pj">Master Programming Fundamentals</h1>
 
-                                <p className="mt-5 text-base text-gray-600 dark:text-gray-300 sm:text-lg font-pj">
+                                <p className="mt-5 text-base text-(--text-secondary) sm:text-lg font-pj">
                                     Practice essential coding concepts like loops, if-else, and functions. Compete for ranks and unlock achievements in a gamified environment.
                                 </p>
 
                                 <div className="mt-8 lg:mt-12 lg:flex lg:items-center">
                                     <div className="flex justify-center shrink-0 -space-x-4 overflow-hidden lg:justify-start">
-                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-white dark:ring-gray-800" src="https://d33wubrfki0l68.cloudfront.net/3bfa6da479d6b9188c58f2d9a8d33350290ee2ef/301f1/images/hero/3/avatar-male.png" alt="" />
-                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-white dark:ring-gray-800" src="https://d33wubrfki0l68.cloudfront.net/b52fa09a115db3a80ceb2d52c275fadbf84cf8fc/7fd8a/images/hero/3/avatar-female-1.png" alt="" />
-                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-white dark:ring-gray-800" src="https://d33wubrfki0l68.cloudfront.net/8a2efb13f103a5ae2909e244380d73087a9c2fc4/31ed6/images/hero/3/avatar-female-2.png" alt="" />
+                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-(--avatar-ring)" src="https://d33wubrfki0l68.cloudfront.net/3bfa6da479d6b9188c58f2d9a8d33350290ee2ef/301f1/images/hero/3/avatar-male.png" alt="" />
+                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-(--avatar-ring)" src="https://d33wubrfki0l68.cloudfront.net/b52fa09a115db3a80ceb2d52c275fadbf84cf8fc/7fd8a/images/hero/3/avatar-female-1.png" alt="" />
+                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-(--avatar-ring)" src="https://d33wubrfki0l68.cloudfront.net/8a2efb13f103a5ae2909e244380d73087a9c2fc4/31ed6/images/hero/3/avatar-female-2.png" alt="" />
                                     </div>
 
-                                    <p className="mt-4 text-lg text-gray-900 dark:text-white lg:mt-0 lg:ml-4 font-pj">Join with <span className="font-bold">4600+ Developers</span> and start practicing today</p>
+                                    <p className="mt-4 text-lg text-(--text-primary) lg:mt-0 lg:ml-4 font-pj">Join with <span className="font-bold">4600+ Developers</span> and start practicing today</p>
                                 </div>
                             </div>
 
@@ -32,7 +32,7 @@ const HeroSection = () => {
                                 <a
                                     href="#"
                                     title=""
-                                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-gray-900 dark:bg-white dark:text-gray-900 border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-white font-pj justif-center hover:bg-gray-600 dark:hover:bg-gray-200"
+                                    className="inline-flex items-center px-8 py-4 text-lg font-bold text-(--btn-primary-text) transition-all duration-200 bg-(--btn-primary-bg) border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--btn-primary-ring) font-pj justif-center hover:bg-(--btn-primary-hover)"
                                     role="button"
                                 >
                                     Start Coding
@@ -57,10 +57,10 @@ const HeroSection = () => {
                                 font-pj
                                 justif-center
                                 rounded-xl
-                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
-                                hover:bg-gray-200 dark:hover:bg-gray-800
-                                focus:bg-gray-200 dark:focus:bg-gray-800
-                                text-gray-900 dark:text-white
+                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--btn-secondary-ring)
+                                hover:bg-(--btn-secondary-hover-bg)
+                                focus:bg-(--btn-secondary-hover-bg)
+                                text-(--text-primary)
                             "
                                     role="button"
                                 >

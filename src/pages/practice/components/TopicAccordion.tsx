@@ -20,21 +20,21 @@ export default function TopicAccordion({ title, description, questions, defaultO
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     return (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-200 shadow-sm hover:shadow-md">
+        <div className="bg-(--bg-card) border border-(--border-primary) rounded-xl overflow-hidden transition-all duration-200 shadow-sm hover:shadow-md">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between px-6 py-5 text-left focus:outline-none bg-gray-50/50 dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                className="w-full flex items-center justify-between px-6 py-5 text-left focus:outline-none bg-(--bg-tertiary)/50 hover:bg-(--bg-tertiary) transition-colors duration-200"
             >
                 <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white font-pj">{title}</h3>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 font-pj">{description}</p>
+                    <h3 className="text-lg font-bold text-(--text-primary) font-pj">{title}</h3>
+                    <p className="mt-1 text-sm text-(--text-secondary) font-pj">{description}</p>
                 </div>
                 <div className="flex items-center">
-                    <span className="mr-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <span className="mr-4 text-sm font-medium text-(--text-secondary)">
                         {questions.filter(q => q.isCompleted).length} / {questions.length}
                     </span>
                     <svg
-                        className={`w-6 h-6 text-gray-400 transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                        className={`w-6 h-6 text-(--text-tertiary) transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -45,7 +45,7 @@ export default function TopicAccordion({ title, description, questions, defaultO
             </button>
 
             {isOpen && (
-                <div className="border-t border-gray-200 dark:border-gray-800">
+                <div className="border-t border-(--border-primary)">
                     {questions.map((question) => (
                         <QuestionRow key={question.id} {...question} />
                     ))}
