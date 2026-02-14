@@ -14,21 +14,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
-export default function Login() {
+export default function Register() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
         // Simulate API call
         setTimeout(() => {
             setIsLoading(false);
-            // For demo, just navigate to dashboard
-            navigate("/problems");
+            // For demo, just navigate to login or dashboard
+            navigate("/login");
         }, 1500);
     };
 
@@ -36,10 +37,10 @@ export default function Login() {
         <Card className="w-full max-w-sm border-(--border-primary) bg-(--bg-secondary) shadow-lg">
             <CardHeader className="space-y-1">
                 <CardTitle className="text-2xl font-bold text-center text-(--text-primary)">
-                    Welcome back
+                    Create an account
                 </CardTitle>
                 <CardDescription className="text-center text-(--text-secondary)">
-                    Enter your email to sign in to your account
+                    Enter your email to sign up
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -58,8 +59,20 @@ export default function Login() {
                     </div>
                 </div>
             </CardContent>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleRegister}>
                 <CardContent className="grid gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="name" className="text-(--text-primary)">Full Name</Label>
+                        <Input
+                            id="name"
+                            type="text"
+                            placeholder="John Doe"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="bg-(--bg-primary) border-(--border-primary) text-(--text-primary)"
+                        />
+                    </div>
                     <div className="grid gap-2">
                         <Label htmlFor="email" className="text-(--text-primary)">Email</Label>
                         <Input
@@ -91,12 +104,12 @@ export default function Login() {
                         disabled={isLoading}
                     >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Sign In
+                        Create Account
                     </Button>
                     <div className="text-sm text-center text-(--text-secondary)">
-                        Don't have an account?{" "}
-                        <Link to="/signup" className="underline hover:text-(--text-primary) transition-colors">
-                            Sign up
+                        Already have an account?{" "}
+                        <Link to="/login" className="underline hover:text-(--text-primary) transition-colors">
+                            Sign in
                         </Link>
                     </div>
                 </CardFooter>

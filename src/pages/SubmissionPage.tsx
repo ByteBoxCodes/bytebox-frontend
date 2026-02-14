@@ -11,7 +11,7 @@ import SubmissionPanel from "@/features/submission/SubmissionPanel";
 import { practiceData } from "../constants/practice-data/PracticeData";
 import type { Question, Language } from "@/types/submission";
 
-export default function PracticeQuestionPage() {
+export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
     const numericQuestionId = Number(questionId);
 
