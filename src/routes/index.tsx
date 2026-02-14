@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import HomePage from "../pages/HomePage";
-import PracticeQuestionPage from "../pages/question/PracticeQuestionPage";
+import PracticeQuestionPage from "../pages/SubmissionPage";
 import ProblemPage from "../pages/ProblemPage";
 
 export const router = createBrowserRouter([
@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
                 element: <ProblemPage />,
             },
             {
-                path: "/problems/:questionId",
+                path: "/problem/:questionId",
                 element: <PracticeQuestionPage />,
             },
         ],

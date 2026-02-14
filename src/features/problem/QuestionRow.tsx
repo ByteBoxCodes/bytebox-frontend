@@ -17,7 +17,7 @@ export default function QuestionRow({ id, title, difficulty, points, isCompleted
         Hard: 'text-(--status-error-text) bg-(--status-error-bg)',
     };
 
-    const openQuestion = () => navigate(`/practice/${id}`);
+    const openQuestion = () => navigate(`/problem/${id}`);
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Enter' || event.key === ' ') {

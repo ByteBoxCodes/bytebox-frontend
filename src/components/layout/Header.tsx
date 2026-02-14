@@ -3,7 +3,7 @@ import ThemeToggle from "../ThemeToggle";
 
 export default function Header() {
     return (
-        <header className="relative py-4 md:py-6 bg-(--bg-secondary) transition-colors duration-200 ">
+        <header className="relative py-4 md:py-4 bg-(--bg-secondary) transition-colors duration-200 ">
             <div className="px-4 w-full sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     <div className="shrink-0">
