@@ -1,9 +1,8 @@
 import { useState } from "react";
-import DashboardStats from "./components/DashboardStats";
-import RightSidebar from "./components/RightSidebar";
-import TopicSidebar from "./components/TopicSidebar";
-import ProblemList from "./components/ProblemList";
-import { practiceData } from "../../constants/practice-data/PracticeData";
+import RightSidebar from "../features/problem/RightSidebar";
+import TopicSidebar from "../features/problem/TopicSidebar";
+import ProblemList from "../features/problem/ProblemList";
+import { practiceData } from "../constants/practice-data/PracticeData";
 
 
 export default function ProblemPage() {
@@ -15,9 +14,9 @@ export default function ProblemPage() {
 
             <div className="relative px-4 w-full sm:px-6 lg:px-8 py-8">
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0">
-                    {/* Left Sidebar - Topic Navigation (3 cols) */}
-                    <div className="lg:col-span-2 hidden lg:block sticky top-8 lg:pr-8">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
+                    {/* Left Sidebar - Topic Navigation */}
+                    <div className="hidden lg:block shrink-0 lg:w-[18%] sticky top-8 lg:pr-8">
                         <TopicSidebar
                             topics={practiceData}
                             selectedTopicIndex={selectedTopicIndex}
@@ -25,14 +24,13 @@ export default function ProblemPage() {
                         />
                     </div>
 
-                    {/* Center Content - Problems (6 cols) */}
-                    <div className="lg:col-span-8 space-y-6 lg:px-8 lg:border-x lg:border-(--border-primary) min-h-[calc(100vh-12rem)]">
-                        <DashboardStats />
+                    {/* Center Content - Problems */}
+                    <div className="flex-1 space-y-6 lg:px-8 lg:border-x lg:border-(--border-primary) min-h-[calc(100vh-12rem)] min-w-0">
                         <ProblemList topic={practiceData[selectedTopicIndex]} />
                     </div>
 
-                    {/* Right Sidebar - Widgets (3 cols) */}
-                    <div className="lg:col-span-2 space-y-6 lg:pl-8">
+                    {/* Right Sidebar - Widgets */}
+                    <div className="shrink-0 w-full lg:w-[22%] space-y-6 lg:pl-8">
                         <RightSidebar />
                     </div>
                 </div>

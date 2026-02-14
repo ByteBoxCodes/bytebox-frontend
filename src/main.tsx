@@ -5,7 +5,7 @@ import "./index.css";
 import "./styles/theme.css";
 import App from "./App.tsx";
 import HomePage from "./pages/HomePage.tsx";
-import PracticePage from "./pages/practice/ProblemPage.tsx";
+import PracticePage from "./pages/ProblemPage.tsx";
 import PracticeQuestionPage from "./pages/question/PracticeQuestionPage.tsx";
 
 const router = createBrowserRouter([

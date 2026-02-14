@@ -2,6 +2,37 @@
 export default function RightSidebar() {
     return (
         <div className="space-y-6">
+            {/* Stats Widget */}
+            <div className="pb-5 border-b border-(--border-primary)">
+                <div className="flex items-center mb-4">
+                    <div className="p-2 bg-(--bg-tertiary)/50 rounded-lg">
+                        <svg className="w-6 h-6 text-(--text-primary)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 className="ml-3 text-lg font-bold text-(--text-primary) font-pj">Overview</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2">
+                        <p className="text-xs font-medium text-(--text-secondary) uppercase tracking-wide">Rank</p>
+                        <div className="flex items-center mt-1">
+                            <span className="text-2xl font-bold text-(--text-primary) font-pj">Novice</span>
+                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                                Lvl 2
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-xs font-medium text-(--text-secondary) uppercase tracking-wide">Solved</p>
+                        <p className="mt-1 text-xl font-bold text-(--text-primary) font-pj">12 <span className="text-sm text-(--text-tertiary)">/ 50</span></p>
+                    </div>
+                    <div>
+                        <p className="text-xs font-medium text-(--text-secondary) uppercase tracking-wide">Points</p>
+                        <p className="mt-1 text-xl font-bold text-(--text-primary) font-pj">450</p>
+                    </div>
+                </div>
+            </div>
+
             {/* Daily Tip Widget */}
             <div className="pb-5 border-b border-(--border-primary)">
                 <div className="flex items-center mb-4">
@@ -15,30 +46,6 @@ export default function RightSidebar() {
                 <p className="text-sm text-(--text-secondary) font-pj leading-relaxed">
                     Consistent practice is key! Try to solve at least one problem every day to build muscle memory and improve your problem-solving skills.
                 </p>
-            </div>
-
-            {/* Platform Updates Widget */}
-            <div className="pb-5 border-b border-(--border-primary)">
-                <div className="flex items-center mb-4">
-                    <div className="p-2 bg-(--status-info-bg) rounded-lg">
-                        <svg className="w-6 h-6 text-(--status-info-text)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                        </svg>
-                    </div>
-                    <h3 className="ml-3 text-lg font-bold text-(--text-primary) font-pj">Updates</h3>
-                </div>
-                <div className="space-y-4">
-                    <div className="pb-4 border-b border-(--bg-tertiary) last:border-0 last:pb-0">
-                        <span className="text-xs font-semibold text-(--status-info-text)">New Feature</span>
-                        <p className="mt-1 text-sm font-medium text-(--text-primary) font-pj">Dark Mode is here!</p>
-                        <p className="mt-1 text-xs text-(--text-secondary)">Switch themes for better coding experience at night.</p>
-                    </div>
-                    <div className="pb-4 border-b border-(--bg-tertiary) last:border-0 last:pb-0">
-                        <span className="text-xs font-semibold text-(--status-success-text)">Content</span>
-                        <p className="mt-1 text-sm font-medium text-(--text-primary) font-pj">10 New Array Questions</p>
-                        <p className="mt-1 text-xs text-(--text-secondary)">Practice array manipulation with our latest set.</p>
-                    </div>
-                </div>
             </div>
 
             {/* Streak Widget */}
