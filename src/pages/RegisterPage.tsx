@@ -10,7 +10,7 @@ export default function RegisterPage() {
             {/* Logo or Brand - Optional */}
             <div className="mb-8 relative z-10 text-center">
                 <Link to="/" className="inline-flex items-center gap-2">
-                    <span className="text-3xl font-bold text-(--text-primary) font-pj">BaseMint</span>
+                    <span className="text-3xl font-bold text-(--text-primary) font-pj">ByteBox</span>
                 </Link>
             </div>
 

@@ -3,12 +3,13 @@ import ThemeToggle from "../ThemeToggle";
 
 export default function Header() {
     return (
-        <header className="relative py-4 md:py-4 bg-(--bg-secondary) transition-colors duration-200 ">
+        <header className="relative py-2 bg-(--bg-secondary) transition-colors duration-200 ">
             <div className="px-4 w-full sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     <div className="shrink-0">
-                        <Link to="/" title="" className="flex rounded outline-none focus:ring-1 focus:ring-(--btn-primary-ring) focus:ring-offset-2">
-                            <span className="text-2xl font-bold text-(--text-primary) font-pj">BaseMint</span>
+                        <Link to="/" title="" className="flex rounded outline-none">
+                            <img src="src/assets/logo/bytebox-light.png" alt="Logo" className="h-[50px] object-contain dark:hidden" />
+                            <img src="src/assets/logo/bytebox-dark.png" alt="Logo" className="h-12 object-contain hidden dark:block" />
                         </Link>
                     </div>
 
