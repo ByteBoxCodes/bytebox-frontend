@@ -1,12 +1,14 @@
-import { useState } from "react";
 import RightSidebar from "../features/problem/RightSidebar";
 import TopicSidebar from "../features/problem/TopicSidebar";
 import ProblemList from "../features/problem/ProblemList";
-import { practiceData } from "../constants/practice-data/PracticeData";
+import { useGetAllTopics } from "@/hooks/useGetAllTopics";
+import { useState } from "react";
 
 
 export default function ProblemPage() {
-    const [selectedTopicIndex, setSelectedTopicIndex] = useState(0);
+
+    const { data: topics } = useGetAllTopics();
+    const [selectedTopic, setSelectedTopic] = useState<string>("LOOPS");
 
     return (
         <div className="relative bg-(--bg-secondary) h-full transition-colors duration-200 border-t border-(--border-primary) flex flex-col overflow-hidden ">
@@ -18,15 +20,15 @@ export default function ProblemPage() {
                     {/* Left Sidebar - Topic Navigation */}
                     <div className="hidden lg:block shrink-0 lg:w-[18%] sticky top-8 lg:pr-8">
                         <TopicSidebar
-                            topics={practiceData}
-                            selectedTopicIndex={selectedTopicIndex}
-                            onSelectTopic={setSelectedTopicIndex}
+                            selectedTopic={selectedTopic}
+                            onSelectTopic={setSelectedTopic}
+                            topics={topics || []}
                         />
                     </div>
 
                     {/* Center Content - Problems */}
                     <div className="flex-1 space-y-6 lg:px-8 lg:border-x lg:border-(--border-primary) min-h-[calc(100vh-12rem)] min-w-0">
-                        <ProblemList topic={practiceData[selectedTopicIndex]} />
+                        <ProblemList topicName={selectedTopic} />
                     </div>
 
                     {/* Right Sidebar - Widgets */}

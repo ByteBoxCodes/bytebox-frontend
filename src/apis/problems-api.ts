@@ -10,3 +10,8 @@ export const getProblemById = async (id: string): Promise<Problem> => {
   const response = await api.get(`/problems/${id}`);
   return response.data;
 };
+
+export const getProblemByTopic = async (topic: string): Promise<Problem[]> => {
+  const response = await api.get(`/problems?topic=${topic}`);
+  return response.data;
+};

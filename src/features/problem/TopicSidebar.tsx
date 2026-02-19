@@ -2,20 +2,17 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { ITopic } from "@/types/topics";
 
-interface Topic {
-    title: string;
-    description: string;
-    questions: any[];
-}
+
 
 interface TopicSidebarProps {
-    topics: Topic[];
-    selectedTopicIndex: number;
-    onSelectTopic: (index: number) => void;
+    topics: ITopic[];
+    selectedTopic: string;
+    onSelectTopic: (topic: string) => void;
 }
 
-export default function TopicSidebar({ topics, selectedTopicIndex, onSelectTopic }: TopicSidebarProps) {
+export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: TopicSidebarProps) {
     return (
         <div className="h-[calc(100vh-12rem)] sticky top-24">
             <div className="pb-4 mb-2 border-b border-(--border-primary)">
@@ -30,19 +27,19 @@ export default function TopicSidebar({ topics, selectedTopicIndex, onSelectTopic
                             variant="ghost"
                             className={cn(
                                 "w-full justify-start text-left font-pj h-auto py-3 px-4",
-                                selectedTopicIndex === index
+                                selectedTopic === topic.name
                                     ? "bg-(--btn-primary-bg) text-(--btn-primary-text) hover:bg-(--btn-primary-hover) hover:text-(--btn-primary-text)"
                                     : "text-(--text-secondary) hover:bg-(--bg-tertiary) hover:text-(--text-primary)"
                             )}
-                            onClick={() => onSelectTopic(index)}
+                            onClick={() => onSelectTopic(topic.name)}
                         >
                             <div className="truncate">
-                                <div className="font-semibold">{topic.title}</div>
+                                <div className="font-semibold">{topic.name}</div>
                                 <div className={cn(
                                     "text-xs mt-0.5 truncate",
-                                    selectedTopicIndex === index ? "text-(--text-inverse)/80" : "text-(--text-tertiary)"
+                                    selectedTopic === topic.name ? "text-(--text-inverse)/80" : "text-(--text-tertiary)"
                                 )}>
-                                    {topic.questions.length} problems
+                                    {topic.description}
                                 </div>
                             </div>
                         </Button>

@@ -1,32 +1,22 @@
 
-import useProblems from "@/hooks/useProblems";
 import QuestionRow from "./ProblemRow";
+import { useGetProblemsByTopic } from "@/hooks/useGetProblemsByTopic";
 
-interface ProblemListProps {
-    topic: {
-        title: string;
-        description: string;
-        questions: any[];
-    };
-}
 
-export default function ProblemList({ topic }: ProblemListProps) {
 
-    const { data: problems } = useProblems();
+export default function ProblemList({ topicName }: { topicName: string }) {
+
+    const { data } = useGetProblemsByTopic(topicName);
 
     return (
         <div className="space-y-6">
             <div className="pb-4 border-b border-(--border-primary)">
-                <h2 className="text-2xl font-bold text-(--text-primary) font-pj">{topic.title}</h2>
-                <p className="mt-1 text-(--text-secondary) font-pj">{topic.description}</p>
+                <h2 className="text-2xl font-bold text-(--text-primary) font-pj">{topicName}</h2>
+                <p className="mt-1 text-(--text-secondary) font-pj">{topicName}</p>
             </div>
 
-            <div className="overflow-hidden">
-                {/* Optional: Add a header row for the table-like list if desired, 
-                     but keeping it simple as per "professional" request often implies clean lists. 
-                     The QuestionRow itself provides the row structure. 
-                 */}
-                {problems?.map((question: any, idx: number) => (
+            <div className="overflow-hidden ">
+                {data?.map((question: any) => (
                     <QuestionRow key={question.id} {...question} />
                 ))}
             </div>
