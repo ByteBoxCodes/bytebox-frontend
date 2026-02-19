@@ -3,7 +3,7 @@ import type { Problem } from '@/types/problems';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function ProblemRow({ id, title, difficulty, topics, description }: Problem) {
+export default function ProblemRow({ id, title, difficulty, topics }: Problem) {
     const navigate = useNavigate();
     const difficultyColor = {
         EASY: 'text-(--status-success-text) bg-(--status-success-bg)',
