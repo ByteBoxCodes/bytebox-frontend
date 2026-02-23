@@ -5,7 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import SubmissionPage from "../pages/SubmissionPage";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/RegisterPage";
-import UserProfilePage from "../pages/UserProfile";
+import UserProfilePage from "../pages/UserProfilePage";
 import ProtectedRoutes from "@/components/common/ProtectedRoutes";
 
 export const router = createBrowserRouter([
