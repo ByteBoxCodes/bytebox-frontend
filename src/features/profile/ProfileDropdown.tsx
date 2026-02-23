@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ProfileAvatar from "./ProfileAvatar";
 import { LogOut, User } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProfileDropdownProps {
     name?: string;
@@ -17,9 +18,11 @@ interface ProfileDropdownProps {
 
 export default function ProfileDropdown({ name, email }: ProfileDropdownProps) {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        queryClient.clear();
         navigate("/login");
     };
 

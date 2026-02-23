@@ -21,8 +21,9 @@ export default function AuthPanel({
     heading = (
         <>
             Master the Code.{" "}
-            <span className="text-(--text-secondary) dark:text-(--dk-text-muted)">
-                Ace the Interview.
+            <br />
+            <span className="text-4xl text-(--text-secondary) dark:text-(--dk-text-muted) font-semibold">
+                Command your fundamentals.
             </span>
         </>
     ),

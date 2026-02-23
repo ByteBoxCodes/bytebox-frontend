@@ -1,7 +1,7 @@
-
 import { Outlet } from "react-router-dom"
 import Header from "./components/layout/Header"
 import { ThemeProvider } from "./context/ThemeContext"
+import { Toaster } from "@/components/ui/sonner"
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
           <Outlet />
         </main>
       </div>
+      <Toaster richColors position="top-right" />
     </ThemeProvider>
   )
 }
