@@ -5,21 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useLoginUser } from "@/hooks/useLoginUser";
 
 export default function Login() {
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
+    const { mutate, isPending } = useLoginUser();
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            navigate("/problems");
-        }, 1500);
+        mutate({ email, password });
     };
 
     return (
@@ -141,12 +138,12 @@ export default function Login() {
                 {/* Submit */}
                 <Button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isPending}
                     className="w-full h-11 rounded-xl font-semibold mt-2 transition-colors
                                bg-(--btn-primary-bg) text-(--btn-primary-text) hover:bg-(--btn-primary-hover)
                                dark:bg-(--dk-btn-bg) dark:text-(--dk-btn-text) dark:hover:bg-(--dk-btn-hover)"
                 >
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign In
                 </Button>
             </form>
