@@ -19,11 +19,7 @@ export default function Register() {
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        mutate({ name, username, email, password }, {
-            onSuccess: () => {
-                navigate("/login");
-            },
-        });
+        mutate({ name, username, email, password });
     };
 
     return (
