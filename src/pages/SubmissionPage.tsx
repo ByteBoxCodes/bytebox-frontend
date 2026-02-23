@@ -17,7 +17,6 @@ export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
     const { data, isLoading, isError } = useGetProblemById(questionId!);
     const [isRunning, setIsRunning] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const { mutate, isPending } = useSubmitSolutions();
 
     if (isLoading) {
@@ -64,7 +63,6 @@ export default function SubmissionPage() {
     };
 
     const handleSubmit = async (language: Language, code: string) => {
-        setIsSubmitting(true);
         const currentUserId = "8ddf831d-e270-4bab-863c-926f6af9917f";
         const submissionData = {
             userId: currentUserId,
@@ -75,8 +73,6 @@ export default function SubmissionPage() {
         mutate(submissionData);
         console.log(`Submitting ${language} solution...`);
         console.log(code);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsSubmitting(false);
     };
 
     return (

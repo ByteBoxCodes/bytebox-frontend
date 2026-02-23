@@ -5,6 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import SubmissionPage from "../pages/SubmissionPage";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/RegisterPage";
+import UserProfilePage from "../pages/UserProfile";
 import ProtectedRoutes from "@/components/common/ProtectedRoutes";
 
 export const router = createBrowserRouter([
@@ -30,8 +31,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/problem/:questionId",
-
-                element: (<ProtectedRoutes ><SubmissionPage /></ProtectedRoutes>),
+                element: (<ProtectedRoutes><SubmissionPage /></ProtectedRoutes>),
+            },
+            {
+                path: "/profile",
+                element: (<ProtectedRoutes><UserProfilePage /></ProtectedRoutes>),
             },
         ],
     },
