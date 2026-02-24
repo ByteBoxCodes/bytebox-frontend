@@ -63,16 +63,12 @@ export default function SubmissionPage() {
     };
 
     const handleSubmit = async (language: Language, code: string) => {
-        const currentUserId = "8ddf831d-e270-4bab-863c-926f6af9917f";
         const submissionData = {
-            userId: currentUserId,
             problemId: questionId,
             language,
             code,
         };
         mutate(submissionData);
-        console.log(`Submitting ${language} solution...`);
-        console.log(code);
     };
 
     return (

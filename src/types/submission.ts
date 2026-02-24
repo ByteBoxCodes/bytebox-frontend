@@ -7,12 +7,11 @@ export interface TestCase {
 
 export interface ISubmission {
   problemId: string;
-  userId: string;
   language: string;
   code: string;
 }
 
-export type Language = "java" | "cpp";
+export type Language = "java" | "c++";
 
 export interface LanguageOption {
   label: string;
