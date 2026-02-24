@@ -37,7 +37,7 @@ export default function ProblemPage() {
 
                     {/* Right Sidebar — Widgets */}
                     <div className="shrink-0 w-full lg:w-[22%] space-y-6 lg:pl-8">
-                        <RightSidebar />
+                        <RightSidebar topics={topics || []} />
                     </div>
 
                 </div>

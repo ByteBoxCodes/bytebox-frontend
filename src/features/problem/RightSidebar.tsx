@@ -1,16 +1,27 @@
-import { Trophy, Target, TrendingUp, Flame } from "lucide-react";
+import { Trophy, Target, TrendingUp, Flame, BookOpen } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useProfile } from "@/hooks/useProfile";
+import type { ITopic } from "@/types/topics";
 
-export default function RightSidebar() {
+interface RightSidebarProps {
+    topics?: ITopic[];
+}
+
+export default function RightSidebar({ topics = [] }: RightSidebarProps) {
     const { data } = useProfile();
     const user = data?.data ?? data;
 
     const solved = user?.problemsSolved ?? 0;
-    const attempted = user?.problemsAttempted ?? 0;
-    // Assuming a total of 150 problems available on the platform for this example
-    const totalSystemProblems = 150;
-    const progressPercent = Math.min(100, Math.round((solved / totalSystemProblems) * 100)) || 0;
+
+    // Calculate total problems across all topics, defaulting to 150 if topics array is empty
+    const totalSystemProblems = topics.length > 0
+        ? topics.reduce((acc, topic) => acc + (topic.problemsCount || 0), 0)
+        : 150;
+
+    const progressPercent = totalSystemProblems > 0
+        ? Math.min(100, Math.round((solved / totalSystemProblems) * 100))
+        : 0;
+
 
     return (
         <div className="space-y-6">
@@ -35,23 +46,6 @@ export default function RightSidebar() {
                     </p>
                 </div>
 
-                {/* Mini Stats Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                        <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                            <Target className="w-4 h-4" />
-                            <span className="text-xs font-semibold tracking-wide uppercase">Solved</span>
-                        </div>
-                        <span className="text-2xl font-bold text-foreground">{solved}</span>
-                    </div>
-                    <div className="flex flex-col gap-1 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                        <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-                            <TrendingUp className="w-4 h-4" />
-                            <span className="text-xs font-semibold tracking-wide uppercase">Attempted</span>
-                        </div>
-                        <span className="text-2xl font-bold text-foreground">{attempted}</span>
-                    </div>
-                </div>
             </div>
 
             {/* Streak Widget (Refined version) */}
