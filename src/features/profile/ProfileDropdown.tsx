@@ -14,9 +14,10 @@ import { useQueryClient } from "@tanstack/react-query";
 interface ProfileDropdownProps {
     name?: string;
     email?: string;
+    username?: string;
 }
 
-export default function ProfileDropdown({ name, email }: ProfileDropdownProps) {
+export default function ProfileDropdown({ name, email, username }: ProfileDropdownProps) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -30,10 +31,18 @@ export default function ProfileDropdown({ name, email }: ProfileDropdownProps) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <button
-                    className="outline-none focus:outline-none"
+                    className="outline-none focus:outline-none flex items-center gap-2.5 hover:bg-(--bg-tertiary) p-1.5 pr-3 rounded-full transition-colors border border-transparent hover:border-(--border-primary) dark:hover:border-white/10"
                     aria-label="Open profile menu"
                 >
-                    <ProfileAvatar name={name} size="md" />
+                    <ProfileAvatar name={name} size="sm" />
+                    <div className="hidden sm:flex flex-col items-start text-left">
+                        <span className="text-sm font-semibold text-(--text-primary) dark:text-white leading-none">
+                            {name ? name.split(' ')[0] : 'User'}
+                        </span>
+                        <span className="text-[11px] font-medium text-(--text-tertiary) mt-0.5 leading-none">
+                            @{username || 'user'}
+                        </span>
+                    </div>
                 </button>
             </DropdownMenuTrigger>
 

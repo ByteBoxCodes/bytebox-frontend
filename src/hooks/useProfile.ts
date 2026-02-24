@@ -6,5 +6,6 @@ export const useProfile = () => {
     queryKey: ["profile"],
     queryFn: getCurrentUser,
     staleTime: 5 * 60 * 1000,
+    enabled: !!localStorage.getItem("token"),
   });
 };
