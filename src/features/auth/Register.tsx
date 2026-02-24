@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,7 @@ import { Loader2, User, AtSign, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useRegisterUser } from "@/hooks/useRegisterUser";
 
 export default function Register() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");

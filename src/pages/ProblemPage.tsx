@@ -13,23 +13,7 @@ export default function ProblemPage() {
                         bg-(--bg-secondary) border-t border-(--border-primary)
                         dark:border-(--dk-border)">
 
-            {/* Dark mode gradient overlay */}
-            <div className="absolute inset-0 hidden dark:block pointer-events-none"
-                style={{ background: `linear-gradient(to bottom right, var(--dk-bg-from), var(--dk-bg-via), var(--dk-bg-to))` }} />
-
-            {/* Dark mode blobs */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden hidden dark:block">
-                <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full blur-3xl"
-                    style={{ background: "var(--dk-blob-a)" }} />
-                <div className="absolute -bottom-24 -right-24 w-[400px] h-[400px] rounded-full blur-3xl"
-                    style={{ background: "var(--dk-blob-b)" }} />
-            </div>
-
-            {/* Light mode top fade */}
-            <div className="absolute top-0 inset-x-0 h-64 pointer-events-none dark:hidden
-                            bg-gradient-to-b from-(--bg-tertiary) to-transparent" />
-
-            <div className="relative z-10 px-4 w-full sm:px-6 lg:px-8 py-8">
+            <div className="relative z-10 px-4 w-full sm:px-6 lg:px-6 py-8">
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
 
                     {/* Left Sidebar — Topic Navigation */}

@@ -34,35 +34,34 @@
 
 /* Dark Mode Overrides */
 .dark {
-  /* Backgrounds */
-  --bg-primary: #111827; /* gray-900 */
-  --bg-secondary: #111827; /* gray-900 (same as primary in dark for hero case, or use slightly lighter if needed) - keeping as per previous hero-bg (gray-900) */
-
-  --bg-tertiary: #1f2937; /* gray-800 */
-  --bg-card: #111827; /* gray-900 */
+  /* Backgrounds (mapped to standard shadcn zinc) */
+  --bg-primary: #27272a; /* zinc-950 */
+  --bg-secondary: #18181b; /* zinc-900 */
+  --bg-tertiary: #27272a; /* zinc-800 */
+  --bg-card: #18181b; /* zinc-950 */
 
   /* Text */
-  --text-primary: #ffffff; /* white */
-  --text-secondary: #d1d5db; /* gray-300 */
-  --text-tertiary: #9ca3af; /* gray-400 */
-  --text-inverse: #111827; /* gray-900 */
+  --text-primary: #faffff; /* nearly white for max contrast */
+  --text-secondary: #a1a1aa; /* zinc-400 */
+  --text-tertiary: #71717a; /* zinc-500 */
+  --text-inverse: #09090b; /* zinc-950 */
 
   /* Borders */
-  --border-primary: #374151; /* gray-700 */
+  --border-primary: #27272a; /* zinc-800 */
 
   /* Components */
-  --pattern-opacity: 0.2;
-  --avatar-ring: #1f2937; /* gray-800 */
+  --pattern-opacity: 0.1;
+  --avatar-ring: #27272a; /* zinc-800 */
 
   /* Primary Button */
-  --btn-primary-bg: #ffffff; /* white */
-  --btn-primary-text: #111827; /* gray-900 */
-  --btn-primary-hover: #e5e7eb; /* gray-200 */
-  --btn-primary-ring: #ffffff; /* white */
+  --btn-primary-bg: #fafafa; /* zinc-50 */
+  --btn-primary-text: #09090b; /* zinc-950 */
+  --btn-primary-hover: #e4e4e7; /* zinc-200 */
+  --btn-primary-ring: #fafafa;
 
   /* Secondary Button */
-  --btn-secondary-text: #ffffff; /* white */
-  --btn-secondary-hover-bg: #1f2937; /* gray-800 */
+  --btn-secondary-text: #fafafa;
+  --btn-secondary-hover-bg: #27272a; /* zinc-800 */
 
   /* Ring stays same or define if needed */
 

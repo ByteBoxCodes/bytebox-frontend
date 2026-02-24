@@ -10,21 +10,11 @@ export default function LoginPage() {
             <div className="w-full h-screen flex overflow-hidden font-sans relative
                         bg-(--bg-secondary) text-(--text-primary) transition-colors duration-200">
 
-                {/* Dark mode gradient overlay */}
-                <div className="absolute inset-0 hidden dark:block pointer-events-none"
-                    style={{ background: `linear-gradient(to bottom right, var(--dk-bg-from), var(--dk-bg-via), var(--dk-bg-to))` }} />
-
                 {/* ── Left Panel (shared) ── */}
                 <AuthPanel />
 
                 {/* ── Right Column ── */}
                 <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 relative overflow-hidden z-10">
-
-                    {/* Dark mode blob */}
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden hidden dark:block">
-                        <div className="absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full blur-3xl"
-                            style={{ background: "var(--dk-blob-a)" }} />
-                    </div>
 
                     <div className="w-full max-w-md space-y-8 z-10">
                         {/* Mobile brand */}

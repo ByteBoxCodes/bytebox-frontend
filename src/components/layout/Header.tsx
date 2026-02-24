@@ -18,11 +18,7 @@ export default function Header() {
     return (
         <header
             className="relative py-2 bg-(--bg-secondary) border-b border-(--border-primary) dark:border-white/8 transition-colors duration-200 z-50"
-            style={{ ["--dk-bg" as string]: "1" }}
         >
-            {/* Dark mode gradient background (Matching HeroSection) */}
-            <div className="absolute inset-0 hidden dark:block transition-colors duration-200 pointer-events-none"
-                style={{ background: `linear-gradient(to bottom right, var(--dk-bg-from), var(--dk-bg-via), var(--dk-bg-to))` }} />
 
             <div className="relative px-4 w-full sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
