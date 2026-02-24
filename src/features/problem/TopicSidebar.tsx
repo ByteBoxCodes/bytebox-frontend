@@ -106,7 +106,7 @@ export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: T
                                     "ml-auto text-xs font-normal shrink-0",
                                     isActive ? "bg-(--btn-primary-bg)/20 text-(--btn-primary-bg)" : "bg-(--bg-primary) text-(--text-tertiary)"
                                 )}>
-                                    12
+                                    {topic.problemsCount}
                                 </Badge>
                             </button>
                         );

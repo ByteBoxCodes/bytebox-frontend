@@ -1,3 +1,5 @@
+import type { ITopic } from "./topics";
+
 export type Difficulty = "EASY" | "MEDIUM" | "HARD";
 
 export interface IProblem {
@@ -5,6 +7,6 @@ export interface IProblem {
   title: string;
   description: string;
   difficulty: Difficulty;
-  topics: string;
+  topics: ITopic;
   createdAt?: string;
 }

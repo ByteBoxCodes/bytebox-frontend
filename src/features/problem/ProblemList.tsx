@@ -15,14 +15,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useGetProblemsByTopic } from "@/hooks/useGetProblemsByTopic";
 import type { IProblem } from "@/types/problems";
 import { CheckCircle2, Circle } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useState } from "react";
 
-export default function ProblemList({ topicName }: { topicName: string }) {
-    const { data: problems } = useGetProblemsByTopic(topicName);
+export default function ProblemList({ problems, topicName }: { problems: IProblem[], topicName: string }) {
     const { data: userData } = useProfile();
     const user = userData?.data ?? userData;
 

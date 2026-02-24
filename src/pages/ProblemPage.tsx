@@ -3,10 +3,14 @@ import TopicSidebar from "../features/problem/TopicSidebar";
 import ProblemList from "../features/problem/ProblemList";
 import { useGetAllTopics } from "@/hooks/useGetAllTopics";
 import { useState } from "react";
+import { useGetProblemsByTopic } from "@/hooks/useGetProblemsByTopic";
 
 export default function ProblemPage() {
     const { data: topics } = useGetAllTopics();
     const [selectedTopic, setSelectedTopic] = useState<string>("variables");
+    const { data: problems } = useGetProblemsByTopic(selectedTopic);
+
+    console.log(problems)
 
     return (
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
@@ -28,7 +32,7 @@ export default function ProblemPage() {
                     {/* Center Content — Problems */}
                     <div className="flex-1 space-y-6 lg:px-8 min-h-[calc(100vh-12rem)] min-w-0
                                     lg:border-x border-(--border-primary) dark:border-(--dk-border)">
-                        <ProblemList topicName={selectedTopic} />
+                        <ProblemList problems={problems || []} topicName={selectedTopic} />
                     </div>
 
                     {/* Right Sidebar — Widgets */}
