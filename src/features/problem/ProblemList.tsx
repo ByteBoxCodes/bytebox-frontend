@@ -62,46 +62,49 @@ export default function ProblemList({ topicName }: { topicName: string }) {
         <div className="space-y-4">
             {/* Header Area */}
             <div className="pb-4">
-                <h2 className="text-3xl font-bold text-foreground font-pj tracking-tight">
-                    {topicName} Problems
-                </h2>
+                <div className="flex items-center gap-2 justify-between pb-2">
+                    <h2 className="text-2xl font-bold text-foreground font-pj tracking-tight capitalize">
+                        {topicName} Questions
+                    </h2>
+                    <div className="flex justify-end items-center gap-3">
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground hidden sm:inline-block">Status:</span>
+                            <Select value={statusFilter} onValueChange={setStatusFilter} >
+                                <SelectTrigger className="w-max h-8 cursor-pointer text-xs rounded-full bg-muted/30 border-0 focus:ring-1 pl-4 ">
+                                    <SelectValue placeholder="Status" />
+                                </SelectTrigger>
+                                <SelectContent align="end" className="rounded-xl cursor-pointer">
+                                    <SelectItem value="All" className="text-xs">All</SelectItem>
+                                    <SelectItem value="Solved" className="text-xs">Solved</SelectItem>
+                                    <SelectItem value="Unsolved" className="text-xs">Unsolved</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground hidden sm:inline-block">Difficulty:</span>
+                            <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
+                                <SelectTrigger className="w-max h-8 cursor-pointer text-xs rounded-full bg-muted/30 border-0 focus:ring-1 pl-4">
+                                    <SelectValue placeholder="Difficulty" />
+                                </SelectTrigger>
+                                <SelectContent align="end" className="rounded-xl cursor-pointer">
+                                    <SelectItem value="All" className="text-xs">All</SelectItem>
+                                    <SelectItem value="EASY" className="text-xs">Easy</SelectItem>
+                                    <SelectItem value="MEDIUM" className="text-xs">Medium</SelectItem>
+                                    <SelectItem value="HARD" className="text-xs">Hard</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </div>
                 <p className="mt-2 text-muted-foreground font-pj text-sm max-w-2xl">
-                    Master {topicName.toLowerCase()} concepts with these curated challenges.
+                    Master {topicName.toLowerCase()} concepts with these curated challenges. <br />
                     Start from easy problems and work your way up to build a solid foundation.
                 </p>
             </div>
 
             {/* Filters Area */}
-            <div className="flex justify-end items-center gap-4 pb-2">
-                <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-muted-foreground hidden sm:inline-block">Status:</span>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-[130px] h-9 bg-muted/30 border-0 focus:ring-1">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent align="end">
-                            <SelectItem value="All">All</SelectItem>
-                            <SelectItem value="Solved">Solved</SelectItem>
-                            <SelectItem value="Unsolved">Unsolved</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
 
-                <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-muted-foreground hidden sm:inline-block">Difficulty:</span>
-                    <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
-                        <SelectTrigger className="w-[130px] h-9 bg-muted/30 border-0 focus:ring-1">
-                            <SelectValue placeholder="Difficulty" />
-                        </SelectTrigger>
-                        <SelectContent align="end">
-                            <SelectItem value="All">All</SelectItem>
-                            <SelectItem value="EASY">Easy</SelectItem>
-                            <SelectItem value="MEDIUM">Medium</SelectItem>
-                            <SelectItem value="HARD">Hard</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
 
             {/* Table Area (Striped, Cardless style) */}
             <div className="rounded-lg border-y border-border overflow-hidden">
@@ -125,12 +128,12 @@ export default function ProblemList({ topicName }: { topicName: string }) {
                             filteredProblems?.map((problem: IProblem, index: number) => {
                                 const solved = isSolved(problem.id);
                                 // Alternating stripe class (LeetCode style)
-                                const isEven = index % 2 === 0;
+                                const isEven = index % 2 !== 0;
 
                                 return (
                                     <TableRow
                                         key={problem.id}
-                                        className={`group transition-colors cursor-pointer border-0 ${isEven ? "bg-muted/10 hover:bg-muted/30" : "bg-muted/5 hover:bg-muted/20"
+                                        className={`group transition-colors cursor-pointer   border-0 ${isEven ? "bg-muted/50 hover:bg-muted/80" : "bg-(--bg-secondary) hover:bg-muted/10"
                                             }`}
                                     >
                                         <TableCell className="text-center py-3">

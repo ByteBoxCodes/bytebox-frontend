@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function ProblemPage() {
     const { data: topics } = useGetAllTopics();
-    const [selectedTopic, setSelectedTopic] = useState<string>("LOOPS");
+    const [selectedTopic, setSelectedTopic] = useState<string>("variables");
 
     return (
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
