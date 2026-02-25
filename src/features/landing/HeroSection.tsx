@@ -1,106 +1,191 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { ChevronRight, Zap, Trophy, Clock, BookOpen } from "lucide-react";
+import {
+    SiPython, SiJavascript, SiCplusplus, SiTypescript,
+    SiGo, SiRust, SiKotlin, SiSwift,
+} from "react-icons/si";
+import { FaJava, FaC } from "react-icons/fa6";
 
+/* ─── Avatars ─── */
+const avatars = [
+    "https://i.pravatar.cc/40?img=1",
+    "https://i.pravatar.cc/40?img=12",
+    "https://i.pravatar.cc/40?img=33",
+];
+
+/* ─── Languages (icon color = theme text) ─── */
+const langs = [
+    { name: "C", Icon: FaC },
+    { name: "C++", Icon: SiCplusplus },
+    { name: "Java", Icon: FaJava },
+    { name: "Python", Icon: SiPython },
+    { name: "JavaScript", Icon: SiJavascript },
+    { name: "TypeScript", Icon: SiTypescript },
+    { name: "Go", Icon: SiGo },
+    { name: "Rust", Icon: SiRust },
+    { name: "Kotlin", Icon: SiKotlin },
+    { name: "Swift", Icon: SiSwift },
+];
+
+/* ─── Feature highlights (unique — no stat duplication) ─── */
+const features = [
+    { icon: <Zap size={14} />, label: "Real-time Feedback" },
+    { icon: <Clock size={14} />, label: "Progress Tracking" },
+    { icon: <BookOpen size={14} />, label: "Structured Curriculum" },
+    { icon: <Trophy size={14} />, label: "Interview Prep" },
+];
+
+/* ─── Counter ─── */
+const Counter = ({ to, suffix = "" }: { to: number; suffix?: string }) => {
+    const [n, setN] = useState(0);
+    useEffect(() => {
+        let cur = 0; const step = to / 60;
+        const t = setInterval(() => {
+            cur += step;
+            if (cur >= to) { setN(to); clearInterval(t); } else setN(Math.floor(cur));
+        }, 2000 / 60);
+        return () => clearInterval(t);
+    }, [to]);
+    return <>{n}{suffix}</>;
+};
+
+/* ─── Main ─── */
 const HeroSection = () => {
+    const up = (delay = 0) => ({
+        initial: { opacity: 0, y: 16 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] as const },
+    });
+
     return (
-        <div className="relative bg-(--bg-secondary) transition-colors duration-200"
-            style={{ ["--dk-bg" as string]: "1" }}>
-            {/* Pattern only in light mode */}
-            <div className="absolute bottom-0 right-0 overflow-hidden lg:inset-y-0 dark:hidden">
-                <img className="w-auto h-full opacity-(--pattern-opacity)" src="https://d33wubrfki0l68.cloudfront.net/1e0fc04f38f5896d10ff66824a62e466839567f8/699b5/images/hero/3/background-pattern.png" alt="" />
-            </div>
+        <div
+            className="relative overflow-hidden"
+            style={{
+                background: "var(--bg-secondary)",
+                height: "calc(100vh - 4rem)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+            }}
+        >
+            {/* Dot-grid */}
+            <div className="absolute inset-0 pointer-events-none"
+                style={{
+                    backgroundImage: "radial-gradient(circle, var(--text-secondary) 1px, transparent 1px)",
+                    backgroundSize: "32px 32px",
+                    opacity: 0.05,
+                }} />
+            {/* Center glow */}
+            <div className="absolute inset-0 pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 80% 55% at 50% 38%, rgba(255,255,255,0.04) 0%, transparent 70%)" }} />
 
-            {/* Dark mode gradient background */}
-            <div className="absolute inset-0 hidden dark:block transition-colors duration-200"
-                style={{ background: `linear-gradient(to bottom right, var(--dk-bg-from), var(--dk-bg-via), var(--dk-bg-to))` }} />
+            <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6 max-w-4xl mx-auto w-full gap-5">
 
-            {/* Dark mode blobs */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden hidden dark:block">
-                <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-3xl"
-                    style={{ background: "var(--dk-blob-a)" }} />
-                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-3xl"
-                    style={{ background: "var(--dk-blob-b)" }} />
-            </div>
-
-            <section className="relative py-12 sm:py-16 lg:pt-20 lg:pb-36">
-                <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-                    <div className="grid grid-cols-1 gap-y-8 lg:items-center lg:grid-cols-2 sm:gap-y-20 xl:grid-cols-5">
-                        <div className="text-center xl:col-span-2 lg:text-left md:px-16 lg:px-0">
-                            <div className="max-w-sm mx-auto sm:max-w-md md:max-w-full">
-                                <h1 className="text-4xl font-bold leading-tight text-(--text-primary) sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight font-pj dark:text-(--dk-text)">
-                                    Master Programming Fundamentals
-                                </h1>
-
-                                <p className="mt-5 text-base text-(--text-secondary) sm:text-lg font-pj dark:text-(--dk-text-muted)">
-                                    Practice essential coding concepts like loops, if-else, and functions. Compete for ranks and unlock achievements in a gamified environment.
-                                </p>
-
-                                <div className="mt-8 lg:mt-12 lg:flex lg:items-center">
-                                    <div className="flex justify-center shrink-0 -space-x-4 overflow-hidden lg:justify-start">
-                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-(--avatar-ring)" src="https://d33wubrfki0l68.cloudfront.net/3bfa6da479d6b9188c58f2d9a8d33350290ee2ef/301f1/images/hero/3/avatar-male.png" alt="" />
-                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-(--avatar-ring)" src="https://d33wubrfki0l68.cloudfront.net/b52fa09a115db3a80ceb2d52c275fadbf84cf8fc/7fd8a/images/hero/3/avatar-female-1.png" alt="" />
-                                        <img className="inline-block rounded-full w-14 h-14 ring-2 ring-(--avatar-ring)" src="https://d33wubrfki0l68.cloudfront.net/8a2efb13f103a5ae2909e244380d73087a9c2fc4/31ed6/images/hero/3/avatar-female-2.png" alt="" />
-                                    </div>
-
-                                    <p className="mt-4 text-lg text-(--text-primary) lg:mt-0 lg:ml-4 font-pj dark:text-(--dk-text)">
-                                        Join with <span className="font-bold">4600+ Developers</span> and start practicing today
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mt-8 sm:flex sm:items-center sm:justify-center lg:justify-start sm:space-x-5 lg:mt-12">
-                                {/* Primary CTA */}
-                                <Link
-                                    to="/problems"
-                                    title=""
-                                    className="inline-flex items-center px-8 py-4 text-lg font-bold transition-all duration-200
-                                               text-(--btn-primary-text) bg-(--btn-primary-bg)
-                                               border border-transparent rounded-xl font-pj justify-center
-                                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--btn-primary-ring)
-                                               hover:bg-(--btn-primary-hover)"
-                                    style={{
-                                        color: undefined,
-                                        background: undefined,
-                                    }}
-                                    data-dk="primary-cta"
-                                    role="button"
-                                >
-                                    <span className="dark:hidden">Start Coding</span>
-                                    <span className="hidden dark:inline"
-                                        style={{ color: "var(--dk-btn-text)" }}>
-                                        Start Coding
-                                    </span>
-                                </Link>
-
-                                {/* Secondary CTA */}
-                                <a
-                                    href="#"
-                                    title=""
-                                    className="inline-flex items-center px-4 py-4 mt-4 text-lg font-bold transition-all duration-200
-                                               bg-transparent border border-transparent sm:mt-0 font-pj justify-center rounded-xl
-                                               focus:outline-none focus:ring-2 focus:ring-offset-2
-                                               focus:ring-(--btn-secondary-ring)
-                                               hover:bg-(--btn-secondary-hover-bg)
-                                               focus:bg-(--btn-secondary-hover-bg)
-                                               text-(--text-primary)
-                                               dark:[color:var(--dk-text-dim)]
-                                               dark:[--hover-bg:var(--dk-surface-hover)]"
-                                    role="button"
-                                >
-                                    <svg className="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                    </svg>
-                                    View Challenges
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="xl:col-span-3">
-                            <img className="w-full mx-auto scale-110" src="https://d33wubrfki0l68.cloudfront.net/29c501c64b21014b3f2e225abe02fe31fd8f3a5c/f866d/images/hero/3/illustration.png" alt="" />
-                        </div>
+                {/* Social proof */}
+                <motion.div {...up(0)} className="flex items-center gap-2.5">
+                    <div className="flex -space-x-2">
+                        {avatars.map((src, i) => (
+                            <img key={i} src={src} alt="" className="w-7 h-7 rounded-full ring-2 ring-offset-1 object-cover" />
+                        ))}
                     </div>
-                </div>
-            </section>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold"
+                        style={{ background: "var(--bg-primary)", borderColor: "var(--border-primary)", color: "var(--text-secondary)" }}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Join 10,000+ developers already coding
+                    </span>
+                </motion.div>
+
+                {/* Headline */}
+                <motion.h1 {...up(0.08)}
+                    className="font-black tracking-tight leading-[1.07]"
+                    style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.5rem)", color: "var(--text-primary)" }}>
+                    Master Programming <br className="hidden sm:block" />
+                    <span style={{ color: "var(--text-secondary)" }}>Fundamentals with ByteBox</span>
+                </motion.h1>
+
+                {/* Subtitle */}
+                <motion.p {...up(0.16)}
+                    className="text-sm sm:text-base leading-relaxed max-w-xl"
+                    style={{ color: "var(--text-tertiary)" }}>
+                    Solve curated coding challenges across 50+ topics — from basic conditionals to advanced algorithms.
+                    Instant feedback. Real-time judge. Track your progress.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div {...up(0.22)} className="flex flex-wrap items-center justify-center gap-3">
+                    <Link to="/register"
+                        className="inline-flex items-center gap-2 px-7 py-3 text-sm font-bold rounded-full transition-all duration-150 hover:scale-[1.03] hover:opacity-90 active:scale-[0.97]"
+                        style={{ background: "var(--btn-primary-bg)", color: "var(--btn-primary-text)" }}>
+                        Get Started — Free
+                    </Link>
+                    <Link to="/problems"
+                        className="inline-flex items-center gap-1 px-7 py-3 text-sm font-bold rounded-full border transition-all duration-150 hover:scale-[1.03] active:scale-[0.97]"
+                        style={{ background: "transparent", color: "var(--text-primary)", borderColor: "var(--border-primary)" }}>
+                        Explore Problems <ChevronRight size={15} />
+                    </Link>
+                </motion.div>
+
+                {/* Stats */}
+                <motion.div {...up(0.3)}
+                    className="flex flex-wrap justify-center gap-x-10 gap-y-3 pt-5 border-t w-full max-w-xl"
+                    style={{ borderColor: "var(--border-primary)" }}>
+                    {[
+                        { n: 500, s: "+", l: "Problems" },
+                        { n: 50, s: "+", l: "Topics" },
+                        { n: 10, s: "k+", l: "Devs" },
+                        { n: 10, s: "+", l: "Languages" },
+                    ].map(({ n, s, l }) => (
+                        <div key={l} className="text-center">
+                            <div className="text-xl sm:text-2xl font-extrabold tabular-nums" style={{ color: "var(--text-primary)" }}>
+                                <Counter to={n} suffix={s} />
+                            </div>
+                            <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>{l}</div>
+                        </div>
+                    ))}
+                </motion.div>
+
+                {/* Feature pill strip */}
+                <motion.div {...up(0.38)}
+                    className="flex flex-wrap items-center justify-center gap-2">
+                    {features.map((f) => (
+                        <span key={f.label}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold"
+                            style={{
+                                background: "var(--bg-primary)",
+                                borderColor: "var(--border-primary)",
+                                color: "var(--text-secondary)",
+                            }}>
+                            <span style={{ color: "var(--text-tertiary)" }}>{f.icon}</span>
+                            {f.label}
+                        </span>
+                    ))}
+                </motion.div>
+
+                {/* Supported languages — inline icons + names, no cards */}
+                <motion.div {...up(0.68)} className="flex flex-col items-center gap-3 w-full">
+                    <div className="w-48 h-px" style={{ background: "var(--border-primary)", opacity: 0.4 }} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+                        Supported Languages
+                    </span>
+                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+                        {langs.map((lang, i) => (
+                            <motion.div key={lang.name}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3, delay: 0.75 + i * 0.04 }}
+                                className="flex items-center gap-1.5 cursor-default opacity-40 hover:opacity-80 transition-opacity"
+                                style={{ color: "var(--text-secondary)" }}>
+                                <lang.Icon size={14} />
+                                <span className="text-xs font-semibold">{lang.name}</span>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </div>
         </div>
-    )
-}
+    );
+};
+
 export default HeroSection;
