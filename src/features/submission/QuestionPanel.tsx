@@ -2,19 +2,18 @@ import type { IProblem } from "@/types/problems";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Terminal, FileText, History } from "lucide-react";
+import { Terminal, FileText, History } from "lucide-react";
 
 
 export default function QuestionPanel({ question }: { question: IProblem }) {
-    console.log(question);
     return (
         <Tabs defaultValue="description" className="h-full flex flex-col">
             {/* Top Navigation Tabs */}
-            <div className="px-3 shrink-0 flex items-center h-10 border-b border-(--dk-border)">
-                <TabsList className="bg-transparent h-full p-0 flex items-center justify-start gap-1">
+            <div className="px-3 shrink-0 flex items-center h-10 border border-(--dk-border)">
+                <TabsList className="bg-transparent h-full p-0 flex items-center justify-start gap-1 ">
                     <TabsTrigger
                         value="description"
-                        className="text-[13px] font-medium tracking-wide data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-(--text-primary) text-(--text-secondary) hover:text-(--text-primary) transition-colors h-8 px-3 rounded-md flex items-center gap-1.5"
+                        className="text-[13px] font-medium tracking-wide data-[state=active]:bg-(--bg-secondary) border-none  data-[state=active]:shadow-none data-[state=active]:text-(--text-primary) text-(--text-secondary) hover:text-(--text-primary) transition-colors h-7 px-3 rounded-md flex items-center gap-1.5"
                     >
                         <FileText className="w-3.5 h-3.5 text-(--status-info-text)" />
                         Description
@@ -24,12 +23,26 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
 
                     <TabsTrigger
                         value="submissions"
-                        className="text-[13px] font-medium tracking-wide data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-(--text-primary) text-(--text-secondary) hover:text-(--text-primary) transition-colors h-8 px-3 rounded-md flex items-center gap-1.5"
+                        className="text-[13px] font-medium tracking-wide data-[state=active]:bg-transparent border-none data-[state=active]:shadow-none data-[state=active]:text-(--text-primary) text-(--text-secondary) hover:text-(--text-primary) transition-colors h-8 px-3 rounded-md flex items-center gap-1.5"
                     >
                         <History className="w-3.5 h-3.5 text-(--text-tertiary)" />
                         Submissions
                     </TabsTrigger>
                 </TabsList>
+
+                {/* Spacer to push badge to the right */}
+                <div className="flex-1" />
+
+                {/* Difficulty Badge */}
+                <Badge
+                    variant="outline"
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border-0 tracking-wide bg-opacity-10 ${question.difficulty === 'EASY' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' :
+                        question.difficulty === 'MEDIUM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' :
+                            'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                        }`}
+                >
+                    {question.difficulty}
+                </Badge>
             </div>
 
             {/* Description Tab */}
@@ -37,25 +50,13 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
                 <ScrollArea className="h-full">
                     <div className="p-6 space-y-8 pb-12">
                         {/* Header */}
-                        <div className="space-y-3">
-                            <h1 className="text-2xl font-bold text-(--text-primary) font-pj">{question.title}</h1>
-                            <div className="flex flex-wrap gap-2">
-                                <Badge
-                                    variant="outline"
-                                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border-0 uppercase tracking-wide ${question.difficulty === 'EASY' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' :
-                                        question.difficulty === 'MEDIUM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' :
-                                            'bg-rose-500/10 text-rose-600 dark:text-rose-400'
-                                        }`}
-                                >
-                                    {question.difficulty}
-                                </Badge>
-                            </div>
+                        <div className="space-y-1 mt-2">
+                            <h1 className="text-[22px] font-bold text-(--text-primary) tracking-tight">{question.title}</h1>
                         </div>
 
                         {/* Problem Statement */}
-                        <section className="space-y-4">
-                            <h2 className="text-lg font-semibold text-(--text-primary)">Problem Statement</h2>
-                            <div className="text-(--text-secondary) leading-relaxed">
+                        <section className="space-y-4 font-pj">
+                            <div className="text-(--text-primary) text-[15px] leading-7">
                                 {/* Replace with actual description if available, currently using placeholder text from original file */}
                                 <p>
                                     {question.description}
@@ -93,27 +94,27 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
                 </section> */}
 
                         {/* Constraints */}
-                        <section className="space-y-4">
-                            <h3 className="text-base font-semibold text-(--text-primary)">Constraints</h3>
-                            <ul className="grid grid-cols-1 gap-2.5 text-sm text-(--text-secondary)">
+                        <section className="space-y-3 pt-4">
+                            <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Constraints</h3>
+                            <ul className="list-inside space-y-1.5 text-sm text-(--text-secondary) ml-2">
                                 {question.constraints?.map((item, index) => (
-                                    <li key={index} className="flex items-center gap-2">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                                    <li key={index} className="flex items-start gap-2">
+                                        <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
                                         <span dangerouslySetInnerHTML={{ __html: item }} />
                                     </li>
                                 )) ?? (
                                         <>
-                                            <li className="flex items-center gap-2">
-                                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                                                <span>1 ≤ n ≤ 10<sup>9</sup></span>
+                                            <li className="flex items-start gap-2">
+                                                <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                                <code className="font-mono text-[13px] bg-(--bg-tertiary)/50 text-(--text-primary) px-1.5 py-0.5 rounded">1 &lt;= n &lt;= 10^9</code>
                                             </li>
-                                            <li className="flex items-center gap-2">
-                                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                                                <span>Time Limit: 1s</span>
+                                            <li className="flex items-start gap-2">
+                                                <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                                <span className="text-(--text-primary)">Time Limit: 1s</span>
                                             </li>
-                                            <li className="flex items-center gap-2">
-                                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                                                <span>Memory Limit: 256 MB</span>
+                                            <li className="flex items-start gap-2">
+                                                <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                                <span className="text-(--text-primary)">Memory Limit: 256 MB</span>
                                             </li>
                                         </>
                                     )}
@@ -121,24 +122,24 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
                         </section>
 
                         {/* Examples */}
-                        <section className="space-y-6">
+                        <section className="space-y-6 pt-4">
                             {/* Placeholder examples - ideally these should come from question data */}
-                            <div className="rounded-xl border border-(--border-primary) overflow-hidden bg-(--bg-primary) shadow-sm">
-                                <div className="bg-(--bg-secondary) px-4 py-2.5 border-b border-(--border-primary) flex items-center gap-2">
-                                    <Terminal className="w-4 h-4 text-(--text-secondary)" />
-                                    <h3 className="text-sm font-semibold text-(--text-primary)">Example 1</h3>
-                                </div>
-                                <div className="p-5 space-y-5">
-                                    <div className="space-y-2">
-                                        <span className="text-xs font-semibold text-(--text-tertiary) uppercase tracking-wider">Input</span>
-                                        <pre className="bg-(--bg-tertiary)/50 rounded-lg p-3.5 text-sm font-mono text-(--text-primary) border-l-2 border-(--btn-primary-bg) overflow-x-auto whitespace-pre-wrap">5</pre>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <span className="text-xs font-semibold text-(--text-tertiary) uppercase tracking-wider">Output</span>
-                                        <pre className="bg-(--bg-tertiary)/50 rounded-lg p-3.5 text-sm font-mono text-(--text-primary) border-l-2 border-emerald-500 overflow-x-auto whitespace-pre-wrap">120</pre>
-                                    </div>
-                                    <div className="pt-2 text-sm text-(--text-secondary) leading-relaxed">
-                                        <span className="font-semibold text-(--text-primary)">Explanation:</span> For input 5, the output is 120.
+                            <div className="space-y-4">
+                                <div>
+                                    <h3 className="text-[15px] font-bold text-(--text-primary) mb-3">Example 1:</h3>
+                                    <div className="pl-4 border-l-2 border-(--border-primary) flex flex-col gap-2">
+                                        <div className="flex flex-col sm:flex-row sm:gap-2">
+                                            <span className="font-bold text-(--text-primary) text-[14px]">Input:</span>
+                                            <code className="text-[13px] text-(--text-secondary) font-mono">n = 5</code>
+                                        </div>
+                                        <div className="flex flex-col sm:flex-row sm:gap-2">
+                                            <span className="font-bold text-(--text-primary) text-[14px]">Output:</span>
+                                            <code className="text-[13px] text-(--text-secondary) font-mono">120</code>
+                                        </div>
+                                        <div className="flex flex-col mt-1">
+                                            <span className="font-bold text-(--text-primary) text-[14px]">Explanation:</span>
+                                            <span className="text-[14px] text-(--text-secondary) leading-relaxed">For input 5, the output is 120.</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

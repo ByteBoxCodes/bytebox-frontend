@@ -17,7 +17,7 @@ export default function Header() {
 
     return (
         <header
-            className="relative py-2 bg-(--bg-secondary) border-b border-(--border-primary) dark:border-white/8 transition-colors duration-200 z-50"
+            className="relative py-2 bg-(--bg-secondary)  dark:border-white/8 transition-colors duration-200 z-50"
         >
 
             <div className="relative px-4 w-full sm:px-6 lg:px-8">

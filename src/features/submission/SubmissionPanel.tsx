@@ -39,12 +39,20 @@ export default function SubmissionPanel({
     const [language, setLanguage] = useState<Language>(languageOptions[0].value);
     const [code, setCode] = useState<string>(languageOptions[0].snippet);
 
+    const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
+    const [activeTestCase, setActiveTestCase] = useState<number>(0);
+
     const handleLanguageChange = (value: Language) => {
         setLanguage(value);
         const option = languageOptions.find((opt) => opt.value === value);
         setCode(option?.snippet || "");
     };
 
+    const mockTestCases = [
+        { input: "n = 5", expectedOutput: "120" },
+        { input: "n = 3", expectedOutput: "6" },
+        { input: "n = 0", expectedOutput: "1" },
+    ];
 
     return (
         <div className="flex flex-col h-full bg-(--bg-secondary)">
@@ -121,36 +129,65 @@ export default function SubmissionPanel({
                         <div className="h-full bg-(--bg-secondary) flex flex-col font-pj">
                             {/* Panel Header */}
                             <div className="px-4 py-[6px] border-b border-(--border-primary) flex items-center gap-4 bg-(--bg-tertiary)/30">
-                                <button className="text-[13px] font-bold text-(--text-primary) tracking-wide border-b-2 border-emerald-500 pb-1.5 -mb-[7px] flex items-center gap-2">
+                                <button
+                                    onClick={() => setActiveTab("testcases")}
+                                    className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] flex items-center gap-2 transition-colors ${activeTab === "testcases"
+                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                        }`}
+                                >
                                     <TerminalSquare className="w-4 h-4" />
                                     Testcases
                                 </button>
-                                <button className="text-[13px] font-bold text-(--text-tertiary) hover:text-(--text-secondary) tracking-wide pb-1.5 -mb-[7px]">
+                                <button
+                                    onClick={() => setActiveTab("test-result")}
+                                    className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] transition-colors ${activeTab === "test-result"
+                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                        }`}
+                                >
                                     Test Result
                                 </button>
                             </div>
 
                             {/* Panel Body */}
                             <div className="flex-1 overflow-auto p-5">
-                                <div className="flex gap-2 mb-5">
-                                    <button className="px-3 py-1.5 rounded-lg text-sm font-semibold bg-(--bg-tertiary) text-(--text-primary)">Case 1</button>
-                                    <button className="px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary) transition-colors">Case 2</button>
-                                    <button className="px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary) transition-colors">Case 3</button>
-                                </div>
-                                <div className="space-y-4">
-                                    <div className="space-y-1.5">
-                                        <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Input</p>
-                                        <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                                            n = 5
+                                {activeTab === "testcases" ? (
+                                    <>
+                                        <div className="flex gap-2 mb-5">
+                                            {mockTestCases.map((_, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => setActiveTestCase(index)}
+                                                    className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${activeTestCase === index
+                                                            ? "bg-(--bg-tertiary) text-(--text-primary)"
+                                                            : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
+                                                        }`}
+                                                >
+                                                    Case {index + 1}
+                                                </button>
+                                            ))}
                                         </div>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Expected Output</p>
-                                        <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                                            120
+                                        <div className="space-y-4">
+                                            <div className="space-y-1.5">
+                                                <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Input</p>
+                                                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
+                                                    {mockTestCases[activeTestCase].input}
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Expected Output</p>
+                                                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
+                                                    {mockTestCases[activeTestCase].expectedOutput}
+                                                </div>
+                                            </div>
                                         </div>
+                                    </>
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-(--text-tertiary) text-sm font-medium">
+                                        Run code to see test results.
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </ResizablePanel>
