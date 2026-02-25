@@ -6,6 +6,7 @@ import { Terminal, FileText, History } from "lucide-react";
 
 
 export default function QuestionPanel({ question }: { question: IProblem }) {
+    const displayTestCases = question.sampleTestCases?.length ? question.sampleTestCases : question.testCases;
     return (
         <Tabs defaultValue="description" className="h-full flex flex-col">
             {/* Top Navigation Tabs */}
@@ -94,56 +95,46 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
                 </section> */}
 
                         {/* Constraints */}
-                        <section className="space-y-3 pt-4">
-                            <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Constraints</h3>
-                            <ul className="list-inside space-y-1.5 text-sm text-(--text-secondary) ml-2">
-                                {question.constraints?.map((item, index) => (
-                                    <li key={index} className="flex items-start gap-2">
-                                        <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                        <span dangerouslySetInnerHTML={{ __html: item }} />
-                                    </li>
-                                )) ?? (
-                                        <>
-                                            <li className="flex items-start gap-2">
-                                                <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                                <code className="font-mono text-[13px] bg-(--bg-tertiary)/50 text-(--text-primary) px-1.5 py-0.5 rounded">1 &lt;= n &lt;= 10^9</code>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                                <span className="text-(--text-primary)">Time Limit: 1s</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                                <span className="text-(--text-primary)">Memory Limit: 256 MB</span>
-                                            </li>
-                                        </>
-                                    )}
-                            </ul>
-                        </section>
+                        {question.constraints && (
+                            <section className="space-y-3 pt-4">
+                                <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Constraints</h3>
+                                <ul className="list-inside space-y-1.5 text-sm text-(--text-secondary) ml-2">
+                                    {question.constraints.split(/[\n.]/).filter(item => item.trim().length > 0).map((item, index) => (
+                                        <li key={index} className="flex items-start gap-2">
+                                            <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                            <span dangerouslySetInnerHTML={{ __html: item.trim() }} />
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
+                        )}
 
                         {/* Examples */}
-                        <section className="space-y-6 pt-4">
-                            {/* Placeholder examples - ideally these should come from question data */}
-                            <div className="space-y-4">
-                                <div>
-                                    <h3 className="text-[15px] font-bold text-(--text-primary) mb-3">Example 1:</h3>
-                                    <div className="pl-4 border-l-2 border-(--border-primary) flex flex-col gap-2">
-                                        <div className="flex flex-col sm:flex-row sm:gap-2">
-                                            <span className="font-bold text-(--text-primary) text-[14px]">Input:</span>
-                                            <code className="text-[13px] text-(--text-secondary) font-mono">n = 5</code>
-                                        </div>
-                                        <div className="flex flex-col sm:flex-row sm:gap-2">
-                                            <span className="font-bold text-(--text-primary) text-[14px]">Output:</span>
-                                            <code className="text-[13px] text-(--text-secondary) font-mono">120</code>
-                                        </div>
-                                        <div className="flex flex-col mt-1">
-                                            <span className="font-bold text-(--text-primary) text-[14px]">Explanation:</span>
-                                            <span className="text-[14px] text-(--text-secondary) leading-relaxed">For input 5, the output is 120.</span>
+                        {displayTestCases && displayTestCases.length > 0 && (
+                            <section className="space-y-6 pt-4">
+                                <div className="space-y-4">
+                                    <div>
+                                        <h3 className="text-[15px] font-bold text-(--text-primary) mb-3">Example 1:</h3>
+                                        <div className="pl-4 border-l-2 border-(--border-primary) flex flex-col gap-2">
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="font-bold text-(--text-primary) text-[14px]">Input:</span>
+                                                <code className="text-[13px] text-(--text-secondary) font-mono whitespace-pre-wrap">{displayTestCases[0].input}</code>
+                                            </div>
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="font-bold text-(--text-primary) text-[14px]">Output:</span>
+                                                <code className="text-[13px] text-(--text-secondary) font-mono whitespace-pre-wrap">{displayTestCases[0].expectedOutput}</code>
+                                            </div>
+                                            {displayTestCases[0].explanation && (
+                                                <div className="flex flex-col mt-1">
+                                                    <span className="font-bold text-(--text-primary) text-[14px]">Explanation:</span>
+                                                    <span className="text-[14px] text-(--text-secondary) leading-relaxed">{displayTestCases[0].explanation}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
+                        )}
                     </div>
                 </ScrollArea>
             </TabsContent>

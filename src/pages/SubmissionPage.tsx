@@ -17,7 +17,7 @@ export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
     const { data, isLoading, isError } = useGetProblemById(questionId!);
     const [isRunning, setIsRunning] = useState(false);
-    const { mutate, isPending } = useSubmitSolutions();
+    const { mutate, isPending, error: submissionError, data: submissionResult } = useSubmitSolutions();
 
     if (isLoading) {
         return (
@@ -102,10 +102,13 @@ export default function SubmissionPage() {
                 <ResizablePanel defaultSize={50} minSize={30} className="">
                     <div className="h-full bg-(--bg-secondary) transition-colors duration-200">
                         <SubmissionPanel
+                            question={data!}
                             onRunTest={handleRunTest}
                             onSubmit={handleSubmit}
                             isRunning={isRunning}
                             isSubmitting={isPending}
+                            submissionResult={submissionResult}
+                            submissionError={submissionError}
                         />
                     </div>
                 </ResizablePanel>

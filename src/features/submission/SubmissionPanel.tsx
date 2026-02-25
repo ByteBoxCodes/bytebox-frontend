@@ -17,12 +17,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, Play, Send, TerminalSquare } from "lucide-react";
 
+import type { IProblem } from "@/types/problems";
+
 interface SubmissionPanelProps {
+    question?: IProblem;
     defaultCode?: string;
     onRunTest: (language: Language, code: string) => Promise<void>;
     onSubmit: (language: Language, code: string) => Promise<void>;
     isRunning: boolean;
     isSubmitting: boolean;
+    submissionResult?: any;
+    submissionError?: any;
 }
 
 const languageOptions: LanguageOption[] = [
@@ -31,16 +36,29 @@ const languageOptions: LanguageOption[] = [
 ];
 
 export default function SubmissionPanel({
+    question,
     onRunTest,
     onSubmit,
     isRunning,
     isSubmitting,
+    submissionResult,
+    submissionError,
 }: SubmissionPanelProps) {
     const [language, setLanguage] = useState<Language>(languageOptions[0].value);
     const [code, setCode] = useState<string>(languageOptions[0].snippet);
 
     const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
     const [activeTestCase, setActiveTestCase] = useState<number>(0);
+
+    const handleRunClick = () => {
+        setActiveTab("test-result");
+        onRunTest(language, code);
+    };
+
+    const handleSubmitClick = () => {
+        setActiveTab("test-result");
+        onSubmit(language === "cpp" ? "c++" : language, code);
+    };
 
     const handleLanguageChange = (value: Language) => {
         setLanguage(value);
@@ -53,6 +71,10 @@ export default function SubmissionPanel({
         { input: "n = 3", expectedOutput: "6" },
         { input: "n = 0", expectedOutput: "1" },
     ];
+
+    const displayTestCases = question?.sampleTestCases?.length ? question.sampleTestCases : (question?.testCases?.length ? question.testCases : mockTestCases);
+
+    console.log(submissionResult)
 
     return (
         <div className="flex flex-col h-full bg-(--bg-secondary)">
@@ -78,7 +100,7 @@ export default function SubmissionPanel({
                     <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => onRunTest(language, code)}
+                        onClick={handleRunClick}
                         disabled={isRunning || isSubmitting}
                         className="font-medium h-8"
                     >
@@ -87,7 +109,7 @@ export default function SubmissionPanel({
                     </Button>
                     <Button
                         size="sm"
-                        onClick={() => onSubmit(language === "cpp" ? "c++" : language, code)}
+                        onClick={handleSubmitClick}
                         disabled={isRunning || isSubmitting}
                         className="font-medium bg-emerald-600 hover:bg-emerald-700 text-white h-8 border-none"
                     >
@@ -101,7 +123,7 @@ export default function SubmissionPanel({
             <div className="flex-1 min-h-0 relative flex flex-col bg-(--bg-secondary)">
                 <ResizablePanelGroup orientation="vertical">
                     {/* Top Panel: Monaco Editor */}
-                    <ResizablePanel defaultSize={70} minSize={30}>
+                    <ResizablePanel defaultSize={60} minSize={30}>
                         <div className="h-full relative border-b border-(--dk-border) bg-(--bg-secondary)">
                             <Editor
                                 theme="vs-dark"
@@ -125,15 +147,15 @@ export default function SubmissionPanel({
 
 
                     {/* Bottom Panel: Test Cases / Console */}
-                    <ResizablePanel defaultSize={30} minSize={15}>
+                    <ResizablePanel defaultSize={40} minSize={15}>
                         <div className="h-full bg-(--bg-secondary) flex flex-col font-pj">
                             {/* Panel Header */}
                             <div className="px-4 py-[6px] border-b border-(--border-primary) flex items-center gap-4 bg-(--bg-tertiary)/30">
                                 <button
                                     onClick={() => setActiveTab("testcases")}
                                     className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] flex items-center gap-2 transition-colors ${activeTab === "testcases"
-                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
-                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                        ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                        : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
                                         }`}
                                 >
                                     <TerminalSquare className="w-4 h-4" />
@@ -142,8 +164,8 @@ export default function SubmissionPanel({
                                 <button
                                     onClick={() => setActiveTab("test-result")}
                                     className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] transition-colors ${activeTab === "test-result"
-                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
-                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                        ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                        : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
                                         }`}
                                 >
                                     Test Result
@@ -155,37 +177,110 @@ export default function SubmissionPanel({
                                 {activeTab === "testcases" ? (
                                     <>
                                         <div className="flex gap-2 mb-5">
-                                            {mockTestCases.map((_, index) => (
+                                            {displayTestCases.map((_, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => setActiveTestCase(index)}
                                                     className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${activeTestCase === index
-                                                            ? "bg-(--bg-tertiary) text-(--text-primary)"
-                                                            : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
+                                                        ? "bg-(--bg-tertiary) text-(--text-primary)"
+                                                        : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
                                                         }`}
                                                 >
                                                     Case {index + 1}
                                                 </button>
                                             ))}
                                         </div>
-                                        <div className="space-y-4">
-                                            <div className="space-y-1.5">
-                                                <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Input</p>
-                                                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                                                    {mockTestCases[activeTestCase].input}
+                                        {displayTestCases.length > 0 && activeTestCase < displayTestCases.length && (
+                                            <div className="space-y-4">
+                                                <div className="space-y-1.5">
+                                                    <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Input</p>
+                                                    <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
+                                                        {displayTestCases[activeTestCase].input}
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Expected Output</p>
+                                                    <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
+                                                        {displayTestCases[activeTestCase].expectedOutput}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="space-y-1.5">
-                                                <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">Expected Output</p>
-                                                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                                                    {mockTestCases[activeTestCase].expectedOutput}
-                                                </div>
-                                            </div>
-                                        </div>
+                                        )}
                                     </>
                                 ) : (
-                                    <div className="flex items-center justify-center h-full text-(--text-tertiary) text-sm font-medium">
-                                        Run code to see test results.
+                                    <div className="h-full">
+                                        {isSubmitting || isRunning ? (
+                                            <div className="flex flex-col items-center justify-center h-full text-(--text-tertiary) space-y-4">
+                                                <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+                                                <span className="text-sm font-medium animate-pulse text-(--text-secondary)">
+                                                    {isSubmitting ? "Testing all test cases..." : "Running test cases..."}
+                                                </span>
+                                            </div>
+                                        ) : submissionResult ? (
+                                            <div className="flex flex-col h-full space-y-6">
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className={`w-2 h-2 rounded-full ${submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]'}`} />
+                                                        <span className={`${submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) ? 'text-emerald-500' : 'text-rose-500'} font-bold text-xl tracking-tight`}>
+                                                            {submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) ? 'Accepted' : submissionResult?.status || 'Completed'}
+                                                        </span>
+                                                    </div>
+
+                                                    {submissionResult?.passedTestCases !== undefined && submissionResult?.totalTestCases !== undefined && (
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="flex items-center gap-1.5 bg-(--bg-tertiary)/50 px-3 py-1.5 rounded-md border border-(--border-primary)">
+                                                                <span className={`font-bold ${Number(submissionResult.passedTestCases) === Number(submissionResult.totalTestCases) ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                                    {submissionResult.passedTestCases}
+                                                                </span>
+                                                                <span className="text-(--text-secondary) text-sm font-medium">
+                                                                    / {submissionResult.totalTestCases} test cases passed
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {(submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases))) && (
+                                                    <div className="p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col items-center justify-center space-y-3 text-center transition-all animate-in fade-in slide-in-from-bottom-2">
+                                                        <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mb-1">
+                                                            <span className="text-2xl">🎉</span>
+                                                        </div>
+                                                        <h3 className="text-emerald-500 font-bold text-lg">Congratulations!</h3>
+                                                        <p className="text-sm text-(--text-secondary) max-w-[250px] leading-relaxed">
+                                                            Your solution successfully passed all the test cases.
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                {!(submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases))) && (
+                                                    <div className="p-4 rounded-md bg-(--bg-primary) border border-(--border-primary) flex-1 min-h-0 overflow-auto animate-in fade-in">
+                                                        <p className="text-xs font-bold text-(--text-tertiary) uppercase tracking-wider mb-3">Submission Details</p>
+                                                        <pre className="text-[13px] font-mono text-(--text-secondary) whitespace-pre-wrap">
+                                                            {typeof submissionResult === 'object' ? JSON.stringify(submissionResult, null, 2) : String(submissionResult)}
+                                                        </pre>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : submissionError ? (
+                                            <div className="flex flex-col h-full space-y-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                                                    <span className="text-rose-500 font-bold text-lg">Submission Error</span>
+                                                </div>
+                                                <div className="p-4 rounded-md border border-rose-500/20 bg-rose-500/10 flex-1 min-h-0 overflow-auto">
+                                                    <pre className="text-sm font-mono text-rose-500 whitespace-pre-wrap">
+                                                        {submissionError?.response?.data?.message || submissionError?.message || JSON.stringify(submissionError, null, 2)}
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center h-full text-(--text-tertiary) space-y-3">
+                                                <div className="p-3 bg-(--bg-primary) rounded-full border border-(--border-primary)">
+                                                    <TerminalSquare className="w-6 h-6 opacity-60" />
+                                                </div>
+                                                <span className="text-sm font-medium">Run code or submit to see test results.</span>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

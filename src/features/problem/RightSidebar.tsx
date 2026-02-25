@@ -1,4 +1,4 @@
-import { Trophy, Target, TrendingUp, Flame, BookOpen } from "lucide-react";
+import { Trophy, Flame } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useProfile } from "@/hooks/useProfile";
 import type { ITopic } from "@/types/topics";
