@@ -8,5 +8,8 @@ export interface IProblem {
   description: string;
   difficulty: Difficulty;
   topics: ITopic;
+  constraints?: string[];
+  inputFormat?: string[];
+  outputFormat?: string[];
   createdAt?: string;
 }

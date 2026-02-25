@@ -22,10 +22,8 @@ export default function SubmissionPage() {
     if (isLoading) {
         return (
             <div className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center
-                            bg-(--bg-primary) dark:bg-transparent overflow-hidden">
-                {/* Dark overlay */}
-                <div className="absolute inset-0 hidden dark:block pointer-events-none"
-                    style={{ background: `linear-gradient(to bottom right, var(--dk-bg-from), var(--dk-bg-via), var(--dk-bg-to))` }} />
+                            bg-(--bg-secondary) overflow-hidden">
+
                 <Loader2 className="relative z-10 h-8 w-8 animate-spin text-(--text-primary) dark:text-(--dk-text-muted)" />
             </div>
         );
@@ -34,10 +32,8 @@ export default function SubmissionPage() {
     if (isError || !questionId) {
         return (
             <div className="relative min-h-screen py-12 px-4 flex items-center justify-center
-                            bg-(--bg-primary) dark:bg-transparent overflow-hidden">
-                {/* Dark overlay */}
-                <div className="absolute inset-0 hidden dark:block pointer-events-none"
-                    style={{ background: `linear-gradient(to bottom right, var(--dk-bg-from), var(--dk-bg-via), var(--dk-bg-to))` }} />
+                            bg-(--bg-secondary) overflow-hidden">
+
                 <div className="relative z-10 text-center space-y-4">
                     <p className="text-lg font-semibold text-(--text-primary) dark:text-(--dk-text)">
                         {isError ? "Error loading problem" : "Question not found"}
@@ -72,8 +68,9 @@ export default function SubmissionPage() {
     };
 
     return (
-        <div className="relative h-full w-full flex flex-col overflow-hidden
-                        bg-(--bg-primary) dark:bg-transparent transition-colors duration-200">
+        <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
+                        bg-(--bg-secondary) border-(--bg-secondary)
+                        dark:border-(--bg-secondary)">
 
             {/* Dark mode gradient overlay */}
             <div className="absolute inset-0 hidden dark:block pointer-events-none"
@@ -88,12 +85,12 @@ export default function SubmissionPage() {
             </div>
 
             <ResizablePanelGroup
-                direction="horizontal"
+                orientation="horizontal"
                 className="relative z-10 flex-1 w-full border-t border-(--border-primary) dark:border-(--dk-border)"
             >
                 {/* Left Panel: Question Details */}
                 <ResizablePanel defaultSize={50} minSize={30}>
-                    <div className="h-full bg-(--bg-primary) dark:bg-(--dk-surface) transition-colors duration-200">
+                    <div className="h-full bg-(--bg-primary) dark:bg-(--bg-secondary) transition-colors duration-200">
                         {data && <QuestionPanel question={data} />}
                     </div>
                 </ResizablePanel>
@@ -102,8 +99,8 @@ export default function SubmissionPage() {
                     className="dark:bg-(--dk-border) dark:hover:bg-(--dk-border-light) transition-colors" />
 
                 {/* Right Panel: Code Editor */}
-                <ResizablePanel defaultSize={50} minSize={30}>
-                    <div className="h-full bg-(--bg-secondary) dark:bg-(--dk-surface) transition-colors duration-200">
+                <ResizablePanel defaultSize={50} minSize={30} className="">
+                    <div className="h-full bg-(--bg-secondary) transition-colors duration-200">
                         <SubmissionPanel
                             onRunTest={handleRunTest}
                             onSubmit={handleSubmit}

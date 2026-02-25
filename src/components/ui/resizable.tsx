@@ -5,15 +5,15 @@ import { cn } from "@/lib/utils"
 
 const ResizablePanelGroup = ({
   className,
-  direction, // Destructure direction to pass explicitly if needed or to satisfy types
+  orientation,
   ...props
-}: React.ComponentProps<typeof ResizablePrimitive.Group> & { direction: "horizontal" | "vertical" }) => {
+}: React.ComponentProps<typeof ResizablePrimitive.Group>) => {
   return (
     <ResizablePrimitive.Group
-      orientation={direction} // Pass explicit direction prop
+      orientation={orientation}
       data-slot="resizable-panel-group"
       className={cn(
-        "flex h-full w-full data-[panel-group-direction=vertical]:flex-col", // aria attribute might be wrong, using data attribute or just flex-col based on direction prop if primitive doesn't handle class
+        "flex h-full w-full data-[panel-group-direction=vertical]:flex-col",
         className
       )}
       {...props}
@@ -36,7 +36,7 @@ const ResizableHandle = ({
     <ResizablePrimitive.Separator
       data-slot="resizable-handle"
       className={cn(
-        "bg-border focus-visible:ring-ring relative flex w-px items-center justify-center after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-hidden data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 data-[panel-group-direction=vertical]:after:-translate-y-1/2 [&[data-panel-group-direction=vertical]>div]:rotate-90",
+        "bg-border focus-visible:ring-ring relative flex w-px items-center justify-center after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-hidden aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full aria-[orientation=horizontal]:after:left-0 aria-[orientation=horizontal]:after:h-1 aria-[orientation=horizontal]:after:w-full aria-[orientation=horizontal]:after:translate-x-0 aria-[orientation=horizontal]:after:-translate-y-1/2 [&[aria-orientation=horizontal]>div]:rotate-90",
         className
       )}
       {...props}

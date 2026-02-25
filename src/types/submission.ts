@@ -11,7 +11,7 @@ export interface ISubmission {
   code: string;
 }
 
-export type Language = "java" | "c++";
+export type Language = "java" | "cpp" | "c++";
 
 export interface LanguageOption {
   label: string;
