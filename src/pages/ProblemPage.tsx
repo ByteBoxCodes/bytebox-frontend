@@ -10,7 +10,7 @@ export default function ProblemPage() {
     const [selectedTopic, setSelectedTopic] = useState<string>("variables");
     const { data: problems } = useGetProblemsByTopic(selectedTopic);
 
-    console.log(problems)
+    console.log(selectedTopic)
 
     return (
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
@@ -37,7 +37,7 @@ export default function ProblemPage() {
 
                     {/* Right Sidebar — Widgets */}
                     <div className="shrink-0 w-full lg:w-[22%] space-y-6 lg:pl-8">
-                        <RightSidebar topics={topics || []} />
+                        <RightSidebar topics={topics || []} selectedTopic={selectedTopic} />
                     </div>
 
                 </div>

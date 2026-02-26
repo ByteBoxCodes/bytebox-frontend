@@ -1,22 +1,18 @@
 import { Trophy, Flame } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { useProfile } from "@/hooks/useProfile";
 import type { ITopic } from "@/types/topics";
 
 interface RightSidebarProps {
-    topics?: ITopic[];
+    topics: ITopic[];
+    selectedTopic: string;
 }
 
-export default function RightSidebar({ topics = [] }: RightSidebarProps) {
-    const { data } = useProfile();
-    const user = data?.data ?? data;
+export default function RightSidebar({ topics, selectedTopic }: RightSidebarProps) {
 
-    const solved = user?.problemsSolved ?? 0;
+    const currentTopic = topics.find((topic) => topic.name === selectedTopic);
 
-    // Calculate total problems across all topics, defaulting to 150 if topics array is empty
-    const totalSystemProblems = topics.length > 0
-        ? topics.reduce((acc, topic) => acc + (topic.problemsCount || 0), 0)
-        : 150;
+    const solved = currentTopic?.solvedProblems || 0;
+    const totalSystemProblems = currentTopic?.totalProblems || 0;
 
     const progressPercent = totalSystemProblems > 0
         ? Math.min(100, Math.round((solved / totalSystemProblems) * 100))

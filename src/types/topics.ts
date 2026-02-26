@@ -2,5 +2,6 @@ export interface ITopic {
   id: number;
   name: string;
   description: string;
-  problemsCount?: number;
+  totalProblems: number;
+  solvedProblems: number;
 }
