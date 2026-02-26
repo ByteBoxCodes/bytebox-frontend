@@ -17,3 +17,11 @@ export interface IProblem {
   testCases?: TestCase[];
   sampleTestCases?: TestCase[];
 }
+
+export interface IProblemList {
+  id: string;
+  title: string;
+  difficulty: Difficulty;
+  orderIndex?: number;
+  solved: boolean;
+}

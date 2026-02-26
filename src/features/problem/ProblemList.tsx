@@ -15,25 +15,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import type { IProblem } from "@/types/problems";
+import type { IProblemList } from "@/types/problems";
 import { CheckCircle2, Circle } from "lucide-react";
-import { useProfile } from "@/hooks/useProfile";
 import { useState } from "react";
 
-export default function ProblemList({ problems, topicName }: { problems: IProblem[], topicName: string }) {
-    const { data: userData } = useProfile();
-    const user = userData?.data ?? userData;
+export default function ProblemList({ problems, topicName }: { problems: IProblemList[], topicName: string }) {
 
     const [difficultyFilter, setDifficultyFilter] = useState<string>("All");
     const [statusFilter, setStatusFilter] = useState<string>("All");
 
-    // Simulate solved status (ideally this comes from backend user profile)
-    const isSolved = (id: string) => {
-        if (!user) return false;
-        return parseInt(id) % 3 === 0;
-    };
 
-    const getDifficultyColor = (diff: IProblem["difficulty"]) => {
+
+    const getDifficultyColor = (diff: IProblemList["difficulty"]) => {
         switch (diff) {
             case "EASY":
                 return "text-emerald-500 bg-emerald-500/10";
@@ -47,11 +40,11 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
     };
 
     // Derived filtered problems
-    const filteredProblems = problems?.filter((p: IProblem) => {
+    const filteredProblems = problems?.filter((p: IProblemList) => {
         const passDifficulty = difficultyFilter === "All" || p.difficulty === difficultyFilter;
         let passStatus = true;
-        if (statusFilter === "Solved") passStatus = isSolved(p.id);
-        if (statusFilter === "Unsolved") passStatus = !isSolved(p.id);
+        if (statusFilter === "Solved") passStatus = p.solved;
+        if (statusFilter === "Unsolved") passStatus = !p.solved;
 
         return passDifficulty && passStatus;
     });
@@ -123,8 +116,8 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            filteredProblems?.map((problem: IProblem, index: number) => {
-                                const solved = isSolved(problem.id);
+                            filteredProblems?.map((problem: IProblemList, index: number) => {
+                                const solved = problem.solved;
                                 // Alternating stripe class (LeetCode style)
                                 const isEven = index % 2 !== 0;
 
