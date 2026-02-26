@@ -14,6 +14,7 @@ export const useLoginUser = () => {
       localStorage.setItem("token", response.data);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       navigate("/problems");
+      toast.success("Logged in successfully!");
     },
     onError: (error: AxiosError<{ message?: string }>) => {
       const message =

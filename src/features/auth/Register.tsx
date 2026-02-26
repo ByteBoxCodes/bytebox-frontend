@@ -66,56 +66,55 @@ export default function Register() {
             {/* Form */}
             <form onSubmit={handleRegister} className="space-y-3">
 
-                {/* Full Name + Username side by side */}
-                <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-1.5">
-                        <Label htmlFor="name"
-                            className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted)">
-                            Full Name
-                        </Label>
-                        <div className="relative">
-                            <User size={15}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none
-                                             text-(--text-tertiary) dark:text-(--dk-text-faint)" />
-                            <Input
-                                id="name"
-                                type="text"
-                                placeholder="John Doe"
-                                required
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="h-11 rounded-xl pl-9
-                                           bg-white border-(--border-primary) text-(--text-primary)
-                                           placeholder:text-(--text-tertiary)
-                                           dark:bg-(--dk-surface) dark:border-(--dk-border-muted)
-                                           dark:text-(--dk-text) dark:placeholder:text-(--dk-text-faint)"
-                            />
-                        </div>
+                {/* Full Name */}
+                <div className="space-y-1.5">
+                    <Label htmlFor="name"
+                        className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted)">
+                        Full Name
+                    </Label>
+                    <div className="relative">
+                        <User size={15}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none
+                                         text-(--text-tertiary) dark:text-(--dk-text-faint)" />
+                        <Input
+                            id="name"
+                            type="text"
+                            placeholder="John Doe"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="h-11 rounded-xl pl-9
+                                       bg-white border-(--border-primary) text-(--text-primary)
+                                       placeholder:text-(--text-tertiary)
+                                       dark:bg-(--dk-surface) dark:border-(--dk-border-muted)
+                                       dark:text-(--dk-text) dark:placeholder:text-(--dk-text-faint)"
+                        />
                     </div>
+                </div>
 
-                    <div className="space-y-1.5">
-                        <Label htmlFor="username"
-                            className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted)">
-                            Username
-                        </Label>
-                        <div className="relative">
-                            <AtSign size={15}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none
-                                               text-(--text-tertiary) dark:text-(--dk-text-faint)" />
-                            <Input
-                                id="username"
-                                type="text"
-                                placeholder="johndoe"
-                                required
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="h-11 rounded-xl pl-9
-                                           bg-white border-(--border-primary) text-(--text-primary)
-                                           placeholder:text-(--text-tertiary)
-                                           dark:bg-(--dk-surface) dark:border-(--dk-border-muted)
-                                           dark:text-(--dk-text) dark:placeholder:text-(--dk-text-faint)"
-                            />
-                        </div>
+                {/* Username */}
+                <div className="space-y-1.5">
+                    <Label htmlFor="username"
+                        className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted)">
+                        Username
+                    </Label>
+                    <div className="relative">
+                        <AtSign size={15}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none
+                                           text-(--text-tertiary) dark:text-(--dk-text-faint)" />
+                        <Input
+                            id="username"
+                            type="text"
+                            placeholder="johndoe"
+                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="h-11 rounded-xl pl-9
+                                       bg-white border-(--border-primary) text-(--text-primary)
+                                       placeholder:text-(--text-tertiary)
+                                       dark:bg-(--dk-surface) dark:border-(--dk-border-muted)
+                                       dark:text-(--dk-text) dark:placeholder:text-(--dk-text-faint)"
+                        />
                     </div>
                 </div>
 

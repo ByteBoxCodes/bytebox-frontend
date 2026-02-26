@@ -4,16 +4,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@layer base {
-  body {
-    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200;
-    @apply bg-background text-foreground;
-  }
-  * {
-    @apply border-border outline-ring/50;
-  }
-}
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
 

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Zap, Trophy, Clock, BookOpen } from "lucide-react";
 import { SiPython, SiJavascript, SiCplusplus } from "react-icons/si";
 import { FaJava, FaC } from "react-icons/fa6";

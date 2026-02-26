@@ -7,15 +7,16 @@ import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/RegisterPage";
 import UserProfilePage from "../pages/UserProfilePage";
 import ProtectedRoutes from "@/components/common/ProtectedRoutes";
+import GuestRoute from "@/components/common/GuestRoute";
 
 export const router = createBrowserRouter([
     {
         path: "/login",
-        element: <LoginPage />,
+        element: <GuestRoute><LoginPage /></GuestRoute>,
     },
     {
         path: "/signup",
-        element: <RegisterPage />,
+        element: <GuestRoute><RegisterPage /></GuestRoute>,
     },
     {
         path: "/",
