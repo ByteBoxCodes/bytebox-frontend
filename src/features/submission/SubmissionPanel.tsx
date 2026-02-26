@@ -95,21 +95,22 @@ export default function SubmissionPanel({
                 </div>
                 {/* Action Buttons */}
                 <div className="flex items-center gap-3">
-                    <Button
+                    {/* <Button
                         variant="secondary"
                         size="sm"
                         onClick={handleRunClick}
-                        disabled={isRunning || isSubmitting}
-                        className="font-medium h-8"
+                        disabled
+                        className="font-medium h-8 disabled:opacity-50 cursor-not-allowed"
+
                     >
                         {isRunning ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Play className="w-3.5 h-3.5 mr-1.5" />}
                         Run Test
-                    </Button>
+                    </Button> */}
                     <Button
                         size="sm"
                         onClick={handleSubmitClick}
                         disabled={isRunning || isSubmitting}
-                        className="font-medium bg-emerald-600 hover:bg-emerald-700 text-white h-8 border-none"
+                        className="font-medium bg-emerald-600 hover:bg-emerald-700 text-white h-8 border-none cursor-pointer"
                     >
                         {isSubmitting ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Send className="w-3.5 h-3.5 mr-1.5" />}
                         Submit

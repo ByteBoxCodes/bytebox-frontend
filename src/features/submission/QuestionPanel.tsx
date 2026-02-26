@@ -2,7 +2,8 @@ import type { IProblem } from "@/types/problems";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Terminal, FileText, History } from "lucide-react";
+import { FileText, History } from "lucide-react";
+import SubmissionHistory from "./SubmissionHistory";
 
 
 export default function QuestionPanel({ question }: { question: IProblem }) {
@@ -140,14 +141,8 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
             </TabsContent>
 
             {/* Submissions Tab */}
-            <TabsContent value="submissions" className="flex-1 overflow-hidden m-0 p-0 border-none outline-none">
-                <div className="flex flex-col items-center justify-center h-full text-(--text-tertiary) space-y-3 p-6 text-center">
-                    <div className="p-4 bg-(--bg-secondary) rounded-full">
-                        <Terminal className="w-8 h-8 opacity-50" />
-                    </div>
-                    <p className="font-medium text-(--text-secondary)">No submissions yet</p>
-                    <p className="text-sm max-w-[250px]">Write and submit your first solution using the editor on the right.</p>
-                </div>
+            <TabsContent value="submissions" className="flex-1 overflow-hidden m-0 p-0 border-none outline-none bg-(--bg-secondary)">
+                <SubmissionHistory problemId={question.id} />
             </TabsContent>
         </Tabs>
     );
