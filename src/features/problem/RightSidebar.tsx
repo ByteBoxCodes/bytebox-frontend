@@ -1,13 +1,22 @@
 import { Trophy, Flame } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { ITopic } from "@/types/topics";
+import type { IProblemList } from "@/types/problems";
+import { useMemo } from "react";
 
 interface RightSidebarProps {
     topics: ITopic[];
     selectedTopic: string;
+    problems: IProblemList[];
 }
 
-export default function RightSidebar({ topics, selectedTopic }: RightSidebarProps) {
+interface DifficultyStats {
+    total: number;
+    solved: number;
+    percent: number;
+}
+
+export default function RightSidebar({ topics, selectedTopic, problems }: RightSidebarProps) {
 
     const currentTopic = topics.find((topic) => topic.name === selectedTopic);
 
@@ -18,6 +27,38 @@ export default function RightSidebar({ topics, selectedTopic }: RightSidebarProp
         ? Math.min(100, Math.round((solved / totalSystemProblems) * 100))
         : 0;
 
+    // Compute difficulty breakdown from the problems list
+    const difficultyBreakdown = useMemo(() => {
+        const stats: Record<string, DifficultyStats> = {
+            EASY: { total: 0, solved: 0, percent: 0 },
+            MEDIUM: { total: 0, solved: 0, percent: 0 },
+            HARD: { total: 0, solved: 0, percent: 0 },
+        };
+
+        problems.forEach((p) => {
+            if (stats[p.difficulty]) {
+                stats[p.difficulty].total += 1;
+                if (p.solved) {
+                    stats[p.difficulty].solved += 1;
+                }
+            }
+        });
+
+        // Calculate percentages
+        for (const key of Object.keys(stats)) {
+            stats[key].percent = stats[key].total > 0
+                ? Math.min(100, Math.round((stats[key].solved / stats[key].total) * 100))
+                : 0;
+        }
+
+        return stats;
+    }, [problems]);
+
+    const difficultyConfig = [
+        { key: "EASY", label: "Easy", color: "bg-emerald-500", textColor: "text-emerald-500", trackColor: "bg-emerald-500/15" },
+        { key: "MEDIUM", label: "Medium", color: "bg-amber-500", textColor: "text-amber-500", trackColor: "bg-amber-500/15" },
+        { key: "HARD", label: "Hard", color: "bg-red-500", textColor: "text-red-500", trackColor: "bg-red-500/15" },
+    ];
 
     return (
         <div className="space-y-6">
@@ -30,10 +71,10 @@ export default function RightSidebar({ topics, selectedTopic }: RightSidebarProp
                     <h3 className="ml-3 text-lg font-bold text-foreground font-pj tracking-tight">Your Progress</h3>
                 </div>
 
-                {/* Progress Bar */}
+                {/* Overall Progress Bar */}
                 <div className="mb-5 space-y-2">
                     <div className="flex justify-between items-end">
-                        <span className="text-sm font-medium text-foreground">Completion</span>
+                        <span className="text-sm font-medium text-foreground">Overall</span>
                         <span className="text-xs font-semibold text-muted-foreground">{progressPercent}%</span>
                     </div>
                     <Progress value={progressPercent} className="h-2 w-full bg-secondary" />
@@ -42,6 +83,28 @@ export default function RightSidebar({ topics, selectedTopic }: RightSidebarProp
                     </p>
                 </div>
 
+                {/* Difficulty Breakdown */}
+                <div className="space-y-3">
+                    {difficultyConfig.map(({ key, label, color, textColor, trackColor }) => {
+                        const stats = difficultyBreakdown[key];
+                        return (
+                            <div key={key} className="space-y-1.5">
+                                <div className="flex justify-between items-center">
+                                    <span className={`text-xs font-semibold ${textColor}`}>{label}</span>
+                                    <span className="text-xs text-muted-foreground font-medium">
+                                        {stats.solved}/{stats.total}
+                                    </span>
+                                </div>
+                                <div className={`h-1.5 w-full rounded-full overflow-hidden ${trackColor}`}>
+                                    <div
+                                        className={`h-full rounded-full ${color} transition-all duration-500 ease-out`}
+                                        style={{ width: `${stats.percent}%` }}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
 
             {/* Streak Widget (Refined version) */}

@@ -15,7 +15,7 @@ import {
     ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
-import { Loader2, Play, Send, TerminalSquare } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Play, Send, TerminalSquare, XCircle } from "lucide-react";
 
 import type { IProblem } from "@/types/problems";
 
@@ -73,8 +73,6 @@ export default function SubmissionPanel({
     ];
 
     const displayTestCases = question?.sampleTestCases?.length ? question.sampleTestCases : (question?.testCases?.length ? question.testCases : mockTestCases);
-
-    console.log(submissionResult)
 
     return (
         <div className="flex flex-col h-full bg-(--bg-secondary)">
@@ -217,47 +215,125 @@ export default function SubmissionPanel({
                                                 </span>
                                             </div>
                                         ) : submissionResult ? (
-                                            <div className="flex flex-col h-full space-y-6">
-                                                <div className="flex flex-col gap-3">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className={`w-2 h-2 rounded-full ${submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]'}`} />
-                                                        <span className={`${submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) ? 'text-emerald-500' : 'text-rose-500'} font-bold text-xl tracking-tight`}>
-                                                            {submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) ? 'Accepted' : submissionResult?.status || 'Completed'}
-                                                        </span>
-                                                    </div>
+                                            <div className="flex flex-col h-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                {/* ── ACCEPTED ── */}
+                                                {(submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases))) && (
+                                                    <div className="space-y-4">
+                                                        {/* Status Header */}
+                                                        <div className="flex items-center gap-1.5">
+                                                            <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-in zoom-in duration-300" />
+                                                            <span className="text-emerald-400 font-bold text-xs">Accepted</span>
+                                                            <span className="text-(--text-tertiary) text-[11px]">·</span>
+                                                            <span className="text-[11px] text-(--text-tertiary)">All test cases passed</span>
+                                                        </div>
 
-                                                    {submissionResult?.passedTestCases !== undefined && submissionResult?.totalTestCases !== undefined && (
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="flex items-center gap-1.5 bg-(--bg-tertiary)/50 px-3 py-1.5 rounded-md border border-(--border-primary)">
-                                                                <span className={`font-bold ${Number(submissionResult.passedTestCases) === Number(submissionResult.totalTestCases) ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                                                    {submissionResult.passedTestCases}
-                                                                </span>
-                                                                <span className="text-(--text-secondary) text-sm font-medium">
-                                                                    / {submissionResult.totalTestCases} test cases passed
-                                                                </span>
+                                                        {/* Test Case List */}
+                                                        {submissionResult?.totalTestCases > 0 && (
+                                                            <div className="space-y-1.5">
+                                                                {Array.from({ length: Number(submissionResult.totalTestCases) }).map((_, i) => (
+                                                                    <div
+                                                                        key={i}
+                                                                        className="flex items-center gap-2 animate-in fade-in slide-in-from-left-1"
+                                                                        style={{ animationDelay: `${150 + i * 100}ms`, animationFillMode: 'both', animationDuration: '350ms' }}
+                                                                    >
+                                                                        <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                                                                        <span className="text-[11px] text-(--text-secondary) font-medium w-14 shrink-0">Test {i + 1}</span>
+                                                                        <div className="flex-1 h-1.5 rounded-full bg-(--bg-primary) overflow-hidden">
+                                                                            <div
+                                                                                className="h-full rounded-full bg-emerald-500/60 animate-in slide-in-from-left"
+                                                                                style={{ width: '100%', animationDelay: `${250 + i * 100}ms`, animationFillMode: 'both', animationDuration: '500ms' }}
+                                                                            />
+                                                                        </div>
+                                                                        <span className="text-[10px] text-emerald-400/70 font-medium shrink-0">Passed</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Success Banner */}
+                                                        <div
+                                                            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border-l-2 border-emerald-500 bg-emerald-500/5 animate-in fade-in slide-in-from-bottom-1"
+                                                            style={{ animationDelay: `${350 + (Number(submissionResult?.totalTestCases) || 0) * 100}ms`, animationFillMode: 'both', animationDuration: '400ms' }}
+                                                        >
+                                                            <span className="text-base">🎉</span>
+                                                            <div>
+                                                                <p className="text-[12px] text-emerald-400 font-semibold leading-tight">Well done!</p>
+                                                                <p className="text-[11px] text-(--text-tertiary) leading-snug">Your solution beats the challenge. Keep solving!</p>
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-
-                                                {(submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases))) && (
-                                                    <div className="p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col items-center justify-center space-y-3 text-center transition-all animate-in fade-in slide-in-from-bottom-2">
-                                                        <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mb-1">
-                                                            <span className="text-2xl">🎉</span>
-                                                        </div>
-                                                        <h3 className="text-emerald-500 font-bold text-lg">Congratulations!</h3>
-                                                        <p className="text-sm text-(--text-secondary) max-w-[250px] leading-relaxed">
-                                                            Your solution successfully passed all the test cases.
-                                                        </p>
                                                     </div>
                                                 )}
 
-                                                {!(submissionResult?.status === 'ACCEPTED' || (submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases))) && (
-                                                    <div className="p-4 rounded-md bg-(--bg-primary) border border-(--border-primary) flex-1 min-h-0 overflow-auto animate-in fade-in">
-                                                        <p className="text-xs font-bold text-(--text-tertiary) uppercase tracking-wider mb-3">Submission Details</p>
-                                                        <pre className="text-[13px] font-mono text-(--text-secondary) whitespace-pre-wrap">
-                                                            {typeof submissionResult === 'object' ? JSON.stringify(submissionResult, null, 2) : String(submissionResult)}
-                                                        </pre>
+                                                {/* ── WRONG ANSWER ── */}
+                                                {submissionResult?.status === 'WRONG_ANSWER' && (!submissionResult?.errorType || submissionResult?.errorType === 'WRONG_ANSWER') && (
+                                                    <div className="space-y-4">
+                                                        {/* Status Header */}
+                                                        <div className="flex items-center gap-1.5">
+                                                            <XCircle className="w-4 h-4 text-rose-400" />
+                                                            <span className="text-rose-400 font-bold text-xs">Wrong Answer</span>
+                                                            {submissionResult?.passedTestCases !== undefined && submissionResult?.totalTestCases !== undefined && (
+                                                                <>
+                                                                    <span className="text-(--text-tertiary) text-[11px]">·</span>
+                                                                    <span className="text-[11px] text-(--text-tertiary)">{submissionResult.passedTestCases}/{submissionResult.totalTestCases} test cases passed</span>
+                                                                </>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Test Case List */}
+                                                        {submissionResult?.passedTestCases !== undefined && submissionResult?.totalTestCases !== undefined && Number(submissionResult.totalTestCases) > 0 && (
+                                                            <div className="space-y-1.5">
+                                                                {Array.from({ length: Number(submissionResult.totalTestCases) }).map((_, i) => {
+                                                                    const passed = i < Number(submissionResult.passedTestCases);
+                                                                    return (
+                                                                        <div key={i} className="flex items-center gap-2">
+                                                                            {passed ? (
+                                                                                <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                                                                            ) : (
+                                                                                <XCircle className="w-3 h-3 text-rose-400 shrink-0" />
+                                                                            )}
+                                                                            <span className="text-[11px] text-(--text-secondary) font-medium w-14 shrink-0">Test {i + 1}</span>
+                                                                            <div className="flex-1 h-1.5 rounded-full bg-(--bg-primary) overflow-hidden">
+                                                                                <div
+                                                                                    className={`h-full rounded-full ${passed ? 'bg-emerald-500/60' : 'bg-rose-500/60'}`}
+                                                                                    style={{ width: '100%' }}
+                                                                                />
+                                                                            </div>
+                                                                            <span className={`text-[10px] font-medium shrink-0 ${passed ? 'text-emerald-400/70' : 'text-rose-400/70'}`}>
+                                                                                {passed ? 'Passed' : 'Failed'}
+                                                                            </span>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Hint Banner */}
+                                                        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border-l-2 border-amber-500 bg-amber-500/5">
+                                                            <span className="text-base">💡</span>
+                                                            <p className="text-[11px] text-(--text-tertiary) leading-snug">Review your logic and edge cases. Check the sample inputs for hints.</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* ── OTHER ERRORS (Compile Error, Runtime Error, etc.) ── */}
+                                                {submissionResult?.status !== 'ACCEPTED' && !(submissionResult?.passedTestCases !== undefined && Number(submissionResult?.passedTestCases) === Number(submissionResult?.totalTestCases)) && (submissionResult?.errorType && submissionResult?.errorType !== 'WRONG_ANSWER' || (submissionResult?.status !== 'WRONG_ANSWER')) && (
+                                                    <div className="space-y-4">
+                                                        {/* Status Header */}
+                                                        <div className="flex items-center gap-1.5">
+                                                            <AlertTriangle className="w-4 h-4 text-rose-400" />
+                                                            <span className="text-rose-400 font-bold text-xs">
+                                                                {(submissionResult?.errorType || submissionResult?.status || 'Error').replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())}
+                                                            </span>
+                                                            <span className="text-(--text-tertiary) text-[11px]">·</span>
+                                                            <span className="text-[11px] text-(--text-tertiary)">Your code could not be executed</span>
+                                                        </div>
+
+                                                        {/* Error Message */}
+                                                        {submissionResult?.errorMessage && (
+                                                            <div className="p-4 rounded-xl bg-(--bg-primary) border border-(--border-primary) flex-1 min-h-0 overflow-auto">
+                                                                <pre className="text-[13px] font-mono text-rose-400 whitespace-pre-wrap leading-relaxed">{submissionResult.errorMessage}</pre>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
@@ -289,6 +365,6 @@ export default function SubmissionPanel({
                 </ResizablePanelGroup>
             </div>
 
-        </div>
+        </div >
     );
 }
