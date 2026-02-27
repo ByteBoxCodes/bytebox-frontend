@@ -15,7 +15,7 @@ import {
     ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CheckCircle2, Loader2, Play, Send, TerminalSquare, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Send, TerminalSquare, XCircle } from "lucide-react";
 
 import type { IProblem } from "@/types/problems";
 
@@ -37,7 +37,6 @@ const languageOptions: LanguageOption[] = [
 
 export default function SubmissionPanel({
     question,
-    onRunTest,
     onSubmit,
     isRunning,
     isSubmitting,
@@ -49,11 +48,6 @@ export default function SubmissionPanel({
 
     const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
     const [activeTestCase, setActiveTestCase] = useState<number>(0);
-
-    const handleRunClick = () => {
-        setActiveTab("test-result");
-        onRunTest(language, code);
-    };
 
     const handleSubmitClick = () => {
         setActiveTab("test-result");
@@ -75,13 +69,13 @@ export default function SubmissionPanel({
     const displayTestCases = question?.sampleTestCases?.length ? question.sampleTestCases : (question?.testCases?.length ? question.testCases : mockTestCases);
 
     return (
-        <div className="flex flex-col h-full bg-(--bg-secondary)">
+        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5 flex flex-col h-full overflow-hidden">
             {/* Top Bar: Language Selector & Actions */}
-            <div className="flex items-center justify-between px-4 py-2 border-b border-(--border-primary) bg-(--bg-tertiary)/50">
+            <div className="flex items-center justify-between pb-4 border-b border-border/40">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-(--text-secondary) uppercase tracking-wider">Language:</span>
+                    <span className="text-xs font-semibold text-(--text-secondary) uppercase tracking-wider">Language</span>
                     <Select value={language} onValueChange={(val) => handleLanguageChange(val as Language)}>
-                        <SelectTrigger className="w-[120px] h-8 text-xs bg-(--bg-primary)">
+                        <SelectTrigger className="w-[120px] h-8 text-xs bg-(--bg-primary) border-border/40">
                             <SelectValue placeholder="Language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -95,17 +89,6 @@ export default function SubmissionPanel({
                 </div>
                 {/* Action Buttons */}
                 <div className="flex items-center gap-3">
-                    {/* <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={handleRunClick}
-                        disabled
-                        className="font-medium h-8 disabled:opacity-50 cursor-not-allowed"
-
-                    >
-                        {isRunning ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Play className="w-3.5 h-3.5 mr-1.5" />}
-                        Run Test
-                    </Button> */}
                     <Button
                         size="sm"
                         onClick={handleSubmitClick}
@@ -366,6 +349,6 @@ export default function SubmissionPanel({
                 </ResizablePanelGroup>
             </div>
 
-        </div >
+        </section>
     );
 }

@@ -19,16 +19,15 @@ function SkillBadge({ label }: { label: string }) {
 
 export default function ProfileSkills() {
     return (
-        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
-            <h2 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-3 flex items-center gap-2">
-                <Star size={15} className="text-primary" />
-                Skills &amp; Languages
-            </h2>
-            <div className="flex flex-wrap gap-2">
+        <div className="px-1 text-sm">
+            <p className="text-xs font-semibold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-3 flex items-center gap-2">
+                <Star size={14} /> Skills &amp; Languages
+            </p>
+            <div className="flex flex-wrap gap-1.5">
                 {SKILLS.map((s) => (
                     <SkillBadge key={s} label={s} />
                 ))}
             </div>
-        </section>
+        </div>
     );
 }

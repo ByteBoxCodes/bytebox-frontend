@@ -5,7 +5,6 @@ import ProfileSidebar from "./ProfileSidebar";
 import ProfileSolvedStats from "./ProfileSolvedStats";
 import ProfileActivity from "./ProfileActivity";
 import ProfileSubmissions from "./ProfileSubmissions";
-import ProfileSkills from "./ProfileSkills";
 
 export default function ProfilePageContent() {
     const { data, isLoading, isError } = useProfile();
@@ -44,7 +43,6 @@ export default function ProfilePageContent() {
                         <ProfileSolvedStats solved={solved} attempted={attempted} />
                         <ProfileActivity attempted={attempted} />
                         <ProfileSubmissions />
-                        <ProfileSkills />
                     </div>
 
                 </div>

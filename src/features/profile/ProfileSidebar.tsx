@@ -11,6 +11,7 @@ import {
     Link2,
     Star,
 } from "lucide-react";
+import ProfileSkills from "./ProfileSkills";
 
 interface ProfileSidebarProps {
     user: IUserProfile;
@@ -44,7 +45,7 @@ const SOCIALS = [
 
 export default function ProfileSidebar({ user }: ProfileSidebarProps) {
     return (
-        <aside className="w-full lg:w-72 lg:shrink-0 space-y-5">
+        <aside className="w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
 
             {/* Avatar + Name */}
             <div className="flex flex-col items-center text-center gap-3 pt-2">
@@ -128,6 +129,11 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
                 <SideStatPill label="Streak" value="12 days 🔥" />
                 <SideStatPill label="Reputation" value="340 pts" />
             </div>
+
+            <hr className="border-border/40" />
+
+            {/* Skills & Languages */}
+            <ProfileSkills />
         </aside>
     );
 }
