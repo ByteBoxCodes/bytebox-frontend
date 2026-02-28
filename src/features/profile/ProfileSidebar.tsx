@@ -4,9 +4,9 @@ import {
     Github,
     Linkedin,
     Twitter,
+    Instagram,
     Globe,
     Calendar,
-    Mail,
     Link2,
     Star,
 } from "lucide-react";
@@ -81,34 +81,49 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
 
             {/* Social icons */}
             {(() => {
-                const activeSocials = [
-                    { icon: Github, href: user.github, label: "GitHub" },
-                    { icon: Linkedin, href: user.linkedin, label: "LinkedIn" },
-                    { icon: Twitter, href: user.twitter, label: "Twitter" },
-                    { icon: Globe, href: user.website, label: "Website" },
-                ].filter(s => s.href);
+                const activeSocials = [];
+
+                if (user.githubUsername && user.githubUsername.trim() !== "") {
+                    activeSocials.push({ icon: Github, href: `https://github.com/${user.githubUsername.replace(/^@/, '')}`, label: "GitHub", username: user.githubUsername });
+                }
+                if (user.linkedinUsername && user.linkedinUsername.trim() !== "") {
+                    activeSocials.push({ icon: Linkedin, href: `https://linkedin.com/in/${user.linkedinUsername.replace(/^@/, '')}`, label: "LinkedIn", username: user.linkedinUsername });
+                }
+                if (user.twitterUsername && user.twitterUsername.trim() !== "") {
+                    activeSocials.push({ icon: Twitter, href: `https://twitter.com/${user.twitterUsername.replace(/^@/, '')}`, label: "Twitter", username: user.twitterUsername });
+                }
+                if (user.instagramUsername && user.instagramUsername.trim() !== "") {
+                    activeSocials.push({ icon: Instagram, href: `https://instagram.com/${user.instagramUsername.replace(/^@/, '')}`, label: "Instagram", username: user.instagramUsername });
+                }
+                if (user.websiteUrl && user.websiteUrl.trim() !== "") {
+                    const cleanWebsite = user.websiteUrl.trim();
+                    activeSocials.push({ icon: Globe, href: cleanWebsite.startsWith('http') ? cleanWebsite : `https://${cleanWebsite}`, label: "Website", username: cleanWebsite });
+                }
 
                 if (activeSocials.length === 0) return null;
 
                 return (
                     <div className="flex justify-center gap-3">
-                        {activeSocials.map(({ icon: Icon, href, label }) => (
-                            <a
-                                key={label}
-                                href={href as string}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label={label}
-                                className="flex h-8 w-8 items-center justify-center rounded-lg
+                        {activeSocials.map(({ icon: Icon, href, label, username }) => {
+                            return (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label={label}
+                                    title={username ? (label === "Website" ? username : `@${username.replace(/^@/, '')}`) : label}
+                                    className="flex h-8 w-8 items-center justify-center rounded-lg
                                            bg-(--bg-secondary) dark:bg-(--dk-surface)
                                            border border-border/60
                                            text-(--text-secondary) dark:text-(--dk-text-muted)
                                            hover:text-(--text-primary) dark:hover:text-(--dk-text)
                                            hover:border-primary/40 transition-colors duration-150"
-                            >
-                                <Icon size={14} />
-                            </a>
-                        ))}
+                                >
+                                    <Icon size={14} />
+                                </a>
+                            );
+                        })}
                     </div>
                 );
             })()}
@@ -127,9 +142,9 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
 
                 <div className="flex items-center gap-2.5 text-(--text-secondary) dark:text-(--dk-text-muted)">
                     <Link2 size={14} className="shrink-0" />
-                    {user.website ? (
-                        <a href={user.website} target="_blank" rel="noreferrer" className="text-xs hover:underline truncate">
-                            {user.website.replace(/^https?:\/\//, '')}
+                    {user.websiteUrl ? (
+                        <a href={user.websiteUrl.startsWith('http') ? user.websiteUrl : `https://${user.websiteUrl}`} target="_blank" rel="noreferrer" className="text-xs hover:underline truncate">
+                            {user.websiteUrl.replace(/^https?:\/\//, '')}
                         </a>
                     ) : (
                         <span className="text-xs">Not available</span>

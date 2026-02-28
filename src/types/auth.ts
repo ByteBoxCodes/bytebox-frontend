@@ -18,12 +18,13 @@ export interface IUserProfile {
   createdAt?: string;
   problemsSolved?: number;
   problemsAttempted?: number;
-  avatar?: string;
+  avatarUrl?: string;
   bio?: string | null;
-  website?: string | null;
-  github?: string | null;
-  linkedin?: string | null;
-  twitter?: string | null;
+  websiteUrl?: string | null;
+  githubUsername?: string | null;
+  linkedinUsername?: string | null;
+  twitterUsername?: string | null;
+  instagramUsername?: string | null;
 }
 
 export interface IHeatmapData {
@@ -43,4 +44,15 @@ export interface IUserStats {
   hardSolved: number;
   acceptanceRate: number;
   totalProblems: number;
+}
+
+export interface IUpdateProfile {
+  name?: string;
+  bio?: string;
+  website?: string;
+  github?: string;
+  linkedin?: string;
+  twitter?: string;
+  instagram?: string;
+  avatar?: string;
 }

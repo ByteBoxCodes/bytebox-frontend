@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 
 import {
     Dialog,
@@ -27,15 +29,19 @@ function getInitials(name?: string) {
 }
 
 export default function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProps) {
+    const queryClient = useQueryClient();
+    const { mutateAsync: updateProfile } = useUpdateProfile();
+
     const [formData, setFormData] = useState({
         name: user.name || "",
         username: user.username || "",
         bio: user.bio || "",
-        website: user.website || "",
-        github: user.github || "",
-        linkedin: user.linkedin || "",
-        twitter: user.twitter || "",
-        avatar: user.avatar || "",
+        website: user.websiteUrl || "",
+        github: user.githubUsername || "",
+        linkedin: user.linkedinUsername || "",
+        twitter: user.twitterUsername || "",
+        instagram: user.instagramUsername || "",
+        avatar: user.avatarUrl || "",
     });
 
     const [isSaving, setIsSaving] = useState(false);
@@ -48,11 +54,12 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
                 name: user.name || "",
                 username: user.username || "",
                 bio: user.bio || "",
-                website: user.website || "",
-                github: user.github || "",
-                linkedin: user.linkedin || "",
-                twitter: user.twitter || "",
-                avatar: user.avatar || "",
+                website: user.websiteUrl || "",
+                github: user.githubUsername || "",
+                linkedin: user.linkedinUsername || "",
+                twitter: user.twitterUsername || "",
+                instagram: user.instagramUsername || "",
+                avatar: user.avatarUrl || "",
             }));
         }
     }, [isOpen, user]);
@@ -73,10 +80,40 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
-        // Simulate an API call
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setIsSaving(false);
-        onClose();
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { avatar, ...submitData } = formData;
+
+            // Clean up potentially full URLs to usernames
+            const extractUsername = (val: string, type: 'github' | 'linkedin' | 'twitter' | 'instagram') => {
+                if (!val) return "";
+                val = val.trim();
+                try {
+                    const url = new URL(val);
+                    const parts = url.pathname.split('/').filter(Boolean);
+                    if (type === 'linkedin' && parts[0] === 'in') return parts[1] || val;
+                    return parts[parts.length - 1] || val;
+                } catch {
+                    return val.replace(/^@/, '');
+                }
+            };
+
+            await updateProfile({
+                name: submitData.name,
+                bio: submitData.bio,
+                website: submitData.website,
+                github: extractUsername(submitData.github, 'github'),
+                linkedin: extractUsername(submitData.linkedin, 'linkedin'),
+                twitter: extractUsername(submitData.twitter, 'twitter'),
+                instagram: extractUsername(submitData.instagram, 'instagram')
+            });
+            await queryClient.invalidateQueries({ queryKey: ["profile"] });
+            onClose();
+        } catch (error) {
+            console.error("Failed to update profile", error);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -182,7 +219,7 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
                                 <Input
                                     id="linkedin" name="linkedin"
                                     value={formData.linkedin} onChange={handleChange}
-                                    placeholder="LinkedIn Profile URL"
+                                    placeholder="LinkedIn Username"
                                 />
                             </div>
 
@@ -192,6 +229,15 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
                                     id="twitter" name="twitter"
                                     value={formData.twitter} onChange={handleChange}
                                     placeholder="Twitter Handle (e.g., @username)"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="instagram">Instagram</Label>
+                                <Input
+                                    id="instagram" name="instagram"
+                                    value={formData.instagram} onChange={handleChange}
+                                    placeholder="Instagram Username"
                                 />
                             </div>
 
