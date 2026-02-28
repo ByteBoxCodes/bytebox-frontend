@@ -1,9 +1,10 @@
 import { Flame, Zap, Trophy, BookOpen } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useMemo } from "react";
+import type { IUserStats, IHeatmapData } from "@/types/auth";
 
 interface ProfileActivityProps {
-    attempted: number; // from API — the rest are static for now
+    stats: IUserStats;
 }
 
 interface ActivityStatProps {
@@ -27,16 +28,21 @@ function ActivityStat({ label, value, icon: Icon, color }: ActivityStatProps) {
     );
 }
 
-function ContributionHeatmap() {
+function ContributionHeatmap({ data }: { data: IHeatmapData[] }) {
     const { empties, days, months } = useMemo(() => {
         const today = new Date();
-        const start = new Date(today);
-        start.setDate(today.getDate() - 364);
+        const currentYear = today.getFullYear();
+        const start = new Date(currentYear, 0, 1); // Jan 1st of current year
 
         const offset = start.getDay();
         const empties = Array.from({ length: offset });
 
-        const days = Array.from({ length: 365 }, (_, i) => {
+        const getDaysInYear = (year: number) => {
+            return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
+        };
+        const daysInYear = getDaysInYear(currentYear);
+
+        const days = Array.from({ length: daysInYear }, (_, i) => {
             const d = new Date(start);
             d.setDate(start.getDate() + i);
             return d;
@@ -59,11 +65,22 @@ function ContributionHeatmap() {
         return { empties, days, months };
     }, []);
 
-    // Random data for demo purposes
+    // Actual data from API
     // We memoize it so it doesn't blink on every re-render
     const intensities = useMemo(() => {
-        return days.map(() => Math.random() > 0.75 ? Math.floor(Math.random() * 4) + 1 : 0);
-    }, [days]);
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        const heatmapMap = new Map(data.map(item => [item.date, item.count]));
+
+        return days.map(day => {
+            const dateStr = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+            const count = heatmapMap.get(dateStr) || 0;
+            if (count === 0) return 0;
+            if (count <= 2) return 1;
+            if (count <= 5) return 2;
+            if (count <= 10) return 3;
+            return 4;
+        });
+    }, [days, data]);
 
     return (
         <div className="w-full">
@@ -135,11 +152,11 @@ function ContributionHeatmap() {
     );
 }
 
-export default function ProfileActivity({ attempted }: ProfileActivityProps) {
-    const stats: ActivityStatProps[] = [
-        { label: "Current Streak", value: "12 days", icon: Flame, color: "text-orange-500" },
-        { label: "Longest Streak", value: "34 days", icon: Zap, color: "text-yellow-500" },
-        { label: "Submissions", value: attempted, icon: Trophy, color: "text-blue-500" },
+export default function ProfileActivity({ stats }: ProfileActivityProps) {
+    const activityStats: ActivityStatProps[] = [
+        { label: "Current Streak", value: `${stats.currentStreak} days`, icon: Flame, color: "text-orange-500" },
+        { label: "Longest Streak", value: `${stats.maxStreak} days`, icon: Zap, color: "text-yellow-500" },
+        { label: "Submissions", value: stats.totalSubmissions, icon: Trophy, color: "text-blue-500" },
         { label: "Courses Done", value: "3", icon: BookOpen, color: "text-purple-500" },
     ];
 
@@ -151,7 +168,7 @@ export default function ProfileActivity({ attempted }: ProfileActivityProps) {
                     Activity
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {stats.map((s) => (
+                    {activityStats.map((s) => (
                         <ActivityStat key={s.label} {...s} />
                     ))}
                 </div>
@@ -159,9 +176,9 @@ export default function ProfileActivity({ attempted }: ProfileActivityProps) {
 
             <div className="mt-8">
                 <h3 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-3">
-                    Submissions in the past year
+                    Submissions in {new Date().getFullYear()}
                 </h3>
-                <ContributionHeatmap />
+                <ContributionHeatmap data={stats.heatmap} />
             </div>
         </section>
     );

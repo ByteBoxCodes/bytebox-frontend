@@ -69,13 +69,13 @@ export default function SubmissionPanel({
     const displayTestCases = question?.sampleTestCases?.length ? question.sampleTestCases : (question?.testCases?.length ? question.testCases : mockTestCases);
 
     return (
-        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5 flex flex-col h-full overflow-hidden">
+        <div className="flex flex-col h-full bg-(--bg-secondary)">
             {/* Top Bar: Language Selector & Actions */}
-            <div className="flex items-center justify-between pb-4 border-b border-border/40">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-(--border-primary) bg-(--bg-tertiary)/50">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-(--text-secondary) uppercase tracking-wider">Language</span>
+                    <span className="text-xs font-medium text-(--text-secondary) uppercase tracking-wider">Language:</span>
                     <Select value={language} onValueChange={(val) => handleLanguageChange(val as Language)}>
-                        <SelectTrigger className="w-[120px] h-8 text-xs bg-(--bg-primary) border-border/40">
+                        <SelectTrigger className="w-[120px] h-8 text-xs bg-(--bg-primary)">
                             <SelectValue placeholder="Language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -349,6 +349,6 @@ export default function SubmissionPanel({
                 </ResizablePanelGroup>
             </div>
 
-        </section>
+        </div>
     );
 }

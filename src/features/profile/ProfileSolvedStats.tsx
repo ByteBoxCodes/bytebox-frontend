@@ -1,8 +1,8 @@
 import { CheckCircle2 } from "lucide-react";
+import type { IUserStats } from "@/types/auth";
 
 interface ProfileSolvedStatsProps {
-    solved: number;
-    attempted: number;
+    stats: IUserStats;
 }
 
 interface DifficultyRowProps {
@@ -31,13 +31,18 @@ function DifficultyRow({ label, solved, total, barColor, textColor }: Difficulty
     );
 }
 
-export default function ProfileSolvedStats({ solved, attempted }: ProfileSolvedStatsProps) {
-    const rate = attempted > 0 ? Math.round((solved / attempted) * 100) : 0;
+export default function ProfileSolvedStats({ stats }: ProfileSolvedStatsProps) {
+    const {
+        totalSolvedProblems: solved,
+        totalSubmissions: attempted,
+        easySolved,
+        mediumSolved,
+        hardSolved,
+        acceptanceRate,
+        totalProblems,
+    } = stats;
 
-    /* Split solved into difficulty buckets — static ratios, replace later */
-    const easySolved = Math.round(solved * 0.55);
-    const medSolved = Math.round(solved * 0.32);
-    const hardSolved = solved - easySolved - medSolved;
+    const rate = Math.round(acceptanceRate);
 
     return (
         <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
@@ -54,8 +59,7 @@ export default function ProfileSolvedStats({ solved, attempted }: ProfileSolvedS
                     </p>
                     <p className="text-xs text-(--text-secondary) dark:text-(--dk-text-muted) mt-1">
                         solved out of{" "}
-                        {/* static total — replace later */}
-                        <span className="font-semibold text-(--text-primary) dark:text-(--dk-text)">3,563</span>
+                        <span className="font-semibold text-(--text-primary) dark:text-(--dk-text)">{totalProblems || 0}</span>
                     </p>
                 </div>
                 <div className="flex gap-4 ml-auto text-center">
@@ -64,7 +68,7 @@ export default function ProfileSolvedStats({ solved, attempted }: ProfileSolvedS
                         <p className="text-xs text-(--text-secondary) dark:text-(--dk-text-muted)">Easy</p>
                     </div>
                     <div>
-                        <p className="text-lg font-bold text-amber-500">{medSolved}</p>
+                        <p className="text-lg font-bold text-amber-500">{mediumSolved}</p>
                         <p className="text-xs text-(--text-secondary) dark:text-(--dk-text-muted)">Medium</p>
                     </div>
                     <div>
@@ -77,7 +81,7 @@ export default function ProfileSolvedStats({ solved, attempted }: ProfileSolvedS
             {/* Progress bars */}
             <div className="space-y-2.5">
                 <DifficultyRow label="Easy" solved={easySolved} total={800} barColor="bg-emerald-500" textColor="text-emerald-500" />
-                <DifficultyRow label="Medium" solved={medSolved} total={1700} barColor="bg-amber-500" textColor="text-amber-500" />
+                <DifficultyRow label="Medium" solved={mediumSolved} total={1700} barColor="bg-amber-500" textColor="text-amber-500" />
                 <DifficultyRow label="Hard" solved={hardSolved} total={763} barColor="bg-red-500" textColor="text-red-500" />
             </div>
 
