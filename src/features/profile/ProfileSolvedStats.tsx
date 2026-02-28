@@ -38,6 +38,9 @@ export default function ProfileSolvedStats({ stats }: ProfileSolvedStatsProps) {
         easySolved,
         mediumSolved,
         hardSolved,
+        totalEasy,
+        totalMedium,
+        totalHard,
         acceptanceRate,
         totalProblems,
     } = stats;
@@ -80,9 +83,9 @@ export default function ProfileSolvedStats({ stats }: ProfileSolvedStatsProps) {
 
             {/* Progress bars */}
             <div className="space-y-2.5">
-                <DifficultyRow label="Easy" solved={easySolved} total={800} barColor="bg-emerald-500" textColor="text-emerald-500" />
-                <DifficultyRow label="Medium" solved={mediumSolved} total={1700} barColor="bg-amber-500" textColor="text-amber-500" />
-                <DifficultyRow label="Hard" solved={hardSolved} total={763} barColor="bg-red-500" textColor="text-red-500" />
+                <DifficultyRow label="Easy" solved={easySolved} total={totalEasy} barColor="bg-emerald-500" textColor="text-emerald-500" />
+                <DifficultyRow label="Medium" solved={mediumSolved} total={totalMedium} barColor="bg-amber-500" textColor="text-amber-500" />
+                <DifficultyRow label="Hard" solved={hardSolved} total={totalHard} barColor="bg-red-500" textColor="text-red-500" />
             </div>
 
             <p className="text-xs text-(--text-secondary) dark:text-(--dk-text-muted) mt-4">

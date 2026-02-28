@@ -40,8 +40,11 @@ export interface IUserStats {
   maxStreak: number;
   heatmap: IHeatmapData[];
   easySolved: number;
+  totalEasy: number;
   mediumSolved: number;
+  totalMedium: number;
   hardSolved: number;
+  totalHard: number;
   acceptanceRate: number;
   totalProblems: number;
 }

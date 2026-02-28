@@ -1,8 +1,15 @@
 import { submitSolution } from "@/apis/submissionsApi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useSubmitSolutions = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: submitSolution,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userStats"] });
+      queryClient.invalidateQueries({ queryKey: ["mySubmissions"] });
+      queryClient.invalidateQueries({ queryKey: ["mySubProfile"] });
+    },
   });
 };
