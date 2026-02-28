@@ -19,6 +19,11 @@ export interface IUserProfile {
   problemsSolved?: number;
   problemsAttempted?: number;
   avatar?: string;
+  bio?: string | null;
+  website?: string | null;
+  github?: string | null;
+  linkedin?: string | null;
+  twitter?: string | null;
 }
 
 export interface IHeatmapData {

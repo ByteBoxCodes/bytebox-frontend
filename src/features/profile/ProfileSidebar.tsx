@@ -5,13 +5,15 @@ import {
     Linkedin,
     Twitter,
     Globe,
-    MapPin,
     Calendar,
     Mail,
     Link2,
     Star,
 } from "lucide-react";
 import ProfileSkills from "./ProfileSkills";
+import { useState } from "react";
+import EditProfileModal from "./EditProfileModal";
+import { Button } from "@/components/ui/button";
 
 interface ProfileSidebarProps {
     user: IUserProfile;
@@ -36,14 +38,11 @@ function SideStatPill({ label, value }: { label: string; value: string | number 
     );
 }
 
-const SOCIALS = [
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Globe, href: "#", label: "Website" },
-];
+
 
 export default function ProfileSidebar({ user }: ProfileSidebarProps) {
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
     return (
         <aside className="w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
 
@@ -69,51 +68,77 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
                 </span>
             </div>
 
-            {/* Bio — static, replace later */}
-            <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted) text-center leading-relaxed px-2">
-                Passionate coder. Building things one problem at a time. ☕
-            </p>
+            {/* Bio */}
+            {user.bio ? (
+                <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted) text-center leading-relaxed px-2">
+                    {user.bio}
+                </p>
+            ) : (
+                <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted) text-center leading-relaxed px-2 italic">
+                    No bio available...!!
+                </p>
+            )}
 
             {/* Social icons */}
-            <div className="flex justify-center gap-3">
-                {SOCIALS.map(({ icon: Icon, href, label }) => (
-                    <a
-                        key={label}
-                        href={href}
-                        aria-label={label}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg
-                                   bg-(--bg-secondary) dark:bg-(--dk-surface)
-                                   border border-border/60
-                                   text-(--text-secondary) dark:text-(--dk-text-muted)
-                                   hover:text-(--text-primary) dark:hover:text-(--dk-text)
-                                   hover:border-primary/40 transition-colors duration-150"
-                    >
-                        <Icon size={14} />
-                    </a>
-                ))}
-            </div>
+            {(() => {
+                const activeSocials = [
+                    { icon: Github, href: user.github, label: "GitHub" },
+                    { icon: Linkedin, href: user.linkedin, label: "LinkedIn" },
+                    { icon: Twitter, href: user.twitter, label: "Twitter" },
+                    { icon: Globe, href: user.website, label: "Website" },
+                ].filter(s => s.href);
+
+                if (activeSocials.length === 0) return null;
+
+                return (
+                    <div className="flex justify-center gap-3">
+                        {activeSocials.map(({ icon: Icon, href, label }) => (
+                            <a
+                                key={label}
+                                href={href as string}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={label}
+                                className="flex h-8 w-8 items-center justify-center rounded-lg
+                                           bg-(--bg-secondary) dark:bg-(--dk-surface)
+                                           border border-border/60
+                                           text-(--text-secondary) dark:text-(--dk-text-muted)
+                                           hover:text-(--text-primary) dark:hover:text-(--dk-text)
+                                           hover:border-primary/40 transition-colors duration-150"
+                            >
+                                <Icon size={14} />
+                            </a>
+                        ))}
+                    </div>
+                );
+            })()}
+
+            <Button
+                className="w-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 font-semibold shadow-none"
+                onClick={() => setIsEditModalOpen(true)}
+            >
+                Edit Profile
+            </Button>
 
             <hr className="border-border/40" />
 
             {/* Meta info */}
             <div className="space-y-2.5 text-sm px-1">
+
                 <div className="flex items-center gap-2.5 text-(--text-secondary) dark:text-(--dk-text-muted)">
-                    <MapPin size={14} className="shrink-0" />
-                    <span className="text-xs">Bangalore, India</span> {/* static */}
+                    <Link2 size={14} className="shrink-0" />
+                    {user.website ? (
+                        <a href={user.website} target="_blank" rel="noreferrer" className="text-xs hover:underline truncate">
+                            {user.website.replace(/^https?:\/\//, '')}
+                        </a>
+                    ) : (
+                        <span className="text-xs">Not available</span>
+                    )}
                 </div>
-                <div className="flex items-center gap-2.5 text-(--text-secondary) dark:text-(--dk-text-muted)">
-                    <Mail size={14} className="shrink-0" />
-                    <span className="text-xs truncate">{user.email}</span>
-                </div>
+
                 <div className="flex items-center gap-2.5 text-(--text-secondary) dark:text-(--dk-text-muted)">
                     <Calendar size={14} className="shrink-0" />
                     <span className="text-xs">Joined {formatDate(user.createdAt)}</span>
-                </div>
-                <div className="flex items-center gap-2.5 text-(--text-secondary) dark:text-(--dk-text-muted)">
-                    <Link2 size={14} className="shrink-0" />
-                    <a href="#" className="text-xs hover:underline truncate">
-                        portfolio.io/{user.username} {/* static */}
-                    </a>
                 </div>
             </div>
 
@@ -134,6 +159,8 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
 
             {/* Skills & Languages */}
             <ProfileSkills />
+
+            <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} user={user} />
         </aside>
     );
 }
