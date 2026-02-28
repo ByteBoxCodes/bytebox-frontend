@@ -6,9 +6,16 @@ export const submitSolution = async (data: ISubmission) => {
   return response.data;
 };
 
-export const getMySubmissions = async (
+export const getMySubmissionByProblemId = async (
   problemId: string,
 ): Promise<ISubmissionResponse[]> => {
   const response = await api.get(`/submissions/problem/${problemId}/my`);
+  return response.data;
+};
+
+export const getMySubmissionByUserId = async (): Promise<
+  ISubmissionResponse[]
+> => {
+  const response = await api.get(`/submissions/user/my`);
   return response.data;
 };

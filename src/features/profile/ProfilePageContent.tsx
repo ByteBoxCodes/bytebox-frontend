@@ -11,6 +11,8 @@ export default function ProfilePageContent() {
     const { data, isLoading, isError } = useProfile();
     const { data: statsData, isLoading: isStatsLoading, isError: isStatsError } = useUserStats();
 
+
+
     if (isLoading || isStatsLoading) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center">
