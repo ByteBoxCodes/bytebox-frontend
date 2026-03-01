@@ -2,15 +2,20 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
 import ProfileDropdown from "@/features/profile/ProfileDropdown";
-import { useProfile } from "@/hooks/useProfile";
-import { Search, Bell, Menu, X } from "lucide-react";
+import { Search, Menu, X, Zap, Flame } from "lucide-react";
+import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
     const token = localStorage.getItem("token");
-    const { data } = useProfile();
+
+    const { data } = useGetHeaderProfile();
     const user = token ? (data?.data ?? data) : null;
 
-    console.log(data);
     console.log(user);
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -84,11 +89,45 @@ export default function Header() {
 
                         {token && user ? (
                             <div className="flex items-center gap-3">
-                                {/* Notifications */}
-                                <button className="relative p-1.5 text-(--text-secondary) hover:text-(--text-primary) dark:text-white/80 dark:hover:text-white hover:bg-(--bg-tertiary) rounded-full transition-colors outline-none focus:ring-2 focus:ring-(--btn-primary-ring) dark:focus:ring-white/30 cursor-not-allowed" disabled>
-                                    <Bell className="w-5 h-5" />
-                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-(--bg-primary) dark:border-zinc-900"></span>
-                                </button>
+                                {/* Streak */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild className="">
+                                        <button className="flex items-center gap-1.5 px-2 py-1.5 text-(--text-secondary) hover:text-(--text-primary) dark:text-white/80 dark:hover:text-white hover:bg-(--bg-tertiary) rounded-full transition-colors outline-none focus:ring-(--btn-primary-ring) dark:focus:ring-white/30 cursor-pointer">
+                                            <div className="relative flex items-center justify-center">
+                                                <Flame className="size-4 text-orange-500 fill-orange-500 origin-bottom" style={{ animation: 'fire-grow 1.5s ease-in-out infinite' }} />
+                                            </div>
+                                            <span className="text-sm font-bold text-(--text-primary) dark:text-white">{user?.currentStreak || 0}</span>
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" sideOffset={8} className="w-48 rounded-xl border border-border bg-popover shadow-xl p-1.5">
+                                        <div className="flex flex-col gap-2 p-1.5">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="p-1 bg-orange-500/10 rounded-lg">
+                                                        <Flame className="w-4 h-4 text-orange-500 fill-orange-500 origin-bottom" style={{ animation: 'fire-grow 1.5s ease-in-out infinite' }} />
+                                                    </div>
+                                                    <span className="text-xs font-medium text-foreground">Current Streak</span>
+                                                </div>
+                                                <span className="text-xs font-bold text-foreground">{user?.currentStreak || 0}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="p-1 bg-yellow-500/10 rounded-lg">
+                                                        <Zap className="size-4 text-yellow-500 fill-yellow-500" />
+                                                    </div>
+                                                    <span className="text-xs font-medium text-foreground">Longest Streak</span>
+                                                </div>
+                                                <span className="text-xs font-bold text-foreground">{user?.maxStreak || 0}</span>
+                                            </div>
+                                        </div>
+                                    </DropdownMenuContent>
+                                    <style>{`
+                                        @keyframes fire-grow {
+                                            0%, 100% { transform: scaleY(0.85); opacity: 0.8; }
+                                            50% { transform: scaleY(1.15); opacity: 1; }
+                                        }
+                                    `}</style>
+                                </DropdownMenu>
 
                                 {/* Profile Dropdown */}
                                 <ProfileDropdown name={user.name} email={user.email} username={user.username || user.email?.split('@')[0]} />

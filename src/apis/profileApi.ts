@@ -16,3 +16,8 @@ export const updateProfile = async (userData: IUpdateProfile) => {
 
   return response.data;
 };
+
+export const getHeaderProfile = async () => {
+  const response = await api.get("/profile/header");
+  return response.data;
+};
