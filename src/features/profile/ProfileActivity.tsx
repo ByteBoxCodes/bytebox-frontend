@@ -79,18 +79,18 @@ function ContributionHeatmap({ data }: { data: IHeatmapData[] }) {
 
     const colors = [
         "bg-black/5 dark:bg-white/5", // 0
-        "bg-[#b9fbc0] dark:bg-[#1b4332]", // 1 - light green
-        "bg-[#72ef8f] dark:bg-[#2d6a4f]", // 2
-        "bg-[#2ee656] dark:bg-[#40916c]", // 3
-        "bg-[#0dd136] dark:bg-[#52b788]", // 4
+        "bg-[#b9fbc0] dark:bg-green-800", // 1 - light green
+        "bg-[#72ef8f] dark:bg-green-700", // 2
+        "bg-[#2ee656] dark:bg-green-600", // 3
+        "bg-[#0dd136] dark:bg-green-500", // 4
     ];
 
     const cellClass = "w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[2px]";
-    const gapClass = "gap-[2px] sm:gap-[3px]";
+    const gapClass = "gap-[2px] sm:gap-[3px] ";
 
     return (
         <div className="w-full">
-            <div className="w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+            <div className="w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent ">
                 <div className="min-w-max flex">
 
                     {/* Heatmap grouped by month blocks */}

@@ -9,6 +9,10 @@ export default function Header() {
     const token = localStorage.getItem("token");
     const { data } = useProfile();
     const user = token ? (data?.data ?? data) : null;
+
+    console.log(data);
+    console.log(user);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {
