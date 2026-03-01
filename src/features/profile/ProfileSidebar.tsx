@@ -9,6 +9,7 @@ import {
     Calendar,
     Link2,
     Star,
+    Rocket,
 } from "lucide-react";
 import ProfileSkills from "./ProfileSkills";
 import { useState } from "react";
@@ -27,15 +28,6 @@ function getInitials(name?: string) {
 function formatDate(d?: string) {
     if (!d) return "—";
     return new Date(d).toLocaleDateString("en-IN", { year: "numeric", month: "long" });
-}
-
-function SideStatPill({ label, value }: { label: string; value: string | number }) {
-    return (
-        <div className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
-            <span className="text-xs text-(--text-secondary) dark:text-(--dk-text-muted)">{label}</span>
-            <span className="text-xs font-semibold text-(--text-primary) dark:text-(--dk-text)">{value}</span>
-        </div>
-    );
 }
 
 
@@ -164,10 +156,15 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
                 <p className="text-xs font-semibold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-2">
                     Community
                 </p>
-                <SideStatPill label="Global Rank" value="#4,218" />
-                <SideStatPill label="Contest Rating" value="1,632" />
-                <SideStatPill label="Streak" value="12 days 🔥" />
-                <SideStatPill label="Reputation" value="340 pts" />
+                <div className="flex flex-col items-center justify-center py-5 px-3 mt-2 rounded-xl border border-dashed border-border flex-1 bg-primary/5 dark:bg-primary/10">
+                    <Rocket className="text-primary/60 mb-2 animate-pulse" size={20} />
+                    <p className="text-sm font-medium text-(--text-primary) dark:text-(--dk-text)">
+                        Coming Soon
+                    </p>
+                    <p className="text-xs text-center text-(--text-secondary) dark:text-(--dk-text-muted) mt-1">
+                        Community stats and rankings are on the way!
+                    </p>
+                </div>
             </div>
 
             <hr className="border-border/40" />
