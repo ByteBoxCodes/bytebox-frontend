@@ -47,6 +47,7 @@ export interface IUserStats {
   totalHard: number;
   acceptanceRate: number;
   totalProblems: number;
+  languages: string[];
 }
 
 export interface IUpdateProfile {

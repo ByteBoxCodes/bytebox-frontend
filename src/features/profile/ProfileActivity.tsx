@@ -157,7 +157,7 @@ export default function ProfileActivity({ stats }: ProfileActivityProps) {
         { label: "Current Streak", value: `${stats.currentStreak} days`, icon: Flame, color: "text-orange-500" },
         { label: "Longest Streak", value: `${stats.maxStreak} days`, icon: Zap, color: "text-yellow-500" },
         { label: "Submissions", value: stats.totalSubmissions, icon: Trophy, color: "text-blue-500" },
-        { label: "Courses Done", value: "3", icon: BookOpen, color: "text-purple-500" },
+        { label: "Languages Used", value: stats.languages.length, icon: BookOpen, color: "text-purple-500" },
     ];
 
     return (

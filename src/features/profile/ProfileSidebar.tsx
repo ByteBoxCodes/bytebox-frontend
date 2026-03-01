@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 
 interface ProfileSidebarProps {
     user: IUserProfile;
+    languages: string[];
 }
 
 function getInitials(name?: string) {
@@ -32,7 +33,7 @@ function formatDate(d?: string) {
 
 
 
-export default function ProfileSidebar({ user }: ProfileSidebarProps) {
+export default function ProfileSidebar({ user, languages }: ProfileSidebarProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     return (
@@ -170,7 +171,7 @@ export default function ProfileSidebar({ user }: ProfileSidebarProps) {
             <hr className="border-border/40" />
 
             {/* Skills & Languages */}
-            <ProfileSkills />
+            <ProfileSkills languages={languages} />
 
             <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} user={user} />
         </aside>

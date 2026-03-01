@@ -32,14 +32,15 @@ export default function ProfilePageContent() {
 
     const user: IUserProfile = data?.data ?? data;
     const stats: IUserStats = statsData?.data ?? statsData;
-
+    console.log(stats)
     return (
         <div className="min-h-screen bg-(--bg-primary) dark:bg-zinc-950 text-(--text-primary) dark:text-(--dk-text)">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
 
                     {/* Left sidebar */}
-                    <ProfileSidebar user={user} />
+                    <ProfileSidebar user={user} languages={stats.languages} />
+
 
                     {/* Right content */}
                     <div className="flex-1 min-w-0 space-y-5">
