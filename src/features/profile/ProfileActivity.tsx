@@ -29,122 +29,106 @@ function ActivityStat({ label, value, icon: Icon, color }: ActivityStatProps) {
 }
 
 function ContributionHeatmap({ data }: { data: IHeatmapData[] }) {
-    const { empties, days, months } = useMemo(() => {
+    const monthsData = useMemo(() => {
         const today = new Date();
         const currentYear = today.getFullYear();
-        const start = new Date(currentYear, 0, 1); // Jan 1st of current year
 
-        const offset = start.getDay();
-        const empties = Array.from({ length: offset });
+        const blocks = [];
 
-        const getDaysInYear = (year: number) => {
-            return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
-        };
-        const daysInYear = getDaysInYear(currentYear);
+        for (let month = 0; month < 12; month++) {
+            const firstDay = new Date(currentYear, month, 1);
+            const lastDay = new Date(currentYear, month + 1, 0);
 
-        const days = Array.from({ length: daysInYear }, (_, i) => {
-            const d = new Date(start);
-            d.setDate(start.getDate() + i);
-            return d;
-        });
+            const daysInMonth = lastDay.getDate();
+            const startOffset = firstDay.getDay();
 
-        const months: { label: string; colIndex: number }[] = [];
-        let prevMonth = -1;
-        days.forEach((day, i) => {
-            const colIndex = Math.floor((i + offset) / 7);
-            const month = day.getMonth();
-            if (month !== prevMonth) {
-                const lastAdded = months[months.length - 1];
-                if (!lastAdded || colIndex - lastAdded.colIndex > 2) {
-                    months.push({ label: day.toLocaleString('default', { month: 'short' }), colIndex });
-                }
-                prevMonth = month;
+            const monthDays: (Date | null)[] = Array(startOffset).fill(null);
+            for (let d = 1; d <= daysInMonth; d++) {
+                monthDays.push(new Date(currentYear, month, d));
             }
-        });
 
-        return { empties, days, months };
+            // Pad the end to ensure complete columns of 7
+            while (monthDays.length % 7 !== 0) {
+                monthDays.push(null);
+            }
+
+            blocks.push({
+                label: firstDay.toLocaleString('default', { month: 'short' }),
+                cells: monthDays
+            });
+        }
+        return blocks;
     }, []);
 
-    // Actual data from API
-    // We memoize it so it doesn't blink on every re-render
-    const intensities = useMemo(() => {
+    const getDayData = useMemo(() => {
         const pad = (n: number) => n.toString().padStart(2, '0');
         const heatmapMap = new Map(data.map(item => [item.date, item.count]));
 
-        return days.map(day => {
+        return (day: Date) => {
             const dateStr = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
             const count = heatmapMap.get(dateStr) || 0;
-            if (count === 0) return 0;
-            if (count <= 2) return 1;
-            if (count <= 5) return 2;
-            if (count <= 10) return 3;
-            return 4;
-        });
-    }, [days, data]);
+            let level = 0;
+            if (count > 0 && count <= 2) level = 1;
+            else if (count > 2 && count <= 5) level = 2;
+            else if (count > 5 && count <= 10) level = 3;
+            else if (count > 10) level = 4;
+
+            return { level, count };
+        };
+    }, [data]);
+
+    const colors = [
+        "bg-black/5 dark:bg-white/5", // 0
+        "bg-[#b9fbc0] dark:bg-[#1b4332]", // 1 - light green
+        "bg-[#72ef8f] dark:bg-[#2d6a4f]", // 2
+        "bg-[#2ee656] dark:bg-[#40916c]", // 3
+        "bg-[#0dd136] dark:bg-[#52b788]", // 4
+    ];
+
+    const cellClass = "w-[10px] h-[10px] sm:w-[11px] sm:h-[11px] rounded-[2px]";
+    const gapClass = "gap-[2px] sm:gap-[3px]";
 
     return (
         <div className="w-full">
             <div className="w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                <div className="min-w-max pr-4">
-                    {/* Months */}
-                    <div className="flex relative h-6 text-xs text-(--text-secondary) dark:text-(--dk-text-muted)">
-                        {months.map((m, i) => (
-                            <span key={i} className="absolute" style={{ left: `${m.colIndex * 15 + 30}px`, bottom: 4 }}>
-                                {m.label}
-                            </span>
+                <div className="min-w-max flex">
+
+                    {/* Heatmap grouped by month blocks */}
+                    <div className="flex gap-[8px] sm:gap-[12px]">
+                        {monthsData.map((month, mIdx) => (
+                            <div key={mIdx} className="flex flex-col">
+                                <span className="text-[10px] sm:text-[11px] text-(--text-secondary) dark:text-(--dk-text-muted) h-[16px] sm:h-[18px] mb-[1px]">
+                                    {month.label}
+                                </span>
+                                <div className={`grid grid-rows-7 grid-flow-col ${gapClass}`}>
+                                    {month.cells.map((day, dIdx) => {
+                                        if (!day) return <div key={`empty-${mIdx}-${dIdx}`} className={`${cellClass} invisible`} />;
+
+                                        const { level, count } = getDayData(day);
+                                        return (
+                                            <div
+                                                key={day.toISOString()}
+                                                className={`${cellClass} ${colors[level]} transition-all hover:ring-[1.5px] hover:ring-foreground/30`}
+                                                title={`${count} submissions on ${day.toDateString()}`}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         ))}
-                    </div>
-
-                    {/* Grid */}
-                    <div className="flex gap-2.5">
-                        {/* Day labels (Mon, Wed, Fri) */}
-                        <div className="flex flex-col justify-between text-[10px] text-(--text-secondary) dark:text-(--dk-text-muted) py-[2px] w-[20px] text-right">
-                            <span className="invisible">Sun</span>
-                            <span>Mon</span>
-                            <span className="invisible">Tue</span>
-                            <span>Wed</span>
-                            <span className="invisible">Thu</span>
-                            <span>Fri</span>
-                            <span className="invisible">Sat</span>
-                        </div>
-
-                        {/* Heatmap cells */}
-                        <div className="grid grid-rows-7 grid-flow-col gap-[3px]">
-                            {empties.map((_, i) => (
-                                <div key={`empty-${i}`} className="w-[11px] h-[11px]" />
-                            ))}
-                            {days.map((day, i) => {
-                                const intensity = intensities[i];
-                                const colors = [
-                                    "bg-black/5 dark:bg-white/5", // 0
-                                    "bg-emerald-200/60 dark:bg-emerald-900/60", // 1
-                                    "bg-emerald-300 dark:bg-emerald-700", // 2
-                                    "bg-emerald-400 dark:bg-emerald-500", // 3
-                                    "bg-emerald-500 dark:bg-emerald-400", // 4
-                                ];
-                                const count = intensity > 0 ? (intensity * 2) : 0;
-                                return (
-                                    <div
-                                        key={day.toISOString()}
-                                        className={`w-[11px] h-[11px] rounded-[2px] ${colors[intensity]} transition-all hover:ring-1 hover:ring-foreground/50`}
-                                        title={`${count} submissions on ${day.toDateString()}`}
-                                    />
-                                );
-                            })}
-                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Legend */}
-            <div className="flex items-center justify-end gap-2 text-xs text-(--text-secondary) dark:text-(--dk-text-muted) mt-2">
+            <div className="flex items-center justify-end gap-2 text-xs text-(--text-secondary) dark:text-(--dk-text-muted) mt-3">
                 <span>Less</span>
-                <div className="flex gap-1">
-                    <div className="w-[12px] h-[12px] rounded-[3px] bg-black/5 dark:bg-white/5" />
-                    <div className="w-[12px] h-[12px] rounded-[3px] bg-emerald-200/60 dark:bg-emerald-900/60" />
-                    <div className="w-[12px] h-[12px] rounded-[3px] bg-emerald-300 dark:bg-emerald-700" />
-                    <div className="w-[12px] h-[12px] rounded-[3px] bg-emerald-400 dark:bg-emerald-500" />
-                    <div className="w-[12px] h-[12px] rounded-[3px] bg-emerald-500 dark:bg-emerald-400" />
+                <div className="flex gap-[3px]">
+                    <div className={`${cellClass} bg-black/5 dark:bg-white/5 border border-border/20`} />
+                    <div className={`${cellClass} bg-[#b9fbc0] dark:bg-[#1b4332]`} />
+                    <div className={`${cellClass} bg-[#72ef8f] dark:bg-[#2d6a4f]`} />
+                    <div className={`${cellClass} bg-[#2ee656] dark:bg-[#40916c]`} />
+                    <div className={`${cellClass} bg-[#0dd136] dark:bg-[#52b788]`} />
                 </div>
                 <span>More</span>
             </div>
