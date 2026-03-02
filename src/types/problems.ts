@@ -12,6 +12,7 @@ export interface IProblem {
   topic: ITopic;
   createdAt?: string;
   requiredKeywords?: string;
+  instructions?: string;
   orderIndex?: number;
   isActive?: boolean;
   testCases?: TestCase[];
