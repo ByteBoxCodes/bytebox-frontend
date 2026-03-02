@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
 
-export const useLoginUser = () => {
+export const useLoginUser = (onErrorCallback?: (message: string) => void) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -19,9 +19,14 @@ export const useLoginUser = () => {
     onError: (error: AxiosError<{ message?: string }>) => {
       const message =
         error.response?.data?.message ?? "Invalid email or password.";
-      toast.error("Login failed", {
-        description: message,
-      });
+
+      if (onErrorCallback) {
+        onErrorCallback(message);
+      } else {
+        toast.error("Login failed", {
+          description: message,
+        });
+      }
     },
   });
 };

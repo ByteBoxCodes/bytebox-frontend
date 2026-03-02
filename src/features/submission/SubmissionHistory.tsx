@@ -55,13 +55,16 @@ function formatRelativeTime(dateString: string): string {
     });
 }
 
-function SubmissionRow({ submission }: { submission: ISubmissionResponse }) {
+function SubmissionRow({ submission, onClick }: { submission: ISubmissionResponse; onClick: () => void }) {
     const config = STATUS_CONFIG[submission.status] ?? STATUS_CONFIG.WRONG_ANSWER;
     const StatusIcon = config.icon;
     const isAccepted = submission.status === "ACCEPTED";
 
     return (
-        <div className="group flex items-center gap-4 px-5 py-3.5 border-b border-(--border-primary) dark:border-(--dk-border) hover:bg-(--bg-tertiary)/50 dark:hover:bg-white/3 transition-colors cursor-default">
+        <div
+            onClick={onClick}
+            className="group flex items-center gap-4 px-5 py-3.5 border-b border-(--border-primary) dark:border-(--dk-border) hover:bg-(--bg-tertiary)/50 dark:hover:bg-white/3 transition-colors cursor-pointer"
+        >
             {/* Status icon + label */}
             <div className="flex items-center gap-2 min-w-[160px]">
                 <StatusIcon className={`w-4 h-4 shrink-0 ${config.color}`} />
@@ -96,8 +99,12 @@ function SubmissionRow({ submission }: { submission: ISubmissionResponse }) {
     );
 }
 
+import SubmissionModal from "./SubmissionModal";
+import { useState } from "react";
+
 export default function SubmissionHistory({ problemId }: { problemId: string }) {
     const { data: submissions, isLoading, isError } = useGetMySubmissions(problemId);
+    const [selectedSubmission, setSelectedSubmission] = useState<ISubmissionResponse | null>(null);
 
     if (isLoading) {
         return (
@@ -145,8 +152,18 @@ export default function SubmissionHistory({ problemId }: { problemId: string }) 
 
             {/* Rows — latest first */}
             {sorted.map((submission) => (
-                <SubmissionRow key={submission.id} submission={submission} />
+                <SubmissionRow
+                    key={submission.id}
+                    submission={submission}
+                    onClick={() => setSelectedSubmission(submission)}
+                />
             ))}
+
+            <SubmissionModal
+                isOpen={!!selectedSubmission}
+                onClose={() => setSelectedSubmission(null)}
+                submission={selectedSubmission}
+            />
         </ScrollArea>
     );
 }

@@ -6,13 +6,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useLoginUser } from "@/hooks/useLoginUser";
+import VerificationModal from "./VerificationModal";
+import { toast } from "sonner";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [showVerificationModal, setShowVerificationModal] = useState(false);
 
-    const { mutate, isPending, } = useLoginUser();
+    const { mutate, isPending } = useLoginUser((message) => {
+        if (message.toLowerCase().includes("not verified") || message.toLowerCase().includes("unverified")) {
+            setShowVerificationModal(true);
+        } else {
+            toast.error("Login failed", { description: message });
+        }
+    });
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -157,6 +166,12 @@ export default function Login() {
                     Sign up
                 </Link>
             </p>
+
+            <VerificationModal
+                isOpen={showVerificationModal}
+                setIsOpen={setShowVerificationModal}
+                email={email}
+            />
         </div>
     );
 }

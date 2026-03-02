@@ -36,32 +36,39 @@ function formatTimeAgo(dateString: string) {
     return Math.floor(seconds) + "s ago";
 }
 
-function SubmissionRow({ problemTitle, language, status, submittedAt }: ISubmissionResponse) {
+function SubmissionRow({ submission, onClick }: { submission: ISubmissionResponse; onClick: () => void }) {
     return (
-        <div className="flex items-center justify-between py-2.5 border-b border-border/40 last:border-0">
+        <div
+            onClick={onClick}
+            className="flex items-center justify-between py-2.5 border-b border-border/40 last:border-0 cursor-pointer hover:bg-(--bg-tertiary)/50 dark:hover:bg-white/3 transition-colors px-2 -mx-2 rounded"
+        >
             <div className="flex items-center gap-2 min-w-0">
                 <Code2 size={13} className="shrink-0 text-(--text-tertiary) dark:text-(--dk-text-faint)" />
-                <span className="text-sm font-medium text-(--text-primary) dark:text-(--dk-text) truncate" title={problemTitle}>
-                    {problemTitle}
+                <span className="text-sm font-medium text-(--text-primary) dark:text-(--dk-text) truncate" title={submission.problemTitle}>
+                    {submission.problemTitle}
                 </span>
             </div>
             <div className="flex items-center gap-3 shrink-0 ml-3">
                 <span className="text-xs text-(--text-tertiary) dark:text-(--dk-text-faint) hidden sm:block">
-                    {language.charAt(0).toUpperCase() + language.slice(1).toLowerCase()}
+                    {submission.language.charAt(0).toUpperCase() + submission.language.slice(1).toLowerCase()}
                 </span>
-                <span className={`text-xs font-semibold ${STATUS_COLOR[status] || "text-gray-500"}`}>
-                    {STATUS_LABEL[status] || status}
+                <span className={`text-xs font-semibold ${STATUS_COLOR[submission.status] || "text-gray-500"}`}>
+                    {STATUS_LABEL[submission.status] || submission.status}
                 </span>
                 <span className="text-xs text-(--text-tertiary) dark:text-(--dk-text-faint)">
-                    {formatTimeAgo(submittedAt)}
+                    {formatTimeAgo(submission.submittedAt)}
                 </span>
             </div>
         </div>
     );
 }
 
+import SubmissionModal from "../submission/SubmissionModal";
+import { useState } from "react";
+
 export default function ProfileSubmissions() {
     const { data: submissions, isLoading, isError } = useGetMySubmissionByUserId();
+    const [selectedSubmission, setSelectedSubmission] = useState<ISubmissionResponse | null>(null);
 
     return (
         <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
@@ -84,9 +91,19 @@ export default function ProfileSubmissions() {
                 </div>
             ) : (
                 [...submissions].reverse().slice(0, 5).map((s) => (
-                    <SubmissionRow key={s.id} {...s} />
+                    <SubmissionRow
+                        key={s.id}
+                        submission={s}
+                        onClick={() => setSelectedSubmission(s)}
+                    />
                 ))
             )}
+
+            <SubmissionModal
+                isOpen={!!selectedSubmission}
+                onClose={() => setSelectedSubmission(null)}
+                submission={selectedSubmission}
+            />
         </section>
     );
 }

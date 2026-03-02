@@ -6,6 +6,7 @@ import SubmissionPage from "../pages/SubmissionPage";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/RegisterPage";
 import UserProfilePage from "../pages/UserProfilePage";
+import VerifyPage from "../pages/VerifyPage";
 import ProtectedRoutes from "@/components/common/ProtectedRoutes";
 import GuestRoute from "@/components/common/GuestRoute";
 
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
     {
         path: "/signup",
         element: <GuestRoute><RegisterPage /></GuestRoute>,
+    },
+    {
+        path: "/verify",
+        element: <VerifyPage />,
     },
     {
         path: "/",
