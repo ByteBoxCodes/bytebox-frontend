@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
     ResizableHandle,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/resizable";
 import QuestionPanel from "@/features/submission/QuestionPanel";
 import SubmissionPanel from "@/features/submission/SubmissionPanel";
+import SuccessModal from "@/features/submission/SuccessModal";
 import type { Language } from "@/types/submission";
 import { useGetProblemById } from "@/hooks/useGetProblemById";
 import { Loader2 } from "lucide-react";
@@ -17,7 +18,20 @@ export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
     const { data, isLoading, isError } = useGetProblemById(questionId!);
     const [isRunning, setIsRunning] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { mutate, isPending, error: submissionError, data: submissionResult } = useSubmitSolutions();
+
+    // Auto-open success modal when all test cases pass
+    useEffect(() => {
+        if (
+            submissionResult &&
+            (submissionResult.status === "ACCEPTED" ||
+                (submissionResult.passedTestCases !== undefined &&
+                    Number(submissionResult.passedTestCases) === Number(submissionResult.totalTestCases)))
+        ) {
+            setShowSuccessModal(true);
+        }
+    }, [submissionResult]);
 
     if (isLoading) {
         return (
@@ -111,6 +125,14 @@ export default function SubmissionPage() {
                             submissionError={submissionError}
                         />
                     </div>
+
+                    <SuccessModal
+                        isOpen={showSuccessModal}
+                        onClose={() => setShowSuccessModal(false)}
+                        passedTestCases={submissionResult?.passedTestCases}
+                        totalTestCases={submissionResult?.totalTestCases}
+                        problemTitle={data?.title}
+                    />
                 </ResizablePanel>
             </ResizablePanelGroup>
         </div>
