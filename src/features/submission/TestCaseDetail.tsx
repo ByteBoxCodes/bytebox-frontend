@@ -1,10 +1,9 @@
-import { CheckCircle2, XCircle } from "lucide-react";
 
 interface TestCaseDetailProps {
     input: string;
     expectedOutput: string;
     userOutput: string | null | undefined;
-    isPassed: boolean;
+    isPassed?: boolean;
 }
 
 export default function TestCaseDetail({
@@ -14,7 +13,7 @@ export default function TestCaseDetail({
     isPassed,
 }: TestCaseDetailProps) {
     return (
-        <div className="space-y-3 animate-in fade-in duration-200">
+        <div className="space-y-3 animate-in fade-in duration-200 mb-10">
             {/* Input */}
             <div className="space-y-1.5">
                 <p className="text-[11px] text-(--text-tertiary) font-bold uppercase tracking-wider">
@@ -22,16 +21,6 @@ export default function TestCaseDetail({
                 </p>
                 <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
                     {input}
-                </div>
-            </div>
-
-            {/* Expected Output */}
-            <div className="space-y-1.5">
-                <p className="text-[11px] text-emerald-400/80 font-bold uppercase tracking-wider">
-                    Expected Output
-                </p>
-                <div className="px-3 py-2.5 rounded-md bg-emerald-500/5 font-mono text-sm text-emerald-400 border border-emerald-500/20">
-                    {expectedOutput}
                 </div>
             </div>
 
@@ -45,8 +34,8 @@ export default function TestCaseDetail({
                 </p>
                 <div
                     className={`px-3 py-2.5 rounded-md font-mono text-sm border ${isPassed
-                            ? "bg-emerald-500/5 text-emerald-400 border-emerald-500/20"
-                            : "bg-rose-500/5 text-rose-400 border-rose-500/20"
+                        ? "bg-emerald-500/5 text-emerald-400 border-emerald-500/20"
+                        : "bg-rose-500/5 text-rose-400 border-rose-500/20"
                         }`}
                 >
                     {userOutput !== null && userOutput !== undefined ? (
@@ -59,11 +48,23 @@ export default function TestCaseDetail({
                 </div>
             </div>
 
+            {/* Expected Output */}
+            <div className="space-y-1.5">
+                <p className="text-[11px] text-emerald-400/80 font-bold uppercase tracking-wider">
+                    Expected Output
+                </p>
+                <div className="px-3 py-2.5 rounded-md bg-emerald-500/5 font-mono text-sm text-emerald-400 border border-emerald-500/20">
+                    {expectedOutput}
+                </div>
+            </div>
+
+
+
             {/* Verdict Badge */}
-            <div
+            {/* <div
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider ${isPassed
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                    : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
                     }`}
             >
                 {isPassed ? (
@@ -72,7 +73,7 @@ export default function TestCaseDetail({
                     <XCircle className="w-3 h-3" />
                 )}
                 {isPassed ? "Passed" : "Failed"}
-            </div>
+            </div> */}
         </div>
     );
 }

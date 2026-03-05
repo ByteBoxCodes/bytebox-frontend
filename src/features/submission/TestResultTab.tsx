@@ -135,7 +135,7 @@ function TestCaseTabs({
     onSelectCase: (i: number) => void;
 }) {
     return (
-        <div className="flex gap-1.5 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap ">
             {testCases.map((tc: any, i: number) => {
                 const isPassed = tc.status === "PASSED";
                 const isActive = activeResultCase === i;
@@ -143,11 +143,11 @@ function TestCaseTabs({
                     <button
                         key={i}
                         onClick={() => onSelectCase(i)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${isActive
-                                ? isPassed
-                                    ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30"
-                                    : "bg-rose-500/15 text-rose-400 ring-1 ring-rose-500/30"
-                                : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
+                        className={`flex cursor-pointer items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${isActive
+                            ? isPassed
+                                ? "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30"
+                                : "bg-rose-500/15 text-rose-400 ring-1 ring-rose-500/30"
+                            : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
                             }`}
                     >
                         {isPassed ? (
@@ -196,8 +196,8 @@ function FallbackBarList({
                         <div className="flex-1 h-1.5 rounded-full bg-(--bg-primary) overflow-hidden">
                             <div
                                 className={`h-full rounded-full ${passed
-                                        ? "bg-emerald-500/60"
-                                        : "bg-rose-500/60"
+                                    ? "bg-emerald-500/60"
+                                    : "bg-rose-500/60"
                                     } animate-in slide-in-from-left`}
                                 style={{
                                     width: "100%",
@@ -209,8 +209,8 @@ function FallbackBarList({
                         </div>
                         <span
                             className={`text-[10px] font-medium shrink-0 ${passed
-                                    ? "text-emerald-400/70"
-                                    : "text-rose-400/70"
+                                ? "text-emerald-400/70"
+                                : "text-rose-400/70"
                                 }`}
                         >
                             {passed ? "Passed" : "Failed"}
@@ -279,28 +279,6 @@ function AcceptedResult({
                     />
                 )
             )}
-
-            {/* Success Banner */}
-            <div
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border-l-2 border-emerald-500 bg-emerald-500/5 animate-in fade-in slide-in-from-bottom-1"
-                style={{
-                    animationDelay: `${350 +
-                        (Number(submissionResult?.totalTestCases) || 0) * 100
-                        }ms`,
-                    animationFillMode: "both",
-                    animationDuration: "400ms",
-                }}
-            >
-                <span className="text-base">🎉</span>
-                <div>
-                    <p className="text-[12px] text-emerald-400 font-semibold leading-tight">
-                        Well done!
-                    </p>
-                    <p className="text-[11px] text-(--text-tertiary) leading-snug">
-                        Your solution beats the challenge. Keep solving!
-                    </p>
-                </div>
-            </div>
         </div>
     );
 }
@@ -348,7 +326,9 @@ function WrongAnswerResult({
                             input={
                                 submissionResult.testCases[activeResultCase]
                                     .input
+
                             }
+
                             expectedOutput={
                                 submissionResult.testCases[activeResultCase]
                                     .expectedOutput
@@ -357,6 +337,7 @@ function WrongAnswerResult({
                                 submissionResult.testCases[activeResultCase]
                                     .userOutput
                             }
+
                             isPassed={
                                 submissionResult.testCases[activeResultCase]
                                     .status === "PASSED"
@@ -377,14 +358,6 @@ function WrongAnswerResult({
                 )
             )}
 
-            {/* Hint Banner */}
-            <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border-l-2 border-amber-500 bg-amber-500/5">
-                <span className="text-base">💡</span>
-                <p className="text-[11px] text-(--text-tertiary) leading-snug">
-                    Review your logic and edge cases. Check the sample inputs
-                    for hints.
-                </p>
-            </div>
         </div>
     );
 }
