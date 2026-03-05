@@ -49,10 +49,28 @@ export default function SubmissionPanel({
     submissionError,
     submissions,
 }: SubmissionPanelProps) {
+    // Derive default language from localStorage, fallback to cpp if none or invalid
+    const [initialLang] = useState<Language>(() => {
+        try {
+            const raw = localStorage.getItem("preferredLanguage");
+            if (!raw) return "cpp";
+
+            let normalized = raw.toLowerCase().trim();
+            // Handle common "c++" vs "cpp" mismatch
+            if (normalized === "c++") normalized = "cpp";
+
+            // Verify the computed language is supported
+            const isValid = languageOptions.some(opt => opt.value === normalized);
+            return isValid ? (normalized as Language) : "cpp";
+        } catch {
+            return "cpp";
+        }
+    });
+
     const { code, setCode, language, changeLanguage, markSolved, saveStatus } = useCodeStorage(
         problemId,
         defaultSnippets,
-        languageOptions[0].value,
+        initialLang,
         submissions
     );
     const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
@@ -105,7 +123,7 @@ export default function SubmissionPanel({
                             <Editor
                                 theme="vs-dark"
                                 height="100%"
-                                defaultLanguage="cpp"
+                                defaultLanguage={initialLang}
                                 language={language}
                                 value={code}
                                 onChange={(value) => setCode(value || "")}

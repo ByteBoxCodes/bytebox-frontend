@@ -9,12 +9,16 @@ import {
     Link2,
     Star,
     Rocket,
+    Pencil,
+    Languages,
 } from "lucide-react";
 import ProfileSkills from "./ProfileSkills";
 import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { Button } from "@/components/ui/button";
 import ProfileAvatar from "./ProfileAvatar";
+import { PREFERRED_LANGUAGE_OPTIONS } from "@/features/submission/languageOptions";
+import LanguagePickerModal from "./LanguagePickerModal";
 
 interface ProfileSidebarProps {
     user: IUserProfile;
@@ -28,6 +32,11 @@ function formatDate(d?: string) {
 
 export default function ProfileSidebar({ user, languages }: ProfileSidebarProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isLangModalOpen, setIsLangModalOpen] = useState(false);
+
+    const currentLangLabel = PREFERRED_LANGUAGE_OPTIONS.find(
+        (o) => o.value === user.preferredLanguage?.toLowerCase()
+    )?.label ?? "Not set";
 
     return (
         <aside className="w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
@@ -141,6 +150,29 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
 
             <hr className="border-border/40" />
 
+            {/* Preferred Language */}
+            <div className="px-1">
+                <p className="text-xs font-semibold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-2">
+                    Preferred Language
+                </p>
+                <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-(--text-secondary) dark:text-(--dk-text-muted)">
+                        <Languages size={14} className="shrink-0" />
+                        <span className="text-xs font-medium">{currentLangLabel}</span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setIsLangModalOpen(true)}
+                        className="p-1 rounded-md text-(--text-secondary) dark:text-(--dk-text-muted) hover:text-(--text-primary) dark:hover:text-(--dk-text) hover:bg-(--bg-tertiary) transition-colors"
+                        title="Edit preferred language"
+                    >
+                        <Pencil size={12} />
+                    </button>
+                </div>
+            </div>
+
+            <hr className="border-border/40" />
+
             {/* Community stats — static, replace later */}
             <div className="px-1">
                 <p className="text-xs font-semibold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-2">
@@ -163,6 +195,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
             <ProfileSkills languages={languages} />
 
             <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} user={user} />
+            <LanguagePickerModal isOpen={isLangModalOpen} onClose={() => setIsLangModalOpen(false)} currentLanguage={user.preferredLanguage} />
         </aside>
     );
 }

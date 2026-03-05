@@ -21,3 +21,10 @@ export const getHeaderProfile = async () => {
   const response = await api.get("/profile/header");
   return response.data;
 };
+
+export const updatePreferredLanguage = async (preferredLanguage: string) => {
+  const response = await api.put("/users/preferred-language", {
+    preferredLanguage: preferredLanguage.toUpperCase(),
+  });
+  return response.data;
+};

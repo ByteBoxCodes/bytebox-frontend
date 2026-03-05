@@ -54,7 +54,7 @@ export default function Header() {
                     <div className="flex md:hidden items-center gap-2 relative z-10">
                         <ThemeToggle />
                         {token && user ? (
-                            <ProfileDropdown name={user.name} email={user.email} />
+                            <ProfileDropdown name={user.name} email={user.email} preferredLanguage={user.preferredLanguage} />
                         ) : null}
                         <button
                             type="button"
@@ -130,7 +130,7 @@ export default function Header() {
                                 </DropdownMenu>
 
                                 {/* Profile Dropdown */}
-                                <ProfileDropdown name={user.name} email={user.email} username={user.username || user.email?.split('@')[0]} imageUrl={user.avatarUrl} />
+                                <ProfileDropdown name={user.name} email={user.email} username={user.username || user.email?.split('@')[0]} imageUrl={user.avatarUrl} preferredLanguage={user.preferredLanguage} />
                             </div>
                         ) : (
                             <div className="flex items-center gap-4">

@@ -14,3 +14,16 @@ export const languageOptions: LanguageOption[] = [
       "// Write your Java solution here\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // code here\n    }\n}\n",
   },
 ];
+
+/** Language options for the preferred language picker. */
+export const PREFERRED_LANGUAGE_OPTIONS: {
+  label: string;
+  value: string;
+  comingSoon?: boolean;
+}[] = [
+  { label: "C", value: "c" },
+  { label: "C++", value: "cpp" },
+  { label: "Java", value: "java" },
+  { label: "Python", value: "python", comingSoon: true },
+  { label: "JavaScript", value: "javascript", comingSoon: true },
+];

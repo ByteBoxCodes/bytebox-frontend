@@ -2,13 +2,34 @@ import RightSidebar from "../features/problem/RightSidebar";
 import TopicSidebar from "../features/problem/TopicSidebar";
 import ProblemList from "../features/problem/ProblemList";
 import { useGetAllTopics } from "@/hooks/useGetAllTopics";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetProblemsByTopic } from "@/hooks/useGetProblemsByTopic";
+import LanguagePickerModal from "@/features/profile/LanguagePickerModal";
+import { useUpdatePreferredLanguage } from "@/hooks/useUpdatePreferredLanguage";
 
 export default function ProblemPage() {
     const { data: topics } = useGetAllTopics();
     const [selectedTopic, setSelectedTopic] = useState<string>("functions");
     const { data: problems } = useGetProblemsByTopic(selectedTopic);
+    const [showLangModal, setShowLangModal] = useState(false);
+    const { mutate: updateLang } = useUpdatePreferredLanguage();
+
+    useEffect(() => {
+        // Only show if no preferred language is currently set
+        const lang = localStorage.getItem("preferredLanguage");
+        if (!lang) {
+            setShowLangModal(true);
+        }
+    }, []);
+
+    const handleLangModalClose = () => {
+        setShowLangModal(false);
+        // If the user closed the modal without selecting a language, default to cpp
+        if (!localStorage.getItem("preferredLanguage")) {
+            localStorage.setItem("preferredLanguage", "cpp");
+            updateLang("cpp");
+        }
+    };
 
     console.log(selectedTopic)
 
@@ -16,6 +37,11 @@ export default function ProblemPage() {
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
                         bg-(--bg-secondary) border-t border-(--border-primary)
                         dark:border-(--dk-border)">
+
+            <LanguagePickerModal
+                isOpen={showLangModal}
+                onClose={handleLangModalClose}
+            />
 
             <div className="relative z-10 px-4 w-full sm:px-6 lg:px-6 py-8">
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">

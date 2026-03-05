@@ -4,7 +4,6 @@ import { touchLocalStorageKey } from "@/utils/storageCleanup";
 
 const DRAFT_PREFIX = "bytebox_draft_";
 const SOLVED_PREFIX = "bytebox_solved_";
-const LANG_PREF_KEY = "bytebox_preferred_lang";
 const DEBOUNCE_MS = 1000;
 
 interface StoredCodeState {
@@ -58,18 +57,9 @@ export function useCodeStorage(
 
   /* ── Read initial state ── */
   const getInitialState = useCallback((): StoredCodeState => {
-    // Use session-persisted language preference if available
-    let preferredLang = defaultLanguage;
-    try {
-      const stored = sessionStorage.getItem(LANG_PREF_KEY);
-      if (stored) preferredLang = stored as Language;
-    } catch {
-      /* ignore */
-    }
-
     const defaults: StoredCodeState = {
       codeByLang: { ...defaultSnippets },
-      language: preferredLang,
+      language: defaultLanguage,
     };
 
     if (!problemId) return defaults;
@@ -138,12 +128,6 @@ export function useCodeStorage(
   const changeLanguage = useCallback(
     (newLang: Language) => {
       setLanguage(newLang);
-      // Persist preference across problems for this session
-      try {
-        sessionStorage.setItem(LANG_PREF_KEY, newLang);
-      } catch {
-        /* ignore */
-      }
       setCodeByLang((prev) => {
         if (prev[newLang] !== undefined) return prev;
         return { ...prev, [newLang]: defaultSnippets[newLang] ?? "" };

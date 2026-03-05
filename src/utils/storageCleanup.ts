@@ -16,7 +16,12 @@ const TIMESTAMPS_KEY = "_ls_timestamps";
 const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 /** Keys that should NEVER be auto-deleted */
-const WHITELIST = new Set(["token", "theme", TIMESTAMPS_KEY]);
+const WHITELIST = new Set([
+  "token",
+  "theme",
+  "preferredLanguage",
+  TIMESTAMPS_KEY,
+]);
 
 type Timestamps = Record<string, number>;
 

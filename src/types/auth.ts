@@ -25,6 +25,7 @@ export interface IUserProfile {
   linkedinUsername?: string | null;
   twitterUsername?: string | null;
   instagramUsername?: string | null;
+  preferredLanguage?: string | null;
 }
 
 export interface IHeatmapData {
