@@ -121,6 +121,9 @@ export function useCodeStorage(
   );
   const [language, setLanguage] = useState<Language>(initial.language);
   const [solved, setSolved] = useState<boolean>(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
+    "idle",
+  );
 
   // The active code for the current language
   const code = codeByLang[language] ?? defaultSnippets[language] ?? "";
@@ -185,11 +188,14 @@ export function useCodeStorage(
 
   /* ── Debounced persistence ── */
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!problemId) return;
 
+    setSaveStatus("saving");
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
 
     timerRef.current = setTimeout(() => {
       const state: StoredCodeState = { codeByLang, language };
@@ -205,6 +211,8 @@ export function useCodeStorage(
       } catch {
         /* storage full — ignore */
       }
+      setSaveStatus("saved");
+      savedTimerRef.current = setTimeout(() => setSaveStatus("idle"), 1500);
     }, DEBOUNCE_MS);
 
     return () => {
@@ -247,5 +255,6 @@ export function useCodeStorage(
     changeLanguage,
     markSolved,
     isSolved: solved,
+    saveStatus,
   };
 }

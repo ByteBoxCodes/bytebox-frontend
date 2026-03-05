@@ -7,7 +7,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send } from "lucide-react";
+import { Check, Loader2, Send } from "lucide-react";
 import { languageOptions } from "./languageOptions";
 
 interface EditorToolbarProps {
@@ -16,6 +16,7 @@ interface EditorToolbarProps {
     onSubmit: () => void;
     isRunning: boolean;
     isSubmitting: boolean;
+    saveStatus?: "idle" | "saving" | "saved";
 }
 
 export default function EditorToolbar({
@@ -24,6 +25,7 @@ export default function EditorToolbar({
     onSubmit,
     isRunning,
     isSubmitting,
+    saveStatus = "idle",
 }: EditorToolbarProps) {
     return (
         <div className="flex items-center justify-between px-4 py-2 border-b border-(--border-primary) bg-(--bg-tertiary)/50">
@@ -50,6 +52,29 @@ export default function EditorToolbar({
 
             {/* Action Buttons */}
             <div className="flex items-center gap-3">
+                {/* Save Status Indicator */}
+                <span
+                    className={`text-[11px] font-medium flex items-center gap-1 transition-all duration-300 ${saveStatus === "saving"
+                            ? "text-(--text-tertiary) opacity-100"
+                            : saveStatus === "saved"
+                                ? "text-emerald-500 opacity-100"
+                                : "opacity-0"
+                        }`}
+                >
+                    {saveStatus === "saving" && (
+                        <>
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            Saving...
+                        </>
+                    )}
+                    {saveStatus === "saved" && (
+                        <>
+                            <Check className="w-3 h-3" />
+                            Saved
+                        </>
+                    )}
+                </span>
+
                 <Button
                     size="sm"
                     onClick={onSubmit}

@@ -49,7 +49,7 @@ export default function SubmissionPanel({
     submissionError,
     submissions,
 }: SubmissionPanelProps) {
-    const { code, setCode, language, changeLanguage, markSolved } = useCodeStorage(
+    const { code, setCode, language, changeLanguage, markSolved, saveStatus } = useCodeStorage(
         problemId,
         defaultSnippets,
         languageOptions[0].value,
@@ -93,6 +93,7 @@ export default function SubmissionPanel({
                 onSubmit={handleSubmitClick}
                 isRunning={isRunning}
                 isSubmitting={isSubmitting}
+                saveStatus={saveStatus}
             />
 
             {/* Editor & Bottom Panel */}
