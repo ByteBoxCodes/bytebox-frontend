@@ -1,5 +1,4 @@
 import type { IUserProfile } from "@/types/auth";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
     Github,
     Linkedin,

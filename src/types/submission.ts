@@ -11,8 +11,16 @@ export interface ISubmission {
   code: string;
 }
 
+export interface SubmissionTestCase {
+  input: string;
+  expectedOutput: string;
+  userOutput: string | null;
+  status: "PASSED" | "WRONG_ANSWER" | "RUNTIME_ERROR" | "TIME_LIMIT_EXCEEDED";
+}
+
 export interface ISubmissionResponse {
   id: string;
+  submissionId?: string;
   code: string;
   language: string;
   status:
@@ -23,6 +31,7 @@ export interface ISubmissionResponse {
     | "TIME_LIMIT_EXCEEDED";
   passedTestCases: number;
   totalTestCases: number;
+  testCases?: SubmissionTestCase[];
   problemId: string;
   problemTitle: string;
   userId: string;

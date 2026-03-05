@@ -7,7 +7,7 @@ import { useGetProblemsByTopic } from "@/hooks/useGetProblemsByTopic";
 
 export default function ProblemPage() {
     const { data: topics } = useGetAllTopics();
-    const [selectedTopic, setSelectedTopic] = useState<string>("variables");
+    const [selectedTopic, setSelectedTopic] = useState<string>("functions");
     const { data: problems } = useGetProblemsByTopic(selectedTopic);
 
     console.log(selectedTopic)
