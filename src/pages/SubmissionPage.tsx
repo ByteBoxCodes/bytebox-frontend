@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
     ResizableHandle,
@@ -13,6 +13,7 @@ import type { Language } from "@/types/submission";
 import { useGetProblemById } from "@/hooks/useGetProblemById";
 import { Loader2 } from "lucide-react";
 import { useSubmitSolutions } from "@/hooks/useSubmitSolutions";
+import { useGetMySubmissions } from "@/hooks/useGetMySubmissions";
 
 export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
@@ -20,6 +21,24 @@ export default function SubmissionPage() {
     const [isRunning, setIsRunning] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { mutate, isPending, error: submissionError, data: submissionResult } = useSubmitSolutions();
+    const { data: submissions } = useGetMySubmissions(questionId!);
+
+    // Compute solved status from submissions
+    const isSolved = useMemo(() => {
+        if (!submissions?.length) return false;
+        if (submissionResult?.status === "ACCEPTED") return true;
+        return submissions.some((s) => s.status === "ACCEPTED");
+    }, [submissions, submissionResult]);
+
+    // Clear sessionStorage for previous problem when route changes (not on reload)
+    const prevQuestionIdRef = useRef(questionId);
+    useEffect(() => {
+        const prevId = prevQuestionIdRef.current;
+        if (prevId && prevId !== questionId) {
+            try { sessionStorage.removeItem(`bytebox_solved_${prevId}`); } catch { /* ignore */ }
+        }
+        prevQuestionIdRef.current = questionId;
+    }, [questionId]);
 
     // Auto-open success modal when all test cases pass
     useEffect(() => {
@@ -105,7 +124,7 @@ export default function SubmissionPage() {
                 {/* Left Panel: Question Details */}
                 <ResizablePanel defaultSize={50} minSize={30}>
                     <div className="h-full bg-(--bg-primary) dark:bg-(--bg-secondary) transition-colors duration-200">
-                        {data && <QuestionPanel question={data} />}
+                        {data && <QuestionPanel question={data} isSolved={isSolved} />}
                     </div>
                 </ResizablePanel>
 
@@ -116,6 +135,7 @@ export default function SubmissionPage() {
                 <ResizablePanel defaultSize={50} minSize={30} className="">
                     <div className="h-full bg-(--bg-secondary) transition-colors duration-200">
                         <SubmissionPanel
+                            problemId={questionId}
                             question={data!}
                             onRunTest={handleRunTest}
                             onSubmit={handleSubmit}
@@ -123,6 +143,7 @@ export default function SubmissionPage() {
                             isSubmitting={isPending}
                             submissionResult={submissionResult}
                             submissionError={submissionError}
+                            submissions={submissions}
                         />
                     </div>
 

@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
-import type { Language } from "@/types/submission";
+import type { Language, ISubmissionResponse } from "@/types/submission";
 import {
     ResizableHandle,
     ResizablePanel,
@@ -11,11 +11,13 @@ import { TerminalSquare } from "lucide-react";
 
 import type { IProblem } from "@/types/problems";
 import { languageOptions } from "./languageOptions";
+import { useCodeStorage } from "@/hooks/useCodeStorage";
 import EditorToolbar from "./EditorToolbar";
 import TestCasesTab from "./TestCasesTab";
 import TestResultTab from "./TestResultTab";
 
 interface SubmissionPanelProps {
+    problemId?: string;
     question?: IProblem;
     defaultCode?: string;
     onRunTest: (language: Language, code: string) => Promise<void>;
@@ -24,7 +26,12 @@ interface SubmissionPanelProps {
     isSubmitting: boolean;
     submissionResult?: any;
     submissionError?: any;
+    submissions?: ISubmissionResponse[];
 }
+
+const defaultSnippets = Object.fromEntries(
+    languageOptions.map((opt) => [opt.value, opt.snippet])
+) as Record<Language, string>;
 
 const mockTestCases = [
     { input: "n = 5", expectedOutput: "120" },
@@ -33,16 +40,34 @@ const mockTestCases = [
 ];
 
 export default function SubmissionPanel({
+    problemId,
     question,
     onSubmit,
     isRunning,
     isSubmitting,
     submissionResult,
     submissionError,
+    submissions,
 }: SubmissionPanelProps) {
-    const [language, setLanguage] = useState<Language>(languageOptions[0].value);
-    const [code, setCode] = useState<string>(languageOptions[0].snippet);
+    const { code, setCode, language, changeLanguage, markSolved } = useCodeStorage(
+        problemId,
+        defaultSnippets,
+        languageOptions[0].value,
+        submissions
+    );
     const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
+
+    // Mark as solved when submission is ACCEPTED
+    useEffect(() => {
+        if (
+            submissionResult &&
+            (submissionResult.status === "ACCEPTED" ||
+                (submissionResult.passedTestCases !== undefined &&
+                    Number(submissionResult.passedTestCases) === Number(submissionResult.totalTestCases)))
+        ) {
+            markSolved(code, language);
+        }
+    }, [submissionResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleSubmitClick = () => {
         setActiveTab("test-result");
@@ -50,9 +75,7 @@ export default function SubmissionPanel({
     };
 
     const handleLanguageChange = (value: Language) => {
-        setLanguage(value);
-        const option = languageOptions.find((opt) => opt.value === value);
-        setCode(option?.snippet || "");
+        changeLanguage(value);
     };
 
     const displayTestCases = question?.sampleTestCases?.length
@@ -109,8 +132,8 @@ export default function SubmissionPanel({
                                 <button
                                     onClick={() => setActiveTab("testcases")}
                                     className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] flex items-center gap-2 transition-colors ${activeTab === "testcases"
-                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
-                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                        ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                        : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
                                         }`}
                                 >
                                     <TerminalSquare className="w-4 h-4" />
@@ -119,8 +142,8 @@ export default function SubmissionPanel({
                                 <button
                                     onClick={() => setActiveTab("test-result")}
                                     className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] transition-colors ${activeTab === "test-result"
-                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
-                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                        ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                        : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
                                         }`}
                                 >
                                     Test Result

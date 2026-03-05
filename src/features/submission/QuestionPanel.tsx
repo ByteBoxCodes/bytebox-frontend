@@ -2,11 +2,11 @@ import type { IProblem } from "@/types/problems";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, History, Star } from "lucide-react";
+import { CheckCircle2, FileText, History, Star } from "lucide-react";
 import SubmissionHistory from "./SubmissionHistory";
 
 
-export default function QuestionPanel({ question }: { question: IProblem }) {
+export default function QuestionPanel({ question, isSolved }: { question: IProblem; isSolved?: boolean }) {
     const displayTestCases = question.sampleTestCases?.length ? question.sampleTestCases : question.testCases;
     return (
         <Tabs defaultValue="description" className="h-full flex flex-col">
@@ -75,6 +75,15 @@ export default function QuestionPanel({ question }: { question: IProblem }) {
                                         Favorite
                                     </Badge>
                                 </button>
+                                {isSolved && (
+                                    <Badge
+                                        variant="outline"
+                                        className="text-[11px] font-bold px-2.5 py-0.5 rounded-full border-0 tracking-wide bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 animate-in fade-in zoom-in duration-300"
+                                    >
+                                        <CheckCircle2 className="w-3.5 h-3.5" />
+                                        Solved
+                                    </Badge>
+                                )}
                             </div>
                         </div>
 
