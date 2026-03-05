@@ -25,9 +25,9 @@ const getTopicIcon = (name: string) => {
 
 export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: TopicSidebarProps) {
     return (
-        <div className="h-[calc(100vh-12rem)] sticky top-24 flex flex-col font-pj">
+        <div className="h-[calc(100vh-12rem)] sticky top-24 flex flex-col font-pj overflow-hidden">
             {/* My Lists Section */}
-            <div className="mb-3 border-b border-(--dk-border) pb-2">
+            <div className="mb-3 border-b border-(--dk-border) pb-2 shrink-0">
                 <div className="flex justify-between items-center">
                     <h3 className="text-xs font-extrabold text-(--text-tertiary) uppercase tracking-wider mb-3 px-3">
                         My Lists
@@ -60,10 +60,10 @@ export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: T
                 </div>
             </div>
 
-            <ScrollArea className="flex-1 -mx-2">
-                <h3 className="text-xs font-extrabold text-(--text-tertiary) uppercase tracking-wider mb-3 px-5 pt-2">
-                    Topics
-                </h3>
+            <h3 className="text-xs font-extrabold text-(--text-tertiary) uppercase tracking-wider mb-3 px-3 pt-2 shrink-0">
+                Topics
+            </h3>
+            <ScrollArea className="flex-1 min-h-0 -mx-2">
                 <div className="space-y-1 px-2 pb-6">
                     {topics.map((topic, index) => {
                         const isActive = selectedTopic === topic.name;

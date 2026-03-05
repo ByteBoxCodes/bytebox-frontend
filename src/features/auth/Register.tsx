@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, User, AtSign, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useRegisterUser } from "@/hooks/useRegisterUser";
 import VerificationModal from "./VerificationModal";
+import GoogleLoginAuth from "./GoogleLoginAuth";
 
 export default function Register() {
     // const navigate = useNavigate();
@@ -39,19 +40,8 @@ export default function Register() {
             </div>
 
             {/* Google button */}
-            <button
-                type="button"
-                className="w-full h-12 rounded-xl flex items-center justify-center gap-3 text-sm font-medium
-                           transition-colors duration-200
-                           bg-black/5 ring-1 ring-black/10 text-(--text-primary) hover:bg-black/8
-                           dark:bg-(--dk-surface) dark:ring-(--dk-border-light) dark:text-(--dk-text-dim)
-                           dark:hover:bg-(--dk-surface-hover)"
-            >
-                <svg className="h-5 w-5" viewBox="0 0 488 512" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                </svg>
-                Continue with Google
-            </button>
+            <GoogleLoginAuth />
+
 
             {/* Divider */}
             <div className="relative">
