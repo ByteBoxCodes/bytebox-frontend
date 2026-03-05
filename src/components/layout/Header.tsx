@@ -130,7 +130,7 @@ export default function Header() {
                                 </DropdownMenu>
 
                                 {/* Profile Dropdown */}
-                                <ProfileDropdown name={user.name} email={user.email} username={user.username || user.email?.split('@')[0]} />
+                                <ProfileDropdown name={user.name} email={user.email} username={user.username || user.email?.split('@')[0]} imageUrl={user.avatarUrl} />
                             </div>
                         ) : (
                             <div className="flex items-center gap-4">

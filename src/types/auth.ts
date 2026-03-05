@@ -60,3 +60,11 @@ export interface IUpdateProfile {
   instagram?: string;
   avatar?: string;
 }
+
+export interface IHeaderProfile {
+  name: string;
+  username: string;
+  avatarUrl: string;
+  currentStreak: number;
+  maxStreak: number;
+}

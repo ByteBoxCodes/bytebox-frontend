@@ -15,9 +15,10 @@ interface ProfileDropdownProps {
     name?: string;
     email?: string;
     username?: string;
+    imageUrl?: string;
 }
 
-export default function ProfileDropdown({ name, email, username }: ProfileDropdownProps) {
+export default function ProfileDropdown({ name, email, username, imageUrl }: ProfileDropdownProps) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -34,7 +35,7 @@ export default function ProfileDropdown({ name, email, username }: ProfileDropdo
                     className="outline-none focus:outline-none flex items-center gap-2.5 hover:bg-(--bg-tertiary) p-1.5 pr-3 rounded-full transition-colors border border-transparent hover:border-(--border-primary) dark:hover:border-white/10"
                     aria-label="Open profile menu"
                 >
-                    <ProfileAvatar name={name} size="sm" />
+                    <ProfileAvatar name={name} size="sm" imageUrl={imageUrl} />
                     <div className="hidden sm:flex flex-col items-start text-left">
                         <span className="text-sm font-semibold text-(--text-primary) dark:text-white leading-none">
                             {name ? name.split(' ')[0] : 'User'}

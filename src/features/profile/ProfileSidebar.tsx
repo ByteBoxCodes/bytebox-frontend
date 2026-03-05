@@ -15,23 +15,17 @@ import ProfileSkills from "./ProfileSkills";
 import { useState } from "react";
 import EditProfileModal from "./EditProfileModal";
 import { Button } from "@/components/ui/button";
+import ProfileAvatar from "./ProfileAvatar";
 
 interface ProfileSidebarProps {
     user: IUserProfile;
     languages: string[];
 }
 
-function getInitials(name?: string) {
-    if (!name) return "U";
-    return name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
-}
-
 function formatDate(d?: string) {
     if (!d) return "—";
     return new Date(d).toLocaleDateString("en-IN", { year: "numeric", month: "long" });
 }
-
-
 
 export default function ProfileSidebar({ user, languages }: ProfileSidebarProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -41,11 +35,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
 
             {/* Avatar + Name */}
             <div className="flex flex-col items-center text-center gap-3 pt-2">
-                <Avatar className="h-24 w-24 ring-4 ring-primary/20 shadow-xl">
-                    <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
-                        {getInitials(user.name)}
-                    </AvatarFallback>
-                </Avatar>
+                <ProfileAvatar name={user.name} imageUrl={user.avatarUrl} size="lg" />
                 <div>
                     <h1 className="text-xl font-bold leading-tight text-(--text-primary) dark:text-(--dk-text)">
                         {user.name}
