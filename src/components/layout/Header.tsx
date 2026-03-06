@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
 import ProfileDropdown from "@/features/profile/ProfileDropdown";
 import { Search, Menu, X, Zap, Flame } from "lucide-react";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
+import SearchModal from "@/features/problem/SearchModal";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,6 +20,18 @@ export default function Header() {
     console.log(user);
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [showSearchModal, setShowSearchModal] = useState(false);
+
+    useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+            if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                setShowSearchModal((open) => !open);
+            }
+        };
+        document.addEventListener("keydown", down);
+        return () => document.removeEventListener("keydown", down);
+    }, []);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -28,6 +41,10 @@ export default function Header() {
         <header
             className="relative py-2 bg-(--bg-secondary)  dark:border-white/8 transition-colors duration-200 z-50"
         >
+            <SearchModal
+                open={showSearchModal}
+                onOpenChange={setShowSearchModal}
+            />
 
             <div className="relative px-4 w-full sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
@@ -80,8 +97,10 @@ export default function Header() {
                             </div>
                             <input
                                 type="text"
-                                placeholder="Search..."
-                                className="w-48 xl:w-64 h-9 pl-10 pr-4 text-sm bg-(--bg-secondary) border border-(--border-primary) dark:border-white/10 rounded-full focus:outline-none focus:ring-1 focus:ring-(--btn-primary-bg) dark:focus:ring-white/30 transition-all text-(--text-primary) dark:text-white placeholder:text-(--text-tertiary)"
+                                placeholder="Search (⌘K)..."
+                                className="cursor-pointer w-48 xl:w-64 h-9 pl-10 pr-4 text-sm bg-(--bg-secondary) border border-(--border-primary) dark:border-white/10 rounded-full focus:outline-none focus:ring-1 focus:ring-(--btn-primary-bg) dark:focus:ring-white/30 transition-all text-(--text-primary) dark:text-white placeholder:text-(--text-tertiary)"
+                                readOnly
+                                onClick={() => setShowSearchModal(true)}
                             />
                         </div>
 
@@ -163,7 +182,12 @@ export default function Header() {
                                 <input
                                     type="text"
                                     placeholder="Search..."
-                                    className="w-full h-10 pl-10 pr-4 text-sm bg-(--bg-secondary) border border-(--border-primary) dark:border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-(--btn-primary-bg) dark:focus:ring-white/30 text-(--text-primary) dark:text-white placeholder:text-(--text-tertiary)"
+                                    className="cursor-pointer w-full h-10 pl-10 pr-4 text-sm bg-(--bg-secondary) border border-(--border-primary) dark:border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-(--btn-primary-bg) dark:focus:ring-white/30 text-(--text-primary) dark:text-white placeholder:text-(--text-tertiary)"
+                                    readOnly
+                                    onClick={() => {
+                                        setShowSearchModal(true);
+                                        setIsMobileMenuOpen(false);
+                                    }}
                                 />
                             </div>
 

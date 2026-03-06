@@ -17,3 +17,8 @@ export const getProblemByTopic = async (
   const response = await api.get(`/problems?topic=${topic}`);
   return response.data;
 };
+
+export const handleSearch = async (query: string): Promise<IProblemList[]> => {
+  const response = await api.get(`/problems/search?query=${query}`);
+  return response.data;
+};
