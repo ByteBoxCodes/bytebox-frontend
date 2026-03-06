@@ -14,21 +14,26 @@ import { useGetProblemById } from "@/hooks/useGetProblemById";
 import { Loader2 } from "lucide-react";
 import { useSubmitSolutions } from "@/hooks/useSubmitSolutions";
 import { useGetMySubmissions } from "@/hooks/useGetMySubmissions";
-
+import { useRunSolution } from "@/hooks/useRunSolution";
 export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
     const { data, isLoading, isError } = useGetProblemById(questionId!);
-    const [isRunning, setIsRunning] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const { mutate, isPending, error: submissionError, data: submissionResult } = useSubmitSolutions();
+    const [lastAction, setLastAction] = useState<"run" | "submit" | null>(null);
+
+    const { mutate: runMutate, isPending: isRunPending, error: runError, data: runResult } = useRunSolution();
+    const { mutate: submitMutate, isPending: isSubmitPending, error: submitError, data: submitResult } = useSubmitSolutions();
     const { data: submissions } = useGetMySubmissions(questionId!);
+
+    const activeResult = lastAction === "run" ? runResult : submitResult;
+    const activeError = lastAction === "run" ? runError : submitError;
 
     // Compute solved status from submissions
     const isSolved = useMemo(() => {
         if (!submissions?.length) return false;
-        if (submissionResult?.status === "ACCEPTED") return true;
+        if (submitResult?.status === "ACCEPTED") return true;
         return submissions.some((s) => s.status === "ACCEPTED");
-    }, [submissions, submissionResult]);
+    }, [submissions, submitResult]);
 
     // Clear sessionStorage for previous problem when route changes (not on reload)
     const prevQuestionIdRef = useRef(questionId);
@@ -43,14 +48,15 @@ export default function SubmissionPage() {
     // Auto-open success modal when all test cases pass
     useEffect(() => {
         if (
-            submissionResult &&
-            (submissionResult.status === "ACCEPTED" ||
-                (submissionResult.passedTestCases !== undefined &&
-                    Number(submissionResult.passedTestCases) === Number(submissionResult.totalTestCases)))
+            lastAction === "submit" &&
+            submitResult &&
+            (submitResult.status === "ACCEPTED" ||
+                (submitResult.passedTestCases !== undefined &&
+                    Number(submitResult.passedTestCases) === Number(submitResult.totalTestCases)))
         ) {
             setShowSuccessModal(true);
         }
-    }, [submissionResult]);
+    }, [submitResult, lastAction]);
 
     if (isLoading) {
         return (
@@ -84,20 +90,21 @@ export default function SubmissionPage() {
     }
 
     const handleRunTest = async (language: Language, code: string) => {
-        setIsRunning(true);
-        console.log(`Running tests for ${language} execution...`);
-        console.log(code);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsRunning(false);
-    };
-
-    const handleSubmit = async (language: Language, code: string) => {
-        const submissionData = {
+        setLastAction("run");
+        runMutate({
             problemId: questionId,
             language,
             code,
-        };
-        mutate(submissionData);
+        });
+    };
+
+    const handleSubmit = async (language: Language, code: string) => {
+        setLastAction("submit");
+        submitMutate({
+            problemId: questionId,
+            language,
+            code,
+        });
     };
 
     return (
@@ -139,10 +146,10 @@ export default function SubmissionPage() {
                             question={data!}
                             onRunTest={handleRunTest}
                             onSubmit={handleSubmit}
-                            isRunning={isRunning}
-                            isSubmitting={isPending}
-                            submissionResult={submissionResult}
-                            submissionError={submissionError}
+                            isRunning={isRunPending}
+                            isSubmitting={isSubmitPending}
+                            submissionResult={activeResult}
+                            submissionError={activeError}
                             submissions={submissions}
                         />
                     </div>
@@ -150,8 +157,8 @@ export default function SubmissionPage() {
                     <SuccessModal
                         isOpen={showSuccessModal}
                         onClose={() => setShowSuccessModal(false)}
-                        passedTestCases={submissionResult?.passedTestCases}
-                        totalTestCases={submissionResult?.totalTestCases}
+                        passedTestCases={submitResult?.passedTestCases}
+                        totalTestCases={submitResult?.totalTestCases}
                         problemTitle={data?.title}
                     />
                 </ResizablePanel>

@@ -6,6 +6,11 @@ export const submitSolution = async (data: ISubmission) => {
   return response.data;
 };
 
+export const runSolution = async (data: ISubmission) => {
+  const response = await api.post("/submissions/run", data);
+  return response.data;
+};
+
 export const getMySubmissionByProblemId = async (
   problemId: string,
 ): Promise<ISubmissionResponse[]> => {

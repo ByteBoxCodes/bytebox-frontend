@@ -42,6 +42,7 @@ const mockTestCases = [
 export default function SubmissionPanel({
     problemId,
     question,
+    onRunTest,
     onSubmit,
     isRunning,
     isSubmitting,
@@ -87,6 +88,11 @@ export default function SubmissionPanel({
         }
     }, [submissionResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    const handleRunTestClick = () => {
+        setActiveTab("test-result");
+        onRunTest(language === "cpp" ? "c++" : language, code);
+    };
+
     const handleSubmitClick = () => {
         setActiveTab("test-result");
         onSubmit(language === "cpp" ? "c++" : language, code);
@@ -109,6 +115,7 @@ export default function SubmissionPanel({
                 language={language}
                 onLanguageChange={handleLanguageChange}
                 onSubmit={handleSubmitClick}
+                onRunTest={handleRunTestClick}
                 isRunning={isRunning}
                 isSubmitting={isSubmitting}
                 saveStatus={saveStatus}

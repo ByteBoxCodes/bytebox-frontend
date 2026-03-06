@@ -7,13 +7,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Check, Loader2, Send } from "lucide-react";
+import { Check, Loader2, Play, Send } from "lucide-react";
 import { languageOptions } from "./languageOptions";
 
 interface EditorToolbarProps {
     language: Language;
     onLanguageChange: (value: Language) => void;
     onSubmit: () => void;
+    onRunTest: () => void;
     isRunning: boolean;
     isSubmitting: boolean;
     saveStatus?: "idle" | "saving" | "saved";
@@ -23,6 +24,7 @@ export default function EditorToolbar({
     language,
     onLanguageChange,
     onSubmit,
+    onRunTest,
     isRunning,
     isSubmitting,
     saveStatus = "idle",
@@ -55,10 +57,10 @@ export default function EditorToolbar({
                 {/* Save Status Indicator */}
                 <span
                     className={`text-[11px] font-medium flex items-center gap-1 transition-all duration-300 ${saveStatus === "saving"
-                            ? "text-(--text-tertiary) opacity-100"
-                            : saveStatus === "saved"
-                                ? "text-emerald-500 opacity-100"
-                                : "opacity-0"
+                        ? "text-(--text-tertiary) opacity-100"
+                        : saveStatus === "saved"
+                            ? "text-emerald-500 opacity-100"
+                            : "opacity-0"
                         }`}
                 >
                     {saveStatus === "saving" && (
@@ -74,6 +76,21 @@ export default function EditorToolbar({
                         </>
                     )}
                 </span>
+
+                <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={onRunTest}
+                    disabled={isRunning || isSubmitting}
+                    className="font-medium bg-(--bg-primary) hover:bg-(--bg-secondary) text-(--text-primary) border border-(--border-primary) h-8 cursor-pointer"
+                >
+                    {isRunning ? (
+                        <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin text-(--text-tertiary)" />
+                    ) : (
+                        <Play className="w-3.5 h-3.5 mr-1.5" />
+                    )}
+                    Run Code
+                </Button>
 
                 <Button
                     size="sm"

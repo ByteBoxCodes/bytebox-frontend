@@ -82,20 +82,45 @@ export default function TestResultTab({
 
     /* ── Submission Error ── */
     if (submissionError) {
+        const rawErrorMsg =
+            submissionError?.response?.data?.message ||
+            submissionError?.message ||
+            (typeof submissionError === "string" ? submissionError : JSON.stringify(submissionError, null, 2));
+
+        let errorContent = (
+            <pre className="text-sm font-mono text-rose-500 whitespace-pre-wrap">
+                {rawErrorMsg}
+            </pre>
+        );
+
+        if (typeof rawErrorMsg === "string" && rawErrorMsg.includes(",")) {
+            const parts = rawErrorMsg.split(/,\s+/).map((s: string) => s.trim()).filter(Boolean);
+            if (parts.length > 1) {
+                errorContent = (
+                    <div className="text-sm font-mono text-rose-500 flex flex-col gap-1.5">
+                        <span className="font-bold">{parts[0]}:</span>
+                        <div className="flex flex-col gap-1 ml-2">
+                            {parts.slice(1).map((part: string, idx: number) => (
+                                <span key={idx} className="opacity-90">
+                                    -&gt; {part}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                );
+            }
+        }
+
         return (
             <div className="flex flex-col h-full space-y-4">
                 <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                    <span className="text-rose-500 font-bold text-lg">
+                    <span className="text-rose-500 font-bold text-md">
                         Submission Error
                     </span>
                 </div>
                 <div className="p-4 rounded-md border border-rose-500/20 bg-rose-500/10 flex-1 min-h-0 overflow-auto">
-                    <pre className="text-sm font-mono text-rose-500 whitespace-pre-wrap">
-                        {submissionError?.response?.data?.message ||
-                            submissionError?.message ||
-                            JSON.stringify(submissionError, null, 2)}
-                    </pre>
+                    {errorContent}
                 </div>
             </div>
         );

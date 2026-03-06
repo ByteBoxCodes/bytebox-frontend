@@ -38,7 +38,7 @@ export interface ISubmissionResponse {
   submittedAt: string;
 }
 
-export type Language = "java" | "cpp" | "c++";
+export type Language = "java" | "cpp" | "c++" | "c";
 
 export interface LanguageOption {
   label: string;

@@ -112,6 +112,35 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
                             </section>
                         )}
 
+                        {/* Constraints & Keywords */}
+                        {(question.constraints || question.requiredKeywords) && (
+                            <section className="space-y-3 pt-4">
+                                <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Constraints</h3>
+                                <ul className="list-inside space-y-1.5 text-[15px] text-(--text-secondary) ml-2">
+                                    {question.constraints && question.constraints.split(/[\n.]/).filter(item => item.trim().length > 0).map((item, index) => (
+                                        <li key={`constraint-${index}`} className="flex items-start gap-2">
+                                            <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                            <span dangerouslySetInnerHTML={{ __html: item.trim() }} />
+                                        </li>
+                                    ))}
+
+                                    {question.requiredKeywords && (
+                                        <li className="flex items-start gap-2 mt-1">
+                                            <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <span>Required Keywords:</span>
+                                                {question.requiredKeywords.split(',').map((keyword, index) => (
+                                                    <Badge key={`keyword-${index}`} variant="secondary" className="font-mono text-[13px] bg-(--bg-primary) text-(--text-secondary) border border-(--border-primary) px-2 py-0.5 rounded-md">
+                                                        {keyword.trim()}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                </ul>
+                            </section>
+                        )}
+
                         {/* Input/Output Format */}
                         {/* <section className="space-y-4">
                     <h3 className="text-base font-semibold text-(--text-primary)">Input Format</h3>
@@ -170,34 +199,7 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
                             </section>
                         )}
 
-                        {/* Constraints & Keywords */}
-                        {(question.constraints || question.requiredKeywords) && (
-                            <section className="space-y-3 pt-4">
-                                <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Constraints</h3>
-                                <ul className="list-inside space-y-1.5 text-[15px] text-(--text-secondary) ml-2">
-                                    {question.constraints && question.constraints.split(/[\n.]/).filter(item => item.trim().length > 0).map((item, index) => (
-                                        <li key={`constraint-${index}`} className="flex items-start gap-2">
-                                            <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                            <span dangerouslySetInnerHTML={{ __html: item.trim() }} />
-                                        </li>
-                                    ))}
 
-                                    {question.requiredKeywords && (
-                                        <li className="flex items-start gap-2 mt-1">
-                                            <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <span>Required Keywords:</span>
-                                                {question.requiredKeywords.split(',').map((keyword, index) => (
-                                                    <Badge key={`keyword-${index}`} variant="secondary" className="font-mono text-[13px] bg-(--bg-primary) text-(--text-secondary) border border-(--border-primary) px-2 py-0.5 rounded-md">
-                                                        {keyword.trim()}
-                                                    </Badge>
-                                                ))}
-                                            </div>
-                                        </li>
-                                    )}
-                                </ul>
-                            </section>
-                        )}
                     </div>
                 </ScrollArea>
             </TabsContent>
