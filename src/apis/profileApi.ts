@@ -12,7 +12,7 @@ export const getUserStats = async () => {
 };
 
 export const updateProfile = async (userData: IUpdateProfile) => {
-  const response = await api.put("/profile", userData);
+  const response = await api.put("/profile/update", userData);
 
   return response.data;
 };

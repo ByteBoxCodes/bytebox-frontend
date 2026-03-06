@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { IUserProfile } from "@/types/auth";
-import { Check } from "lucide-react";
+import { Check, CircleAlert, Cross, FileWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,7 @@ function getInitials(name?: string) {
 
 export default function EditProfileModal({ isOpen, onClose, user }: EditProfileModalProps) {
     const queryClient = useQueryClient();
-    const { mutateAsync: updateProfile } = useUpdateProfile();
+    const { mutateAsync: updateProfile, error } = useUpdateProfile();
 
     const [formData, setFormData] = useState({
         name: user.name || "",
@@ -102,6 +102,7 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
                 name: submitData.name,
                 bio: submitData.bio,
                 website: submitData.website,
+                username: submitData.username,
                 github: extractUsername(submitData.github, 'github'),
                 linkedin: extractUsername(submitData.linkedin, 'linkedin'),
                 twitter: extractUsername(submitData.twitter, 'twitter'),
@@ -176,9 +177,14 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
                                 <Input
                                     id="username" name="username"
                                     value={formData.username} onChange={handleChange}
-                                    placeholder="Username" disabled
+                                    placeholder="Username"
                                 />
-                                <p className="text-xs text-muted-foreground">Username cannot be changed.</p>
+                                {error && (error as any).response?.data?.message && (
+                                    <p className="text-xs gap-2 text-red-600 flex items-center mt-1">
+                                        <CircleAlert size={12} />
+                                        {(error as any).response.data.message}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-2">

@@ -60,6 +60,7 @@ export interface IUpdateProfile {
   twitter?: string;
   instagram?: string;
   avatar?: string;
+  username?: string;
 }
 
 export interface IHeaderProfile {
