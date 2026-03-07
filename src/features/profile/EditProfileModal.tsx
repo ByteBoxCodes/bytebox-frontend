@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { IUserProfile } from "@/types/auth";
-import { Check, CircleAlert, Cross, FileWarning } from "lucide-react";
+import { Check, CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

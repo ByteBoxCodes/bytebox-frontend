@@ -7,14 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useLoginUser } from "@/hooks/useLoginUser";
 import VerificationModal from "./VerificationModal";
-import { toast } from "sonner";
 import GoogleLoginAuth from "./GoogleLoginAuth";
+import ForgotPasswordModal from "./ForgotPasswordModal";
+import { toast } from "sonner";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showVerificationModal, setShowVerificationModal] = useState(false);
+    const [showForgotModal, setShowForgotModal] = useState(false);
 
     const { mutate, isPending } = useLoginUser((message) => {
         if (message.toLowerCase().includes("not verified") || message.toLowerCase().includes("unverified")) {
@@ -94,11 +96,13 @@ export default function Login() {
                             className="text-sm text-(--text-secondary) dark:text-(--dk-text-muted)">
                             Password
                         </Label>
-                        <Link to="/forgot-password"
-                            className="text-xs hover:opacity-80 transition-opacity
+                        <button
+                            type="button"
+                            onClick={() => setShowForgotModal(true)}
+                            className=" cursor-pointer hover:underline text-xs hover:opacity-80 transition-opacity
                                          text-(--text-secondary) dark:text-(--dk-text-faint)">
                             Forgot password?
-                        </Link>
+                        </button>
                     </div>
                     <div className="relative">
                         <Lock size={15}
@@ -160,6 +164,11 @@ export default function Login() {
                 isOpen={showVerificationModal}
                 setIsOpen={setShowVerificationModal}
                 email={email}
+            />
+
+            <ForgotPasswordModal
+                isOpen={showForgotModal}
+                setIsOpen={setShowForgotModal}
             />
         </div>
     );
