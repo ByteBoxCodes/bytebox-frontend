@@ -9,6 +9,7 @@ import UserProfilePage from "../pages/UserProfilePage";
 import VerifyPage from "../pages/VerifyPage";
 import ProtectedRoutes from "@/components/common/ProtectedRoutes";
 import GuestRoute from "@/components/common/GuestRoute";
+import LeaderboardPage from "../pages/LeaderboardPage";
 
 export const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: (<ProtectedRoutes><UserProfilePage /></ProtectedRoutes>),
+            },
+            {
+                path: "/leaderboard",
+                element: <LeaderboardPage />,
             },
         ],
     },

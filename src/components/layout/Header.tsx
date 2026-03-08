@@ -62,7 +62,7 @@ export default function Header() {
                         <div className="hidden md:flex items-center space-x-6 relative z-10">
                             <Link to="/" className="text-sm font-medium text-(--text-primary) dark:text-white/80 transition-colors rounded focus:outline-none hover:text-(--btn-primary-bg) dark:hover:text-white relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-(--btn-primary-bg) dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"> Explore</Link>
                             <Link to="/problems" className="text-sm font-medium text-(--text-primary) dark:text-white/80 transition-colors rounded focus:outline-none hover:text-(--btn-primary-bg) dark:hover:text-white relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-(--btn-primary-bg) dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"> Problems </Link>
-                            <Link to="#" className="text-sm font-medium text-(--text-primary) dark:text-white/80 transition-colors rounded focus:outline-none hover:text-(--btn-primary-bg) dark:hover:text-white cursor-not-allowed relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-(--btn-primary-bg) dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"> Leaderboard </Link>
+                            <Link to="/leaderboard" className="text-sm font-medium text-(--text-primary) dark:text-white/80 transition-colors rounded focus:outline-none hover:text-(--btn-primary-bg) dark:hover:text-white relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-(--btn-primary-bg) dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"> Leaderboard </Link>
                         </div>
                     </div>
 
@@ -194,7 +194,7 @@ export default function Header() {
                             <nav className="flex flex-col space-y-2">
                                 <Link to="/" onClick={toggleMobileMenu} className="px-3 py-2 rounded-lg text-base font-medium text-(--text-primary) dark:text-white hover:bg-(--bg-tertiary) transition-colors"> Explore </Link>
                                 <Link to="/problems" onClick={toggleMobileMenu} className="px-3 py-2 rounded-lg text-base font-medium text-(--text-primary) dark:text-white hover:bg-(--bg-tertiary) transition-colors"> Problems </Link>
-                                <Link to="#" onClick={toggleMobileMenu} className="px-3 py-2 rounded-lg text-base font-medium text-(--text-primary) dark:text-white hover:bg-(--bg-tertiary) transition-colors cursor-not-allowed opacity-70"> Leaderboard </Link>
+                                <Link to="/leaderboard" onClick={toggleMobileMenu} className="px-3 py-2 rounded-lg text-base font-medium text-(--text-primary) dark:text-white hover:bg-(--bg-tertiary) transition-colors"> Leaderboard </Link>
                                 <Link to="#" onClick={toggleMobileMenu} className="px-3 py-2 rounded-lg text-base font-medium text-(--text-primary) dark:text-white hover:bg-(--bg-tertiary) transition-colors cursor-not-allowed opacity-70"> Challenges </Link>
                             </nav>
 
