@@ -5,6 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle2, FileText, History, Star } from "lucide-react";
 import SubmissionHistory from "./SubmissionHistory";
 
+const highlightQuotes = (text: string) => {
+    if (!text) return text;
+    return text.replace(/"([^"]+)"/g, '<span class="bg-(--bg-primary) text-(--text-primary) px-1.5 py-0.5 rounded-md font-mono text-[13px] border border-(--border-primary) mx-0.5">"$1"</span>');
+};
 
 export default function QuestionPanel({ question, isSolved }: { question: IProblem; isSolved?: boolean }) {
     const displayTestCases = question.sampleTestCases?.length ? question.sampleTestCases : question.testCases;
@@ -89,11 +93,13 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
 
                         {/* Problem Statement */}
                         <section className="space-y-4 font-pj">
-                            <div className="text-(--text-primary) text-[16px] leading-7">
-                                {/* Replace with actual description if available, currently using placeholder text from original file */}
-                                <p>
-                                    {question.description}
-                                </p>
+                            <div className="text-(--text-primary) text-[16px] leading-7 space-y-4">
+                                {question.description?.split(/\.\s+|\n+/).filter(item => item.trim().length > 0).map((item, index) => {
+                                    const text = item.trim() + (item.trim().endsWith('.') ? '' : '.');
+                                    return (
+                                        <p key={index} dangerouslySetInnerHTML={{ __html: highlightQuotes(text) }} />
+                                    );
+                                })}
                             </div>
                         </section>
 
@@ -102,10 +108,10 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
                             <section className="space-y-3 pt-4">
                                 <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Instructions</h3>
                                 <ul className="list-inside space-y-1.5 text-[15px] text-(--text-secondary) ml-2">
-                                    {question.instructions.split('\n').filter(item => item.trim().length > 0).map((item, index) => (
+                                    {question.instructions && question.instructions.split(/[\n.]/).filter(item => item.trim().length > 0).map((item, index) => (
                                         <li key={index} className="flex items-start gap-2">
                                             <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                            <span dangerouslySetInnerHTML={{ __html: item.trim() }} />
+                                            <span dangerouslySetInnerHTML={{ __html: highlightQuotes(item.trim()) }} />
                                         </li>
                                     ))}
                                 </ul>
@@ -120,7 +126,7 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
                                     {question.constraints && question.constraints.split(/[\n.]/).filter(item => item.trim().length > 0).map((item, index) => (
                                         <li key={`constraint-${index}`} className="flex items-start gap-2">
                                             <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
-                                            <span dangerouslySetInnerHTML={{ __html: item.trim() }} />
+                                            <span dangerouslySetInnerHTML={{ __html: highlightQuotes(item.trim()) }} />
                                         </li>
                                     ))}
 
