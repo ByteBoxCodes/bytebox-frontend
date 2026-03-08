@@ -278,6 +278,7 @@ function AcceptedResult({
                     />
                     {submissionResult.testCases[activeResultCase] && (
                         <TestCaseDetail
+
                             input={
                                 submissionResult.testCases[activeResultCase]
                                     .input

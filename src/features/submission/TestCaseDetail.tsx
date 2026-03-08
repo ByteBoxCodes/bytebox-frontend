@@ -15,14 +15,16 @@ export default function TestCaseDetail({
     return (
         <div className="space-y-3 animate-in fade-in duration-200 mb-10">
             {/* Input */}
-            <div className="space-y-1.5">
-                <p className="text-[11px] text-(--text-tertiary) font-bold uppercase tracking-wider">
-                    Input
-                </p>
-                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                    {input}
+            {input && (
+                <div className="space-y-1.5">
+                    <p className="text-[11px] text-(--text-tertiary) font-bold uppercase tracking-wider">
+                        Input
+                    </p>
+                    <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
+                        {input}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Your Output */}
             <div className="space-y-1.5">
@@ -50,10 +52,10 @@ export default function TestCaseDetail({
 
             {/* Expected Output */}
             <div className="space-y-1.5">
-                <p className="text-[11px] text-emerald-400/80 font-bold uppercase tracking-wider">
+                <p className="text-[11px] text-(--text-tertiary) font-bold uppercase tracking-wider">
                     Expected Output
                 </p>
-                <div className="px-3 py-2.5 rounded-md bg-emerald-500/5 font-mono text-sm text-emerald-400 border border-emerald-500/20">
+                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
                     {expectedOutput}
                 </div>
             </div>

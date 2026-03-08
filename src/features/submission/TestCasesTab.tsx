@@ -16,8 +16,8 @@ export default function TestCasesTab({ testCases }: TestCasesTabProps) {
                         key={index}
                         onClick={() => setActiveTestCase(index)}
                         className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${activeTestCase === index
-                                ? "bg-(--bg-tertiary) text-(--text-primary)"
-                                : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
+                            ? "bg-(--bg-tertiary) text-(--text-primary)"
+                            : "hover:bg-(--bg-tertiary)/50 text-(--text-secondary) hover:text-(--text-primary)"
                             }`}
                     >
                         Case {index + 1}
@@ -26,14 +26,16 @@ export default function TestCasesTab({ testCases }: TestCasesTabProps) {
             </div>
             {testCases.length > 0 && activeTestCase < testCases.length && (
                 <div className="space-y-4">
-                    <div className="space-y-1.5">
-                        <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">
-                            Input
-                        </p>
-                        <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                            {testCases[activeTestCase].input}
+                    {testCases[activeTestCase].input && (
+                        <div className="space-y-1.5">
+                            <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">
+                                Input
+                            </p>
+                            <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
+                                {testCases[activeTestCase].input}
+                            </div>
                         </div>
-                    </div>
+                    )}
                     <div className="space-y-1.5">
                         <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">
                             Expected Output
