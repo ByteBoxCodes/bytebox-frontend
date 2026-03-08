@@ -33,12 +33,6 @@ const defaultSnippets = Object.fromEntries(
     languageOptions.map((opt) => [opt.value, opt.snippet])
 ) as Record<Language, string>;
 
-const mockTestCases = [
-    { input: "n = 5", expectedOutput: "120" },
-    { input: "n = 3", expectedOutput: "6" },
-    { input: "n = 0", expectedOutput: "1" },
-];
-
 export default function SubmissionPanel({
     problemId,
     question,
@@ -106,7 +100,7 @@ export default function SubmissionPanel({
         ? question.sampleTestCases
         : question?.testCases?.length
             ? question.testCases
-            : mockTestCases;
+            : [];
 
     return (
         <div className="flex flex-col h-full bg-(--bg-secondary)">
@@ -179,7 +173,13 @@ export default function SubmissionPanel({
                             {/* Tab Body */}
                             <div className="flex-1 overflow-auto p-5">
                                 {activeTab === "testcases" ? (
-                                    <TestCasesTab testCases={displayTestCases} />
+                                    displayTestCases.length > 0 ? (
+                                        <TestCasesTab testCases={displayTestCases} />
+                                    ) : (
+                                        <div className="flex h-full items-center justify-center text-sm font-medium text-(--text-tertiary)">
+                                            No test cases available for this
+                                        </div>
+                                    )
                                 ) : (
                                     <div className="h-full">
                                         <TestResultTab

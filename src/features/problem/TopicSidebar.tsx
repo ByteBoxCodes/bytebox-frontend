@@ -71,7 +71,7 @@ export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: T
                         return (
                             <button
                                 key={topic.id || index}
-                                onClick={() => onSelectTopic(topic.name)}
+                                onClick={() => onSelectTopic(topic.name.replaceAll(" ", ""))}
                                 className={cn(
                                     "cursor-pointer group relative flex items-center gap-3 w-full text-left px-3 py-2 rounded-md transition-all duration-200 ease-out outline-none focus-visible:ring-2 focus-visible:ring-(--btn-primary-bg)",
                                     isActive

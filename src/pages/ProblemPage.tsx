@@ -9,7 +9,7 @@ import { useUpdatePreferredLanguage } from "@/hooks/useUpdatePreferredLanguage";
 
 export default function ProblemPage() {
     const { data: topics } = useGetAllTopics();
-    const [selectedTopic, setSelectedTopic] = useState<string>("functions");
+    const [selectedTopic, setSelectedTopic] = useState<string>("Input & Output");
     const { data: problems } = useGetProblemsByTopic(selectedTopic);
     const [showLangModal, setShowLangModal] = useState(false);
     const { mutate: updateLang } = useUpdatePreferredLanguage();

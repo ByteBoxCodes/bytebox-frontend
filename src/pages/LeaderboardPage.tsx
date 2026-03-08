@@ -53,7 +53,7 @@ export default function LeaderboardPage() {
                                     </h2>
                                 </div>
                                 <p className="mt-2 text-muted-foreground font-pj text-sm max-w-2xl">
-                                    Compete with the community. Rise through the ranks by solving algorithmic challenges and earning points.
+                                    Rise through the ranks by solving algorithmic challenges and earning points.
                                 </p>
                             </div>
 
