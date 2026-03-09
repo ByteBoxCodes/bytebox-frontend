@@ -12,7 +12,7 @@ const highlightQuotes = (text: string) => {
 
 const formatText = (text: string | null | undefined) => {
     if (!text) return text;
-    return String(text).replace(/#\s*/g, '\n').trim();
+    return String(text).replace(/(?:\\n|\n)/g, '\n').trim();
 };
 
 export default function QuestionPanel({ question, isSolved }: { question: IProblem; isSolved?: boolean }) {

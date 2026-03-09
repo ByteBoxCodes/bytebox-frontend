@@ -3,7 +3,7 @@ import type { TestCase } from "@/types/submission";
 
 const formatText = (text: string | null | undefined) => {
     if (!text) return text;
-    return String(text).replace(/#\s*/g, '\n').trim();
+    return String(text).replace(/(?:\\n|\n)/g, '\n').trim();
 };
 
 interface TestCasesTabProps {

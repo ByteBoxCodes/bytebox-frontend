@@ -2,7 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ITopic } from "@/types/topics";
-import { Terminal, Code2, Database, Hash, ListTree, RotateCw, Braces, Layers, Binary, Star, Plus, ChevronsLeftRightEllipsis } from "lucide-react";
+import { Code2, Hash, Star, Plus, ChevronsLeftRightEllipsis, Ampersand, ChartNoAxesGantt, Repeat, Asterisk, ParenthesesIcon, Brackets, TextInitial } from "lucide-react";
 
 interface TopicSidebarProps {
     topics: ITopic[];
@@ -13,15 +13,15 @@ interface TopicSidebarProps {
 const getTopicIcon = (name: string) => {
     const lowerName = name.toLowerCase();
     if (lowerName.includes('input')) return <ChevronsLeftRightEllipsis className="size-[18px]" />
-    if (lowerName.includes('loop')) return <RotateCw className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('array')) return <Layers className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('string')) return <Braces className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('tree')) return <ListTree className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('math') || lowerName.includes('number')) return <Hash className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('graph') || lowerName.includes('data') || lowerName.includes('sql')) return <Database className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('basic') || lowerName.includes('intro')) return <Terminal className="w-[18px] h-[18px]" />;
-    if (lowerName.includes('bit')) return <Binary className="w-[18px] h-[18px]" />;
-    return <Code2 className="w-[18px] h-[18px]" />;
+    if (lowerName.includes('operator')) return <Ampersand className="size-[18px]" />
+    if (lowerName.includes('condition')) return <ChartNoAxesGantt className="size-[18px]" />
+    if (lowerName.includes('loops')) return <Repeat className="size-[18px]" />;
+    if (lowerName.includes('pattern')) return <Asterisk className="size-[18px]" />;
+    if (lowerName.includes('function')) return <ParenthesesIcon className="size-[18px]" />;
+    if (lowerName.includes('math') || lowerName.includes('number')) return <Hash className="size-[18px]" />;
+    if (lowerName.includes('array')) return <Brackets className="size-[18px]" />;
+    if (lowerName.includes('string')) return <TextInitial className="size-[18px]" />;
+    return <Code2 className="size-[18px]" />;
 };
 
 export default function TopicSidebar({ topics, selectedTopicId, onSelectTopicId }: TopicSidebarProps) {
@@ -65,7 +65,7 @@ export default function TopicSidebar({ topics, selectedTopicId, onSelectTopicId 
                 Topics
             </h3>
             <ScrollArea className="flex-1 min-h-0 -mx-2">
-                <div className="space-y-1 px-2 pb-6">
+                <div className=" px-2 pb-6">
                     {topics.map((topic, index) => {
                         const isActive = selectedTopicId === topic.id;
 
@@ -95,7 +95,7 @@ export default function TopicSidebar({ topics, selectedTopicId, onSelectTopicId 
                                 {/* Text Content */}
                                 <div className="flex-1 min-w-0 pr-2">
                                     <div className={cn(
-                                        "font-semibold text-sm transition-colors duration-200 truncate capitalize",
+                                        "font-semibold text-xs transition-colors duration-200 truncate capitalize",
                                         isActive ? "text-(--text-primary)" : "text-(--text-primary)"
                                     )}>
                                         {topic.name}
