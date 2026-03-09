@@ -10,6 +10,11 @@ const highlightQuotes = (text: string) => {
     return text.replace(/"([^"]+)"/g, '<span class="bg-(--bg-primary) text-(--text-primary) px-1.5 py-0.5 rounded-md font-mono text-[13px] border border-(--border-primary) mx-0.5">"$1"</span>');
 };
 
+const formatText = (text: string | null | undefined) => {
+    if (!text) return text;
+    return String(text).replace(/#\s*/g, '\n').trim();
+};
+
 export default function QuestionPanel({ question, isSolved }: { question: IProblem; isSolved?: boolean }) {
     const displayTestCases = question.sampleTestCases?.length ? question.sampleTestCases : question.testCases;
     return (
@@ -107,14 +112,13 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
                         {question.instructions && (
                             <section className="space-y-3 pt-4">
                                 <h3 className="text-sm font-bold text-(--text-primary) uppercase tracking-wide">Instructions</h3>
-                                <ul className="list-inside space-y-1.5 text-[15px] text-(--text-secondary) ml-2">
+                                <ol className="list-decimal list-outside space-y-1.5 text-[15px] text-(--text-secondary) ml-4">
                                     {question.instructions && question.instructions.split(/[\n.]/).filter(item => item.trim().length > 0).map((item, index) => (
-                                        <li key={index} className="flex items-start gap-2">
-                                            <div className="w-1 h-1 rounded-full bg-(--text-tertiary) mt-2 shrink-0" />
+                                        <li key={index} className="pl-1">
                                             <span dangerouslySetInnerHTML={{ __html: highlightQuotes(item.trim()) }} />
                                         </li>
                                     ))}
-                                </ul>
+                                </ol>
                             </section>
                         )}
 
@@ -184,18 +188,20 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
                                         <div key={index}>
                                             <h3 className="text-[15px] font-bold text-(--text-primary) mb-3">Example {index + 1}:</h3>
                                             <div className="pl-4 border-l-2 border-(--border-primary) flex flex-col gap-2">
-                                                <div className="flex flex-col sm:flex-row sm:gap-2">
-                                                    <span className="font-bold text-(--text-primary) text-[14px]">Input:</span>
-                                                    <code className="text-[15px] text-(--text-secondary) font-mono whitespace-pre-wrap">{testCase.input}</code>
-                                                </div>
+                                                {testCase.input && (
+                                                    <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                        <span className="font-bold text-(--text-primary) text-[14px]">Input:</span>
+                                                        <code className="text-[15px] text-(--text-secondary) font-mono whitespace-pre-wrap">{formatText(testCase.input)}</code>
+                                                    </div>
+                                                )}
                                                 <div className="flex flex-col sm:flex-row sm:gap-2">
                                                     <span className="font-bold text-(--text-primary) text-[14px]">Output:</span>
-                                                    <code className="text-[15px] text-(--text-secondary) font-mono whitespace-pre-wrap">{testCase.expectedOutput}</code>
+                                                    <code className="text-[15px] text-(--text-secondary) font-mono whitespace-pre-wrap">{formatText(testCase.expectedOutput)}</code>
                                                 </div>
                                                 {testCase.explanation && (
                                                     <div className="mt-1">
                                                         <span className="font-bold text-(--text-primary) text-[14px] mr-2">Explanation:</span>
-                                                        <span className="text-[15px] text-(--text-secondary) leading-relaxed">{testCase.explanation}</span>
+                                                        <span className="text-[15px] text-(--text-secondary) leading-relaxed whitespace-pre-wrap">{formatText(testCase.explanation)}</span>
                                                     </div>
                                                 )}
                                             </div>

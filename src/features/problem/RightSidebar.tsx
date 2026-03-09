@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 interface RightSidebarProps {
     topics: ITopic[];
-    selectedTopic: string;
+    selectedTopicId: string;
     problems: IProblemList[];
 }
 
@@ -16,9 +16,9 @@ interface DifficultyStats {
     percent: number;
 }
 
-export default function RightSidebar({ topics, selectedTopic, problems }: RightSidebarProps) {
+export default function RightSidebar({ topics, selectedTopicId, problems }: RightSidebarProps) {
 
-    const currentTopic = topics.find((topic) => topic.name === selectedTopic);
+    const currentTopic = topics.find((topic) => topic.id === selectedTopicId);
 
     const solved = currentTopic?.solvedProblems || 0;
     const totalSystemProblems = currentTopic?.totalProblems || 0;

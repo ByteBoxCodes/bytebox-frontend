@@ -1,3 +1,7 @@
+const formatText = (text: string | null | undefined) => {
+    if (!text) return text;
+    return String(text).replace(/#\s*/g, '\n').trim();
+};
 
 interface TestCaseDetailProps {
     input: string;
@@ -20,8 +24,8 @@ export default function TestCaseDetail({
                     <p className="text-[11px] text-(--text-tertiary) font-bold uppercase tracking-wider">
                         Input
                     </p>
-                    <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                        {input}
+                    <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary) whitespace-pre-wrap">
+                        {formatText(input)}
                     </div>
                 </div>
             )}
@@ -35,13 +39,13 @@ export default function TestCaseDetail({
                     Your Output
                 </p>
                 <div
-                    className={`px-3 py-2.5 rounded-md font-mono text-sm border ${isPassed
+                    className={`px-3 py-2.5 rounded-md font-mono text-sm border whitespace-pre-wrap ${isPassed
                         ? "bg-emerald-500/5 text-emerald-400 border-emerald-500/20"
                         : "bg-rose-500/5 text-rose-400 border-rose-500/20"
                         }`}
                 >
                     {userOutput !== null && userOutput !== undefined ? (
-                        userOutput
+                        formatText(userOutput)
                     ) : (
                         <span className="italic text-(--text-tertiary) text-xs">
                             No output
@@ -55,8 +59,8 @@ export default function TestCaseDetail({
                 <p className="text-[11px] text-(--text-tertiary) font-bold uppercase tracking-wider">
                     Expected Output
                 </p>
-                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                    {expectedOutput}
+                <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary) whitespace-pre-wrap">
+                    {formatText(expectedOutput)}
                 </div>
             </div>
 

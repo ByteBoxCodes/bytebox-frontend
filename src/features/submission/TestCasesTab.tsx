@@ -1,6 +1,11 @@
 import { useState } from "react";
 import type { TestCase } from "@/types/submission";
 
+const formatText = (text: string | null | undefined) => {
+    if (!text) return text;
+    return String(text).replace(/#\s*/g, '\n').trim();
+};
+
 interface TestCasesTabProps {
     testCases: TestCase[];
 }
@@ -31,8 +36,8 @@ export default function TestCasesTab({ testCases }: TestCasesTabProps) {
                             <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">
                                 Input
                             </p>
-                            <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                                {testCases[activeTestCase].input}
+                            <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary) whitespace-pre-wrap">
+                                {formatText(testCases[activeTestCase].input)}
                             </div>
                         </div>
                     )}
@@ -40,8 +45,8 @@ export default function TestCasesTab({ testCases }: TestCasesTabProps) {
                         <p className="text-xs text-(--text-tertiary) font-bold uppercase tracking-wider">
                             Expected Output
                         </p>
-                        <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary)">
-                            {testCases[activeTestCase].expectedOutput}
+                        <div className="px-3 py-2.5 rounded-md bg-(--bg-primary) font-mono text-sm text-(--text-primary) border border-(--border-primary) whitespace-pre-wrap">
+                            {formatText(testCases[activeTestCase].expectedOutput)}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 export interface ITopic {
-  id: number;
+  id: string;
   name: string;
   description: string;
   totalProblems: number;

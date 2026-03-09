@@ -2,16 +2,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ITopic } from "@/types/topics";
-import { Terminal, Code2, Database, Hash, ListTree, RotateCw, Braces, Layers, Binary, Star, Plus } from "lucide-react";
+import { Terminal, Code2, Database, Hash, ListTree, RotateCw, Braces, Layers, Binary, Star, Plus, ChevronsLeftRightEllipsis } from "lucide-react";
 
 interface TopicSidebarProps {
     topics: ITopic[];
-    selectedTopic: string;
-    onSelectTopic: (topic: string) => void;
+    selectedTopicId: string;
+    onSelectTopicId: (topicId: string) => void;
 }
 
 const getTopicIcon = (name: string) => {
     const lowerName = name.toLowerCase();
+    if (lowerName.includes('input')) return <ChevronsLeftRightEllipsis className="size-[18px]" />
     if (lowerName.includes('loop')) return <RotateCw className="w-[18px] h-[18px]" />;
     if (lowerName.includes('array')) return <Layers className="w-[18px] h-[18px]" />;
     if (lowerName.includes('string')) return <Braces className="w-[18px] h-[18px]" />;
@@ -23,7 +24,7 @@ const getTopicIcon = (name: string) => {
     return <Code2 className="w-[18px] h-[18px]" />;
 };
 
-export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: TopicSidebarProps) {
+export default function TopicSidebar({ topics, selectedTopicId, onSelectTopicId }: TopicSidebarProps) {
     return (
         <div className="h-[calc(100vh-12rem)] sticky top-24 flex flex-col font-pj overflow-hidden">
             {/* My Lists Section */}
@@ -66,12 +67,12 @@ export default function TopicSidebar({ topics, selectedTopic, onSelectTopic }: T
             <ScrollArea className="flex-1 min-h-0 -mx-2">
                 <div className="space-y-1 px-2 pb-6">
                     {topics.map((topic, index) => {
-                        const isActive = selectedTopic === topic.name;
+                        const isActive = selectedTopicId === topic.id;
 
                         return (
                             <button
                                 key={topic.id || index}
-                                onClick={() => onSelectTopic(topic.name.replaceAll(" ", ""))}
+                                onClick={() => onSelectTopicId(topic.id)}
                                 className={cn(
                                     "cursor-pointer group relative flex items-center gap-3 w-full text-left px-3 py-2 rounded-md transition-all duration-200 ease-out outline-none focus-visible:ring-2 focus-visible:ring-(--btn-primary-bg)",
                                     isActive

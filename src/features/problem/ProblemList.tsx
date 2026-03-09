@@ -47,7 +47,7 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
         if (statusFilter === "Unsolved") passStatus = !p.solved;
 
         return passDifficulty && passStatus;
-    });
+    })?.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
 
     return (
         <div className="space-y-4">
