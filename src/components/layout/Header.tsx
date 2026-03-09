@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
 import ProfileDropdown from "@/features/profile/ProfileDropdown";
-import { Search, Menu, X, Zap, Flame } from "lucide-react";
+import { Search, Menu, X, Zap, Flame, Layers } from "lucide-react";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
 import SearchModal from "@/features/problem/SearchModal";
 import {
@@ -52,9 +52,16 @@ export default function Header() {
                     {/* Left Section: Logo & Navigation */}
                     <div className="flex items-center gap-8">
                         <div className="shrink-0 flex items-center">
-                            <Link to="/" title="" className="flex rounded outline-none py-1">
-                                <img src="src/assets/logo/bytebox-light.png" alt="Logo" className="h-[36px] object-contain dark:hidden relative z-10" />
-                                <img src="src/assets/logo/bytebox-dark.png" alt="Logo" className="h-[36px] object-contain hidden dark:block relative z-10" />
+                            <Link to="/" title="" className="flex rounded outline-none py-1 relative z-10 items-center gap-1 ">
+                                <Layers className="w-5 h-5 md:size-6 mb-0.5" />
+                                <div className="flex flex-col items-end justify-center">
+                                    <span className="text-md md:text-md font-bold tracking-tight text-(--text-primary) dark:text-white leading-none">
+                                        ByteBox
+                                    </span>
+                                    <span className="text-[8px] text-(--text-tertiary) font-mono tracking-widest leading-none mt-0.5">
+                                        &lt;codes/&gt;
+                                    </span>
+                                </div>
                             </Link>
                         </div>
 
