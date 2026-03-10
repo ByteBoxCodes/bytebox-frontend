@@ -54,7 +54,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                 {/* Left: Avatar with Progress */}
                 <div className="relative shrink-0 flex items-center justify-center">
                     <svg
-                        className="absolute w-[88px] h-[88px] -rotate-90 pointer-events-none"
+                        className="absolute w-[88px] h-[88px] rotate-90 pointer-events-none"
                         viewBox="0 0 96 96"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -73,18 +73,17 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                             cx="48"
                             cy="48"
                             r="43"
-                            stroke="url(#avatar-progress-gradient)"
+                            stroke="url(#avatar-gray-gradient)"
+                            className="transition-all duration-1000 ease-out"
                             strokeWidth="3"
                             strokeLinecap="round"
                             strokeDasharray={2 * Math.PI * 43}
                             strokeDashoffset={2 * Math.PI * 43 * (1 - Math.min(100, Math.max(0, points < (levelInfo.level * 15) ? (points / (levelInfo.level * 15)) * 100 : 100)) / 100)}
-                            className="transition-all duration-1000 ease-out"
                         />
                         <defs>
-                            <linearGradient id="avatar-progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#10b981" />
-                                <stop offset="50%" stopColor="#a855f7" />
-                                <stop offset="100%" stopColor="#f59e0b" />
+                            <linearGradient id="avatar-gray-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" className="[stop-color:var(--color-zinc-200)]" />
+                                <stop offset="100%" className="[stop-color:var(--color-zinc-400)] dark:[stop-color:var(--color-zinc-600)]" />
                             </linearGradient>
                         </defs>
                     </svg>
