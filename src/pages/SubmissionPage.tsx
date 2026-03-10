@@ -11,15 +11,18 @@ import SubmissionPanel from "@/features/submission/SubmissionPanel";
 import SuccessModal from "@/features/submission/SuccessModal";
 import type { Language } from "@/types/submission";
 import { useGetProblemById } from "@/hooks/useGetProblemById";
-import { Loader2 } from "lucide-react";
+import { Layers, Loader2 } from "lucide-react";
 import { useSubmitSolutions } from "@/hooks/useSubmitSolutions";
 import { useGetMySubmissions } from "@/hooks/useGetMySubmissions";
 import { useRunSolution } from "@/hooks/useRunSolution";
+import { isAuthenticated } from "@/utils/isAuthenticated";
+
 export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
     const { data, isLoading, isError } = useGetProblemById(questionId!);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [lastAction, setLastAction] = useState<"run" | "submit" | null>(null);
+    const isAuth = isAuthenticated();
 
     const { mutate: runMutate, isPending: isRunPending, error: runError, data: runResult } = useRunSolution();
     const { mutate: submitMutate, isPending: isSubmitPending, error: submitError, data: submitResult } = useSubmitSolutions();
@@ -139,8 +142,8 @@ export default function SubmissionPage() {
                     className="dark:bg-(--dk-border) dark:hover:bg-(--dk-border-light) transition-colors" />
 
                 {/* Right Panel: Code Editor */}
-                <ResizablePanel defaultSize={50} minSize={30} className="">
-                    <div className="h-full bg-(--bg-secondary) transition-colors duration-200">
+                <ResizablePanel defaultSize={50} minSize={30} className="relative">
+                    <div className={`h-full bg-(--bg-secondary) transition-colors duration-200 ${!isAuth ? "blur-[3px] pointer-events-none select-none opacity-60" : ""}`}>
                         <SubmissionPanel
                             problemId={questionId}
                             question={data!}
@@ -153,6 +156,23 @@ export default function SubmissionPage() {
                             submissions={submissions}
                         />
                     </div>
+
+                    {!isAuth && (
+                        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-(--bg-secondary)/40 backdrop-blur-[1px]">
+                            <div className="flex flex-col items-center text-center max-w-sm px-4">
+                                <div className="p-3 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-2xl mb-4">
+                                    <Layers className="w-8 h-8" />
+                                </div>
+                                <h3 className="text-xl font-semibold tracking-tight text-(--text-primary) dark:text-(--dk-text) mb-2">Login to Code</h3>
+                                <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-dim) mb-6 leading-relaxed">
+                                    Join to write, run, and save your solutions. Track your progress with detailed submission history.
+                                </p>
+                                <Link to="/login" className="px-6 py-2.5 text-sm bg-(--text-primary) text-(--bg-primary) dark:bg-(--dk-text) dark:text-(--bg-secondary) font-semibold rounded-full hover:opacity-90 transition-opacity active:scale-95 shadow-md">
+                                    Sign In to Continue
+                                </Link>
+                            </div>
+                        </div>
+                    )}
 
                     <SuccessModal
                         isOpen={showSuccessModal}

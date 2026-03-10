@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/problem/:questionId",
-                element: (<ProtectedRoutes><SubmissionPage /></ProtectedRoutes>),
+                element: <SubmissionPage />,
             },
             {
                 path: "/profile",

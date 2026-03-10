@@ -10,6 +10,8 @@ export const useSubmitSolutions = () => {
       queryClient.invalidateQueries({ queryKey: ["userStats"] });
       queryClient.invalidateQueries({ queryKey: ["mySubmissions"] });
       queryClient.invalidateQueries({ queryKey: ["mySubProfile"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["leaderboard"] });
     },
   });
 };
