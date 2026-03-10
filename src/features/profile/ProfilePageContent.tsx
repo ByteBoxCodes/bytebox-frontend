@@ -44,7 +44,7 @@ export default function ProfilePageContent() {
 
                     {/* Right content */}
                     <div className="flex-1 min-w-0 space-y-5">
-                        <ProfileSolvedStats stats={stats} />
+                        <ProfileSolvedStats stats={stats} user={user} />
                         <ProfileActivity stats={stats} />
                         <ProfileSubmissions />
                     </div>

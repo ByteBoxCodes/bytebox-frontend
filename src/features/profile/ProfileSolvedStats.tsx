@@ -1,8 +1,11 @@
+import { getLevelInfo } from "@/utils/levelUtils";
 import { CheckCircle2 } from "lucide-react";
-import type { IUserStats } from "@/types/auth";
+import type { IUserStats, IUserProfile } from "@/types/auth";
+import { BADGES } from "@/constants/badges";
 
 interface ProfileSolvedStatsProps {
     stats: IUserStats;
+    user: IUserProfile;
 }
 
 interface DifficultyRowProps {
@@ -31,7 +34,7 @@ function DifficultyRow({ label, solved, total, barColor, textColor }: Difficulty
     );
 }
 
-export default function ProfileSolvedStats({ stats }: ProfileSolvedStatsProps) {
+export default function ProfileSolvedStats({ stats, user }: ProfileSolvedStatsProps) {
     const {
         totalSolvedProblems: solved,
         totalSubmissions: attempted,
@@ -47,8 +50,20 @@ export default function ProfileSolvedStats({ stats }: ProfileSolvedStatsProps) {
 
     const rate = Math.round(acceptanceRate);
 
+    // Determine highest badge properties for the rank tag
+    const points = user.points ?? 0;
+    const levelInfo = getLevelInfo(points, user.level);
+    const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
+    const BadgeIcon = currentBadge.icon;
+
     return (
-        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
+        <section className="relative rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
+            {/* Dynamic Rank badge mapped to journey colors - Top Right Absolute */}
+            <div className={`absolute top-5 right-5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${currentBadge.bg} ${currentBadge.color} border ${currentBadge.tagBorder} shadow-xs transition-colors duration-300`}>
+                <BadgeIcon size={12} className="opacity-80" />
+                <span className="tracking-wide uppercase">{levelInfo.title}</span>
+            </div>
+
             <h2 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-4 flex items-center gap-2">
                 <CheckCircle2 size={15} className="text-emerald-500" />
                 Problems Solved

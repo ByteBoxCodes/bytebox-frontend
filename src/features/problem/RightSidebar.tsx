@@ -1,8 +1,9 @@
-import { Trophy, Flame } from "lucide-react";
+import { Trophy, Zap } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { ITopic } from "@/types/topics";
 import type { IProblemList } from "@/types/problems";
 import { useMemo } from "react";
+import { getLevelInfo } from "@/utils/levelUtils";
 
 interface RightSidebarProps {
     topics: ITopic[];
@@ -60,8 +61,59 @@ export default function RightSidebar({ topics, selectedTopicId, problems }: Righ
         { key: "HARD", label: "Hard", color: "bg-red-500", textColor: "text-red-500", trackColor: "bg-red-500/15" },
     ];
 
+    // Using static data for now as requested
+    const staticPoints = 1250;
+    const levelInfo = getLevelInfo(staticPoints);
+
     return (
         <div className="space-y-6">
+            {/* Level Progress Widget */}
+            <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5 shadow-sm group">
+                {/* Decorative background accent */}
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/10 blur-3xl rounded-full transition-all duration-500 group-hover:bg-primary/20" />
+
+                <div className="relative z-10 flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-3.5">
+                        <div className="p-2.5 bg-primary/10 text-primary rounded-xl border border-primary/20 shadow-inner">
+                            <Trophy className="w-5 h-5 fill-primary/20" />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-0.5">Current Rank</p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl font-extrabold text-(--text-primary) dark:text-(--dk-text) tracking-tight leading-none">Level {levelInfo.level}</span>
+                                <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                                    {levelInfo.title}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="relative z-10">
+                    <div className="flex justify-between items-center text-xs font-semibold mb-2">
+                        <span className="text-primary tracking-tight">{levelInfo.currentPoints} <span className="text-[10px] uppercase">XP</span></span>
+                        <span className="text-(--text-secondary) dark:text-(--dk-text-muted) tracking-tight">{levelInfo.pointsForNextLevel} <span className="text-[10px] uppercase">XP</span></span>
+                    </div>
+                    <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden border border-border/50">
+                        <div
+                            className="h-full bg-primary rounded-full transition-all duration-1000 relative overflow-hidden"
+                            style={{ width: `${levelInfo.progressPercent}%` }}
+                        >
+                            <div className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 translate-x-[-150%] animate-[shimmer_2s_infinite]" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="relative z-10 mt-5 bg-(--bg-primary) dark:bg-zinc-900/50 rounded-xl p-3 border border-border/50 flex items-center gap-3">
+                    <div className="bg-amber-500/10 p-1.5 rounded-lg text-amber-500 border border-amber-500/20 shrink-0">
+                        <Zap className="w-4 h-4 fill-amber-500/20" />
+                    </div>
+                    <p className="text-[11px] text-(--text-secondary) dark:text-(--dk-text-muted) font-medium leading-tight">
+                        <strong className="text-(--text-primary) dark:text-(--dk-text) block mb-0.5">Bonus Action</strong>
+                        Complete all topic questions to earn <span className="text-amber-500 dark:text-amber-400 font-bold">+50 XP</span>
+                    </p>
+                </div>
+            </div>
             {/* Stats Widget */}
             <div className="pb-5 border-b border-border">
                 <div className="flex items-center mb-4">
@@ -107,29 +159,6 @@ export default function RightSidebar({ topics, selectedTopicId, problems }: Righ
                 </div>
             </div>
 
-            {/* Streak Widget (Refined version) */}
-            <div className="bg-linear-to-br from-orange-500 to-red-600 rounded-xl p-5 text-white shadow-md relative overflow-hidden">
-                {/* Decorative background blob */}
-                <div className="absolute -right-6 -bottom-6 opacity-30">
-                    <Flame className="w-24 h-24" />
-                </div>
-
-                <div className="relative z-10 flex items-center justify-between">
-                    <div>
-                        <p className="text-sm font-medium text-orange-100">Current Streak</p>
-                        <p className="mt-1 text-3xl font-bold font-pj tracking-tight">5 Days</p>
-                    </div>
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm border border-white/10 shadow-sm">
-                        <Flame className="w-6 h-6 text-white" />
-                    </div>
-                </div>
-                <div className="relative z-10 mt-5 flex space-x-1.5">
-                    {[...Array(7)].map((_, i) => (
-                        <div key={i} className={`h-1.5 flex-1 rounded-full ${i < 5 ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]' : 'bg-white/20'}`}></div>
-                    ))}
-                </div>
-                <p className="relative z-10 mt-3 text-xs text-orange-50 font-medium">Keep it up! 2 more days for a weekly badge.</p>
-            </div>
         </div>
     );
 }
