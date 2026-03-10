@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trophy, Medal, Award, Flame, User } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { getLevelInfo } from "@/utils/levelUtils";
+import { BADGES } from "@/constants/badges";
 
 export default function LeaderboardPage() {
     const { data: rawUsers, isLoading } = useGetLeaderboard();
@@ -53,7 +55,7 @@ export default function LeaderboardPage() {
                                     </h2>
                                 </div>
                                 <p className="mt-2 text-muted-foreground font-pj text-sm max-w-2xl">
-                                    Rise through the ranks by solving algorithmic challenges and earning points.
+                                    Rise through the ranks by solving algorithmic challenges and earning XP.
                                 </p>
                             </div>
 
@@ -70,7 +72,7 @@ export default function LeaderboardPage() {
                                                 <TableHead className="w-[80px] text-center font-semibold text-muted-foreground">Rank</TableHead>
                                                 <TableHead className="font-semibold text-muted-foreground">User</TableHead>
                                                 <TableHead className="w-[120px] text-right font-semibold text-muted-foreground">Solved</TableHead>
-                                                <TableHead className="w-[120px] text-right font-semibold text-muted-foreground">Points</TableHead>
+                                                <TableHead className="w-[120px] text-right font-semibold text-muted-foreground">XP</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -84,6 +86,10 @@ export default function LeaderboardPage() {
                                                 users.map((user: any, index: number) => {
                                                     const isCurrentUser = currentUser?.username === user.username;
                                                     const isEven = index % 2 !== 0;
+
+                                                    const levelInfo = getLevelInfo(user.points, user.level);
+                                                    const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
+                                                    const BadgeIcon = currentBadge.icon;
 
                                                     let rankDisplay = <span className="text-muted-foreground">{index + 1}</span>;
                                                     if (index === 0) rankDisplay = <Trophy className="w-5 h-5 mx-auto text-yellow-500" />;
@@ -113,7 +119,20 @@ export default function LeaderboardPage() {
                                                                                 <span className="text-[10px] px-1.5 py-0 rounded text-primary bg-primary/10 font-bold uppercase tracking-wider">You</span>
                                                                             )}
                                                                         </span>
-                                                                        <span className="text-xs text-muted-foreground">@{user.username}</span>
+                                                                        <span className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                                                                            <span>@{user.username}</span>
+                                                                            <span className="text-[10px] text-muted-foreground/40">•</span>
+                                                                            <div className="flex items-center gap-1">
+                                                                                <BadgeIcon size={12} className={`${currentBadge.color} ${currentBadge.fill}`} />
+                                                                                <span className={`font-bold text-[10px] uppercase tracking-wider ${currentBadge.color}`}>
+                                                                                    {currentBadge.title}
+                                                                                </span>
+                                                                                <span className="text-[10px] text-muted-foreground/40 leading-none pb-px">•</span>
+                                                                                <span className="font-medium text-[10px] uppercase tracking-wider text-muted-foreground">
+                                                                                    Lvl {levelInfo.level}
+                                                                                </span>
+                                                                            </div>
+                                                                        </span>
                                                                     </div>
                                                                 </div>
                                                             </TableCell>
@@ -124,7 +143,7 @@ export default function LeaderboardPage() {
                                                             </TableCell>
                                                             <TableCell className="py-3 text-right">
                                                                 <span className="font-semibold text-emerald-600 dark:text-emerald-500">
-                                                                    {user.points} pt
+                                                                    {user.points} XP
                                                                 </span>
                                                             </TableCell>
                                                         </TableRow>
@@ -165,7 +184,7 @@ export default function LeaderboardPage() {
                                             <>
                                                 <Progress value={(currentUserStats?.points || 0) / ((currentUserStats?.points || 0) + pointsToNextRank) * 100} className="h-2 w-full bg-secondary" />
                                                 <p className="text-xs text-muted-foreground text-right">
-                                                    {pointsToNextRank} points to next rank
+                                                    {pointsToNextRank} XP to next rank
                                                 </p>
                                             </>
                                         )}
@@ -173,7 +192,7 @@ export default function LeaderboardPage() {
 
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-xs font-semibold text-muted-foreground">Total Points</span>
+                                            <span className="text-xs font-semibold text-muted-foreground">Total XP</span>
                                             <span className="text-xs text-foreground font-medium">{currentUserStats?.points || 0}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
@@ -209,7 +228,7 @@ export default function LeaderboardPage() {
                                     <h3 className="ml-3 text-lg font-bold text-foreground font-pj tracking-tight">Join Leaderboard</h3>
                                 </div>
                                 <p className="text-sm text-muted-foreground mb-4">
-                                    Log in to see your rank and start earning points by solving algorithmic challenges.
+                                    Log in to see your rank and start earning XP by solving algorithmic challenges.
                                 </p>
                             </div>
                         )}
