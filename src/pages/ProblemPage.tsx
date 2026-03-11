@@ -46,11 +46,11 @@ export default function ProblemPage() {
                 onClose={handleLangModalClose}
             />
 
-            <div className="relative z-10 px-4 w-full sm:px-6 lg:px-6 py-8">
-                <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
+            <div className="relative z-10 px-4 w-full sm:px-6 lg:px-6 py-8 flex-1 overflow-hidden">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-0 h-full">
 
                     {/* Left Sidebar — Topic Navigation */}
-                    <div className="hidden lg:block shrink-0 lg:w-[18%] sticky top-8 lg:pr-8">
+                    <div className="hidden lg:block shrink-0 lg:w-[18%] h-full overflow-y-auto lg:pr-8">
                         <TopicSidebar
                             selectedTopicId={selectedTopicId}
                             onSelectTopicId={setSelectedTopicId}
@@ -59,13 +59,13 @@ export default function ProblemPage() {
                     </div>
 
                     {/* Center Content — Problems */}
-                    <div className="flex-1 space-y-6 lg:px-8 min-h-[calc(100vh-12rem)] min-w-0
+                    <div className="flex-1 space-y-6 lg:px-8 h-full overflow-y-auto min-w-0
                                     lg:border-x border-(--border-primary) dark:border-(--dk-border)">
                         <ProblemList problems={problems || []} topicName={activeTopicName} />
                     </div>
 
                     {/* Right Sidebar — Widgets */}
-                    <div className="shrink-0 w-full lg:w-[22%] space-y-6 lg:pl-8">
+                    <div className="shrink-0 w-full lg:w-[22%] space-y-6 lg:pl-8 h-full overflow-y-auto">
                         <RightSidebar topics={topics || []} selectedTopicId={selectedTopicId} problems={problems || []} />
                     </div>
 

@@ -1,12 +1,7 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+    Table
 } from "@/components/ui/table";
 import {
     Select,
@@ -50,9 +45,9 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
     })?.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
 
     return (
-        <div className="space-y-4">
+        <div className="flex flex-col h-full space-y-4">
             {/* Header Area */}
-            <div className="pb-4">
+            <div className="pb-4 shrink-0">
                 <div className="flex items-center gap-2 justify-between pb-2">
                     <h2 className="text-2xl font-bold text-foreground font-pj tracking-tight capitalize">
                         {topicName} Questions
@@ -98,69 +93,82 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
 
 
             {/* Table Area (Striped, Cardless style) */}
-            <div className="rounded-lg border-y border-border overflow-hidden">
-                <Table>
-                    <TableHeader className="bg-transparent border-b border-border">
-                        <TableRow className="hover:bg-transparent border-0 [&_th]:h-10">
-                            <TableHead className="w-[80px] text-center font-semibold text-muted-foreground">Status</TableHead>
-                            <TableHead className="w-[60px] font-semibold text-muted-foreground">No.</TableHead>
-                            <TableHead className="font-semibold text-muted-foreground">Title</TableHead>
-                            <TableHead className="w-[120px] font-semibold text-muted-foreground">Difficulty</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredProblems?.length === 0 ? (
-                            <TableRow>
-                                <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
-                                    No problems matching your filters.
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            filteredProblems?.map((problem: IProblemList, index: number) => {
-                                const solved = problem.solved;
-                                // Alternating stripe class (LeetCode style)
-                                const isEven = index % 2 !== 0;
-
-                                return (
-                                    <TableRow
-                                        key={problem.id}
-                                        className={`group transition-colors cursor-pointer   border-0 ${isEven ? "bg-muted/50 hover:bg-muted/80" : "bg-(--bg-secondary) hover:bg-muted/10"
-                                            }`}
-                                    >
-                                        <TableCell className="text-center py-3">
-                                            <div className="flex justify-center">
-                                                {solved ? (
-                                                    <CheckCircle2 size={18} className="text-emerald-500" />
-                                                ) : (
-                                                    <Circle size={18} className="text-muted-foreground/30 group-hover:text-muted-foreground/50 transition-colors" />
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="font-medium text-muted-foreground py-3">
-                                            {index + 1}
-                                        </TableCell>
-                                        <TableCell className="py-3">
-                                            <Link
-                                                to={`/problem/${problem.id}`}
-                                                className="font-medium text-foreground hover:text-primary transition-colors block w-full outline-none"
-                                            >
-                                                {problem.title}
-                                            </Link>
-                                        </TableCell>
-                                        <TableCell className="py-3">
-                                            <Badge
-                                                variant="secondary"
-                                                className={`font-medium ${getDifficultyColor(problem.difficulty)}`}
-                                            >
-                                                {problem.difficulty}
-                                            </Badge>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })
-                        )}
-                    </TableBody>
+            <div className="flex-1 flex flex-col rounded-lg border border-border overflow-hidden min-h-0">
+                <Table className="hidden">
+                    {/* Hack to keep Table styles load, using manual structure below for scrolling */}
                 </Table>
+                
+                {/* Fixed Header */}
+                <div className="bg-transparent border-b border-border shrink-0">
+                    <table className="w-full text-sm text-left">
+                        <thead className="[&_tr]:border-b">
+                            <tr className="hover:bg-transparent border-0 [&_th]:h-10">
+                                <th className="h-10 px-4 w-[80px] text-center align-middle font-semibold text-muted-foreground">Status</th>
+                                <th className="h-10 px-4 w-[60px] align-middle font-semibold text-muted-foreground">No.</th>
+                                <th className="h-10 px-4 align-middle font-semibold text-muted-foreground">Title</th>
+                                <th className="h-10 px-4 w-[120px] align-middle font-semibold text-muted-foreground">Difficulty</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                {/* Scrollable Body */}
+                <div className="flex-1 overflow-y-auto">
+                    <table className="w-full text-sm text-left">
+                        <tbody className="[&_tr:last-child]:border-0">
+                            {filteredProblems?.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="h-32 text-center align-middle text-muted-foreground">
+                                        No problems matching your filters.
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredProblems?.map((problem: IProblemList, index: number) => {
+                                    const solved = problem.solved;
+                                    // Alternating stripe class (LeetCode style)
+                                    const isEven = index % 2 !== 0;
+
+                                    return (
+                                        <tr
+                                            key={problem.id}
+                                            className={`group transition-colors cursor-pointer border-0 ${isEven ? "bg-muted/50 hover:bg-muted/80" : "bg-(--bg-secondary) hover:bg-muted/10"
+                                                }`}
+                                        >
+                                            <td className="w-[80px] p-4 text-center align-middle py-3">
+                                                <div className="flex justify-center">
+                                                    {solved ? (
+                                                        <CheckCircle2 size={18} className="text-emerald-500" />
+                                                    ) : (
+                                                        <Circle size={18} className="text-muted-foreground/30 group-hover:text-muted-foreground/50 transition-colors" />
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="w-[60px] p-4 align-middle font-medium text-muted-foreground py-3">
+                                                {index + 1}
+                                            </td>
+                                            <td className="p-4 align-middle py-3">
+                                                <Link
+                                                    to={`/problem/${problem.id}`}
+                                                    className="font-medium text-foreground hover:text-primary transition-colors block w-full outline-none"
+                                                >
+                                                    {problem.title}
+                                                </Link>
+                                            </td>
+                                            <td className="w-[120px] p-4 align-middle py-3">
+                                                <Badge
+                                                    variant="secondary"
+                                                    className={`font-medium ${getDifficultyColor(problem.difficulty)}`}
+                                                >
+                                                    {problem.difficulty}
+                                                </Badge>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
