@@ -2,16 +2,33 @@ import RightSidebar from "../features/problem/RightSidebar";
 import TopicSidebar from "../features/problem/TopicSidebar";
 import ProblemList from "../features/problem/ProblemList";
 import { useGetAllTopics } from "@/hooks/useGetAllTopics";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import LanguagePickerModal from "@/features/profile/LanguagePickerModal";
 import { useUpdatePreferredLanguage } from "@/hooks/useUpdatePreferredLanguage";
 import { useGetProblemsByTopicId } from "@/hooks/useGetProblemsByTopicId";
 
+const SELECTED_TOPIC_KEY = "selectedTopicId";
+
 export default function ProblemPage() {
     const { data: topics } = useGetAllTopics();
-    const [selectedTopicIdState, setSelectedTopicIdState] = useState<string | null>(null);
-    const selectedTopicId = selectedTopicIdState || (topics?.[0]?.id || "");
-    const setSelectedTopicId = (id: string) => setSelectedTopicIdState(id);
+    const [storedTopicId, setStoredTopicId] = useState<string | null>(
+        () => localStorage.getItem(SELECTED_TOPIC_KEY)
+    );
+
+    // Derive the effective topic ID — validate stored ID against loaded topics
+    // Use String() coercion since API may return numeric ids but localStorage stores strings
+    const selectedTopicId = useMemo(() => {
+        if (storedTopicId && topics?.some(t => String(t.id) === storedTopicId)) {
+            return storedTopicId;
+        }
+        return topics?.[0]?.id ? String(topics[0].id) : "";
+    }, [storedTopicId, topics]);
+
+    const setSelectedTopicId = useCallback((id: string) => {
+        const stringId = String(id);
+        localStorage.setItem(SELECTED_TOPIC_KEY, stringId);
+        setStoredTopicId(stringId);
+    }, []);
 
     const { data: problems } = useGetProblemsByTopicId(selectedTopicId);
     const [showLangModal, setShowLangModal] = useState(false);
@@ -34,7 +51,7 @@ export default function ProblemPage() {
         }
     };
 
-    const activeTopicName = topics?.find(t => t.id === selectedTopicId)?.name || 'All';
+    const activeTopicName = topics?.find(t => String(t.id) === selectedTopicId)?.name || 'All';
 
     return (
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200

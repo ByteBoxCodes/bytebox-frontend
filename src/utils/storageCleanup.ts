@@ -20,6 +20,7 @@ const WHITELIST = new Set([
   "token",
   "theme",
   "preferredLanguage",
+  "selectedTopicId",
   TIMESTAMPS_KEY,
 ]);
 

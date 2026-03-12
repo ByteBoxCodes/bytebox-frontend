@@ -67,7 +67,7 @@ export default function TopicSidebar({ topics, selectedTopicId, onSelectTopicId 
             <ScrollArea className="flex-1 min-h-0 -mx-2">
                 <div className=" px-2 pb-6">
                     {[...topics].sort((a, b) => Number(a.id) - Number(b.id)).map((topic, index) => {
-                        const isActive = selectedTopicId === topic.id;
+                        const isActive = selectedTopicId === String(topic.id);
                         return (
                             <button
                                 key={topic.id || index}
