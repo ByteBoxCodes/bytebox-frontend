@@ -4,6 +4,7 @@ import ThemeToggle from "../ThemeToggle";
 import ProfileDropdown from "@/features/profile/ProfileDropdown";
 import { Search, Menu, X, Zap, Flame, Layers } from "lucide-react";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
+import HeaderProfileSkeleton from "@/fallback/HeaderProfileSkeleton";
 import SearchModal from "@/features/problem/SearchModal";
 import {
     DropdownMenu,
@@ -14,7 +15,7 @@ import {
 export default function Header() {
     const token = localStorage.getItem("token");
 
-    const { data } = useGetHeaderProfile();
+    const { data, isLoading } = useGetHeaderProfile();
     const user = token ? (data?.data ?? data) : null;
 
     console.log(user);
@@ -76,7 +77,9 @@ export default function Header() {
                     {/* Mobile Controls (Always visible on small screens) */}
                     <div className="flex md:hidden items-center gap-2 relative z-10">
                         <ThemeToggle />
-                        {token && user ? (
+                        {token && isLoading ? (
+                            <HeaderProfileSkeleton />
+                        ) : token && user ? (
                             <ProfileDropdown name={user.name} email={user.email} preferredLanguage={user.preferredLanguage} />
                         ) : null}
                         <button
@@ -112,7 +115,9 @@ export default function Header() {
 
                         <div className="w-px h-5 bg-(--border-primary) dark:bg-white/15 hidden lg:block"></div>
 
-                        {token && user ? (
+                        {token && isLoading ? (
+                            <HeaderProfileSkeleton />
+                        ) : token && user ? (
                             <div className="flex items-center gap-3">
                                 {/* Streak */}
                                 <DropdownMenu>

@@ -13,8 +13,9 @@ import {
 import type { IProblemList } from "@/types/problems";
 import { CheckCircle2, Circle } from "lucide-react";
 import { useState } from "react";
+import ProblemListSkeleton from "@/fallback/ProblemListSkeleton";
 
-export default function ProblemList({ problems, topicName }: { problems: IProblemList[], topicName: string }) {
+export default function ProblemList({ problems, topicName, isLoading }: { problems: IProblemList[], topicName: string, isLoading?: boolean }) {
 
     const [difficultyFilter, setDifficultyFilter] = useState<string>("All");
     const [statusFilter, setStatusFilter] = useState<string>("All");
@@ -97,7 +98,8 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
                 <Table className="hidden">
                     {/* Hack to keep Table styles load, using manual structure below for scrolling */}
                 </Table>
-                
+
+
                 {/* Fixed Header */}
                 <div className="bg-transparent border-b border-border shrink-0">
                     <table className="w-full text-sm text-left">
@@ -116,7 +118,9 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
                 <div className="flex-1 overflow-y-auto">
                     <table className="w-full text-sm text-left">
                         <tbody className="[&_tr:last-child]:border-0">
-                            {filteredProblems?.length === 0 ? (
+                            {isLoading ? (
+                                <ProblemListSkeleton />
+                            ) : filteredProblems?.length === 0 ? (
                                 <tr>
                                     <td colSpan={4} className="h-32 text-center align-middle text-muted-foreground">
                                         No problems matching your filters.
@@ -125,7 +129,6 @@ export default function ProblemList({ problems, topicName }: { problems: IProble
                             ) : (
                                 filteredProblems?.map((problem: IProblemList, index: number) => {
                                     const solved = problem.solved;
-                                    // Alternating stripe class (LeetCode style)
                                     const isEven = index % 2 !== 0;
 
                                     return (

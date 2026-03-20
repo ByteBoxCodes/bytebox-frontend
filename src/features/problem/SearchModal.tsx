@@ -9,8 +9,8 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command";
-import { Loader2 } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
+import SearchModalSkeleton from "@/fallback/SearchModalSkeleton";
 
 interface SearchModalProps {
     open: boolean;
@@ -46,10 +46,7 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
             <CommandList>
                 <CommandEmpty className="py-12 text-center text-sm">
                     {isLoading ? (
-                        <div className="flex flex-col items-center justify-center gap-3">
-                            <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
-                            <p className="text-(--text-tertiary) font-medium">Searching problems...</p>
-                        </div>
+                        <SearchModalSkeleton />
                     ) : query.length > 0 ? (
                         <div className="flex flex-col items-center justify-center gap-2">
                             <p className="text-(--text-primary) font-semibold text-base">No problems found</p>

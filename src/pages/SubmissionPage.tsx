@@ -11,7 +11,8 @@ import SubmissionPanel from "@/features/submission/SubmissionPanel";
 import SuccessModal from "@/features/submission/SuccessModal";
 import type { Language } from "@/types/submission";
 import { useGetProblemById } from "@/hooks/useGetProblemById";
-import { Layers, Loader2 } from "lucide-react";
+import { Layers } from "lucide-react";
+import SubmissionPageSkeleton from "@/fallback/SubmissionPageSkeleton";
 import { useSubmitSolutions } from "@/hooks/useSubmitSolutions";
 import { useGetMySubmissions } from "@/hooks/useGetMySubmissions";
 import { useRunSolution } from "@/hooks/useRunSolution";
@@ -62,13 +63,7 @@ export default function SubmissionPage() {
     }, [submitResult, lastAction]);
 
     if (isLoading) {
-        return (
-            <div className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center
-                            bg-(--bg-secondary) overflow-hidden">
-
-                <Loader2 className="relative z-10 h-8 w-8 animate-spin text-(--text-primary) dark:text-(--dk-text-muted)" />
-            </div>
-        );
+        return <SubmissionPageSkeleton />;
     }
 
     if (isError || !questionId) {

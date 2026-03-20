@@ -1,8 +1,8 @@
 import { useProfile } from "@/hooks/useProfile";
 import { useUserStats } from "@/hooks/useUserStats";
 import type { IUserProfile, IUserStats } from "@/types/auth";
-import { Loader2 } from "lucide-react";
 import ProfileSidebar from "./ProfileSidebar";
+import ProfilePageSkeleton from "@/fallback/ProfilePageSkeleton";
 import ProfileSolvedStats from "./ProfileSolvedStats";
 import ProfileActivity from "./ProfileActivity";
 import ProfileSubmissions from "./ProfileSubmissions";
@@ -14,11 +14,7 @@ export default function ProfilePageContent() {
 
 
     if (isLoading || isStatsLoading) {
-        return (
-            <div className="flex min-h-[60vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-        );
+        return <ProfilePageSkeleton />;
     }
 
     if (isError || !data || isStatsError || !statsData) {

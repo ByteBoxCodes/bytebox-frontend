@@ -1,4 +1,5 @@
-import { Code2, Loader2 } from "lucide-react";
+import { Code2 } from "lucide-react";
+import ProfileSubmissionsSkeleton from "@/fallback/ProfileSubmissionsSkeleton";
 import { useGetMySubmissionByUserId } from "@/hooks/useGetMySubmissions";
 import type { ISubmissionResponse } from "@/types/submission";
 
@@ -78,9 +79,7 @@ export default function ProfileSubmissions() {
             </h2>
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                </div>
+                <ProfileSubmissionsSkeleton />
             ) : isError ? (
                 <div className="text-sm text-muted-foreground text-center py-4">
                     Failed to load recent submissions

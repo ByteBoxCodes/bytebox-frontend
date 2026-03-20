@@ -2,6 +2,7 @@ import RightSidebar from "../features/problem/RightSidebar";
 import TopicSidebar from "../features/problem/TopicSidebar";
 import ProblemList from "../features/problem/ProblemList";
 import { useGetAllTopics } from "@/hooks/useGetAllTopics";
+import ProblemPageSkeleton from "@/fallback/ProblemPageSkeleton";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import LanguagePickerModal from "@/features/profile/LanguagePickerModal";
 import { useUpdatePreferredLanguage } from "@/hooks/useUpdatePreferredLanguage";
@@ -10,7 +11,7 @@ import { useGetProblemsByTopicId } from "@/hooks/useGetProblemsByTopicId";
 const SELECTED_TOPIC_KEY = "selectedTopicId";
 
 export default function ProblemPage() {
-    const { data: topics } = useGetAllTopics();
+    const { data: topics, isLoading: isTopicsLoading } = useGetAllTopics();
     const [storedTopicId, setStoredTopicId] = useState<string | null>(
         () => localStorage.getItem(SELECTED_TOPIC_KEY)
     );
@@ -30,7 +31,7 @@ export default function ProblemPage() {
         setStoredTopicId(stringId);
     }, []);
 
-    const { data: problems } = useGetProblemsByTopicId(selectedTopicId);
+    const { data: problems, isLoading: isProblemsLoading } = useGetProblemsByTopicId(selectedTopicId);
     const [showLangModal, setShowLangModal] = useState(false);
     const { mutate: updateLang } = useUpdatePreferredLanguage();
 
@@ -52,6 +53,10 @@ export default function ProblemPage() {
     };
 
     const activeTopicName = topics?.find(t => String(t.id) === selectedTopicId)?.name || 'All';
+
+    if (isTopicsLoading) {
+        return <ProblemPageSkeleton />;
+    }
 
     return (
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
@@ -78,7 +83,7 @@ export default function ProblemPage() {
                     {/* Center Content — Problems */}
                     <div className="flex-1 space-y-6 lg:px-8 h-full overflow-y-auto min-w-0
                                     lg:border-x border-(--border-primary) dark:border-(--dk-border)">
-                        <ProblemList problems={problems || []} topicName={activeTopicName} />
+                        <ProblemList problems={problems || []} topicName={activeTopicName} isLoading={isProblemsLoading} />
                     </div>
 
                     {/* Right Sidebar — Widgets */}

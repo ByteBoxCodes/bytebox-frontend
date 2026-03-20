@@ -1,4 +1,5 @@
 import { useGetLeaderboard } from "@/hooks/useGetLeaderboard";
+import LeaderboardSkeleton from "@/fallback/LeaderboardSkeleton";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -34,6 +35,10 @@ export default function LeaderboardPage() {
         }
     }
 
+    if (isLoading) {
+        return <LeaderboardSkeleton />;
+    }
+
     return (
         <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
                         bg-(--bg-secondary) border-t border-(--border-primary)
@@ -59,13 +64,7 @@ export default function LeaderboardPage() {
                                 </p>
                             </div>
 
-                            {/* Table Area (Striped, Cardless style based on ProblemList) */}
                             <div className="rounded-lg border-y border-border overflow-hidden">
-                                {isLoading ? (
-                                    <div className="p-8 text-center text-muted-foreground animate-pulse">
-                                        Loading rankings...
-                                    </div>
-                                ) : (
                                     <Table>
                                         <TableHeader className="bg-transparent border-b border-border">
                                             <TableRow className="hover:bg-transparent border-0 [&_th]:h-10">
@@ -152,7 +151,6 @@ export default function LeaderboardPage() {
                                             )}
                                         </TableBody>
                                     </Table>
-                                )}
                             </div>
                         </div>
                     </div>

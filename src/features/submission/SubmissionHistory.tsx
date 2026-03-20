@@ -1,6 +1,7 @@
 import { useGetMySubmissions } from "@/hooks/useGetMySubmissions";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Terminal, CheckCircle2, XCircle, AlertTriangle, Clock } from "lucide-react";
+import { Terminal, CheckCircle2, XCircle, AlertTriangle, Clock } from "lucide-react";
+import SubmissionHistorySkeleton from "@/fallback/SubmissionHistorySkeleton";
 import type { ISubmissionResponse } from "@/types/submission";
 
 const STATUS_CONFIG: Record<
@@ -107,11 +108,7 @@ export default function SubmissionHistory({ problemId }: { problemId: string }) 
     const [selectedSubmission, setSelectedSubmission] = useState<ISubmissionResponse | null>(null);
 
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <Loader2 className="h-6 w-6 animate-spin text-(--text-tertiary)" />
-            </div>
-        );
+        return <SubmissionHistorySkeleton />;
     }
 
     if (isError) {
