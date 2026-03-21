@@ -10,6 +10,7 @@ import VerifyPage from "../pages/VerifyPage";
 import ProtectedRoutes from "@/components/common/ProtectedRoutes";
 import GuestRoute from "@/components/common/GuestRoute";
 import LeaderboardPage from "../pages/LeaderboardPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 export const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
     {
         path: "/signup",
         element: <GuestRoute><RegisterPage /></GuestRoute>,
+    },
+    {
+        path: "/reset-password",
+        element: <GuestRoute><ResetPasswordPage /></GuestRoute>,
     },
     {
         path: "/verify",
