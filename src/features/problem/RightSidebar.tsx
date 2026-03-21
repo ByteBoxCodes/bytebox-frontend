@@ -25,7 +25,7 @@ export default function RightSidebar({ topics, selectedTopicId, problems }: Righ
     const { data: userProfile } = useProfile();
     const user = userProfile?.data;
     const points = user?.points ?? 0;
-    const levelInfo = getLevelInfo(points, user?.level);
+    const levelInfo = getLevelInfo(points, user?.level, user?.levelXp);
 
     const currentTopic = topics.find((topic) => topic.id === selectedTopicId);
 
@@ -137,17 +137,21 @@ export default function RightSidebar({ topics, selectedTopicId, problems }: Righ
                             </div>
                         </div>
                     </div>
+                    <div className="text-right">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-0.5">Total XP</p>
+                        <p className={`text-lg font-extrabold ${currentBadge.color} tracking-tight leading-none`}>{levelInfo.currentPoints}</p>
+                    </div>
                 </div>
 
                 <div className="relative z-10">
                     <div className="flex justify-between items-center text-xs font-semibold mb-2">
-                        <span className={`tracking-tight ${currentBadge.color}`}>{points} <span className="text-[10px] uppercase">XP</span></span>
-                        <span className="text-(--text-secondary) dark:text-(--dk-text-muted) tracking-tight">{levelInfo.level * 15} <span className="text-[10px] uppercase">XP</span></span>
+                        <span className={`tracking-tight ${currentBadge.color}`}>{levelInfo.levelXp} <span className="text-[10px] uppercase">XP</span></span>
+                        <span className="text-(--text-secondary) dark:text-(--dk-text-muted) tracking-tight">{levelInfo.pointsForNextLevel} <span className="text-[10px] uppercase">XP</span></span>
                     </div>
                     <div className="h-2 w-full bg-border/40 rounded-full overflow-hidden">
                         <div
                             className={`h-full rounded-full transition-all duration-1000 relative overflow-hidden ${currentBadge.bg.replace('/10', '')}`}
-                            style={{ width: `${Math.min(100, Math.max(0, points < (levelInfo.level * 15) ? (points / (levelInfo.level * 15)) * 100 : 100))}%` }}
+                            style={{ width: `${levelInfo.progressPercent}%` }}
                         >
                             <div className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 translate-x-[-150%] animate-[shimmer_2s_infinite]" />
                         </div>

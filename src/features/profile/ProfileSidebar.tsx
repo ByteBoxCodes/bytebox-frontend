@@ -41,7 +41,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
     )?.label ?? "Not set";
 
     const points = user.points ?? 0;
-    const levelInfo = getLevelInfo(points, user.level);
+    const levelInfo = getLevelInfo(points, user.level, user.levelXp);
 
     // Reverse find highest unlocked badge to map styling
     const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
@@ -79,7 +79,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                             strokeWidth="3"
                             strokeLinecap="round"
                             strokeDasharray={2 * Math.PI * 43}
-                            strokeDashoffset={2 * Math.PI * 43 * (1 - Math.min(100, Math.max(0, points < (levelInfo.level * 15) ? (points / (levelInfo.level * 15)) * 100 : 100)) / 100)}
+                            strokeDashoffset={2 * Math.PI * 43 * (1 - (levelInfo.progressPercent / 100))}
                         />
                         <defs>
                             <linearGradient id="avatar-gray-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -96,9 +96,11 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                     <h1 className="text-lg font-bold leading-tight text-(--text-primary) dark:text-(--dk-text) truncate pr-2">
                         {user.name}
                     </h1>
-                    <p className="text-xs text-(--text-secondary) dark:text-(--dk-text-muted) truncate mt-0.5">
-                        @{user.username}
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5 text-xs text-(--text-secondary) dark:text-(--dk-text-muted) truncate">
+                        <span>@{user.username}</span>
+                        <span className="text-[10px] opacity-40">•</span>
+                        <span className={`font-semibold ${currentBadge.color}`}>{levelInfo.currentPoints} XP</span>
+                    </div>
 
                     {/* Level / Points Block */}
                     <div className="mt-2.5 flex flex-col gap-1.5 w-full">
@@ -110,7 +112,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                                 </span>
                             </div>
                             <p className="text-[10px] text-(--text-secondary) dark:text-(--dk-text-muted) font-medium font-mono">
-                                <span className={`font-bold ${currentBadge.color}`}>{points}</span> / {levelInfo.level * 15}
+                                <span className={`font-bold ${currentBadge.color}`}>{levelInfo.levelXp}</span> / {levelInfo.pointsForNextLevel}
                             </p>
                         </div>
 
@@ -118,7 +120,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                         <div className="h-1.5 w-full max-w-[180px] sm:max-w-[140px] bg-border/40 rounded-full overflow-hidden">
                             <div
                                 className={`h-full rounded-full transition-all duration-1000 ${currentBadge.bg.replace('/10', '')}`}
-                                style={{ width: `${Math.min(100, Math.max(0, points < (levelInfo.level * 15) ? (points / (levelInfo.level * 15)) * 100 : 100))}%` }}
+                                style={{ width: `${levelInfo.progressPercent}%` }}
                             />
                         </div>
                     </div>

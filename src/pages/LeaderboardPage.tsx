@@ -86,7 +86,7 @@ export default function LeaderboardPage() {
                                                     const isCurrentUser = currentUser?.username === user.username;
                                                     const isEven = index % 2 !== 0;
 
-                                                    const levelInfo = getLevelInfo(user.points, user.level);
+                                                    const levelInfo = getLevelInfo(user.points, user.level, user.levelXp);
                                                     const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
                                                     const BadgeIcon = currentBadge.icon;
 

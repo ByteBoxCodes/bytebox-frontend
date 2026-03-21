@@ -18,6 +18,7 @@ export interface IUserProfile {
   createdAt?: string;
   points?: number;
   level?: number;
+  levelXp?: number;
   problemsSolved?: number;
   problemsAttempted?: number;
   avatarUrl?: string;

@@ -2,29 +2,25 @@ export interface LevelInfo {
   level: number;
   title: string;
   currentPoints: number;
+  levelXp: number;
   pointsForNextLevel: number;
   progressPercent: number;
 }
 
 /**
- * Calculates user level and title based on their total points.
- * Level progression: 100 points = 1 level.
+ * Calculates user level and title.
+ * The backend provides totalPoints, level, and levelXp.
  */
 export const getLevelInfo = (
-  totalPoints: number,
-  providedLevel?: number,
+  totalPoints: number = 0,
+  level: number = 1,
+  levelXp: number = 0,
 ): LevelInfo => {
-  // Basic conversion: 100 points = 1 level
-  const level = providedLevel ?? Math.floor(totalPoints / 100) + 1;
-
-  // Calculate progress to next level
-  const currentLevelBasePoints = (level - 1) * 100;
-  const nextLevelBasePoints = level * 100;
-  const pointsInCurrentLevel = totalPoints - currentLevelBasePoints;
-  const pointsNeeded = 100;
-  const progressPercent = Math.round(
-    (pointsInCurrentLevel / pointsNeeded) * 100,
-  );
+  // Required XP for the current level to advance to the next level
+  const pointsForNextLevel = level * 5 + 10;
+  
+  const rawProgress = pointsForNextLevel > 0 ? (levelXp / pointsForNextLevel) * 100 : 0;
+  const progressPercent = Math.round(Math.min(100, Math.max(0, rawProgress)));
 
   // Determine Title based on level
   let title = "Newbie";
@@ -37,7 +33,8 @@ export const getLevelInfo = (
     level,
     title,
     currentPoints: totalPoints,
-    pointsForNextLevel: nextLevelBasePoints,
+    levelXp,
+    pointsForNextLevel,
     progressPercent,
   };
 };

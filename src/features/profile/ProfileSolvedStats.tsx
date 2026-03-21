@@ -52,7 +52,7 @@ export default function ProfileSolvedStats({ stats, user }: ProfileSolvedStatsPr
 
     // Determine highest badge properties for the rank tag
     const points = user.points ?? 0;
-    const levelInfo = getLevelInfo(points, user.level);
+    const levelInfo = getLevelInfo(points, user.level, user.levelXp);
     const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
     const BadgeIcon = currentBadge.icon;
 
