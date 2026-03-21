@@ -3,15 +3,14 @@ import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ThemeToggle() {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
 
   return (
     <button
-      onClick={(e) => e.preventDefault()}
-      disabled
+      onClick={toggleTheme}
       className={cn(
-        "relative inline-flex h-7 w-13 shrink-0 cursor-not-allowed items-center justify-center rounded-full border-transparent transition-colors duration-200 ease-in-out opacity-40 grayscale",
+        "relative inline-flex h-7 w-13 shrink-0 cursor-pointer items-center justify-center rounded-full border-transparent transition-colors duration-200 ease-in-out",
         isDark ? "bg-zinc-800" : "bg-gray-200",
       )}
       role="switch"
