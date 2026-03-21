@@ -1,24 +1,24 @@
 :root {
   /* Generic Theme Variables */
   /* Backgrounds */
-  --bg-primary: #ffffff; /* white */
-  --bg-secondary: #f9fafb; /* gray-50 */
+  --bg-primary: #ffffff; /* pure white */
+  --bg-secondary: #fafafa; /* zinc-50 */
 
-  --bg-tertiary: #f3f4f6; /* gray-100 */
-  --bg-card: #ffffff; /* white */
+  --bg-tertiary: #f4f4f5; /* zinc-100 */
+  --bg-card: #ffffff; /* pure white */
 
   /* Text */
-  --text-primary: #111827; /* gray-900 */
-  --text-secondary: #4b5563; /* gray-600 */
-  --text-tertiary: #9ca3af; /* gray-400 */
+  --text-primary: #0f172a; /* deep slate */
+  --text-secondary: #52525b; /* zinc-600 */
+  --text-tertiary: #a1a1aa; /* zinc-400 */
   --text-inverse: #ffffff; /* white */
 
   /* Borders */
-  --border-primary: #d1d5db; /* gray-300 */
+  --border-primary: #e4e4e7; /* zinc-200 */
 
   /* Components */
   --pattern-opacity: 1;
-  --avatar-ring: #ffffff; /* white */
+  --avatar-ring: #ffffff; /* pure white */
 
   /* Primary Button */
   --btn-primary-bg: #111827; /* gray-900 */
