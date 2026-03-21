@@ -18,8 +18,9 @@ export const getLevelInfo = (
 ): LevelInfo => {
   // Required XP for the current level to advance to the next level
   const pointsForNextLevel = level * 5 + 10;
-  
-  const rawProgress = pointsForNextLevel > 0 ? (levelXp / pointsForNextLevel) * 100 : 0;
+
+  const rawProgress =
+    pointsForNextLevel > 0 ? (levelXp / pointsForNextLevel) * 100 : 0;
   const progressPercent = Math.round(Math.min(100, Math.max(0, rawProgress)));
 
   // Determine Title based on level

@@ -28,3 +28,16 @@ export const updatePreferredLanguage = async (preferredLanguage: string) => {
   });
   return response.data;
 };
+
+export const uploadAvatar = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await api.post("/profile/upload-avatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
