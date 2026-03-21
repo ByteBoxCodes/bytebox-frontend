@@ -19,6 +19,18 @@ export const languageOptions: LanguageOption[] = [
     snippet:
       "// Write your Java solution here\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // code here\n\n    }\n}\n",
   },
+  {
+    label: "Python",
+    value: "python",
+    snippet:
+      "# Write your Python solution here\ndef main():\n    # code here\n    pass\n\nif __name__ == '__main__':\n    main()\n",
+  },
+  {
+    label: "JavaScript",
+    value: "javascript",
+    snippet:
+      "// Write your JavaScript solution here\nfunction main() {\n    // code here\n\n}\n\nmain();\n",
+  },
 ];
 
 /** Language options for the preferred language picker. */
@@ -30,6 +42,6 @@ export const PREFERRED_LANGUAGE_OPTIONS: {
   { label: "C", value: "c" },
   { label: "C++", value: "cpp" },
   { label: "Java", value: "java" },
-  { label: "Python", value: "python", comingSoon: true },
-  { label: "JavaScript", value: "javascript", comingSoon: true },
+  { label: "Python", value: "python" },
+  { label: "JavaScript", value: "javascript" },
 ];

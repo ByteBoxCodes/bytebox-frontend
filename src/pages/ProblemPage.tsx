@@ -6,6 +6,7 @@ import ProblemPageSkeleton from "@/fallback/ProblemPageSkeleton";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import LanguagePickerModal from "@/features/profile/LanguagePickerModal";
 import { useUpdatePreferredLanguage } from "@/hooks/useUpdatePreferredLanguage";
+import { isAuthenticated } from "@/utils/isAuthenticated";
 import { useGetProblemsByTopicId } from "@/hooks/useGetProblemsByTopicId";
 
 const SELECTED_TOPIC_KEY = "selectedTopicId";
@@ -36,10 +37,13 @@ export default function ProblemPage() {
     const { mutate: updateLang } = useUpdatePreferredLanguage();
 
     useEffect(() => {
-        // Only show if no preferred language is currently set
+        // Only show for authenticated users who haven't been prompted before
+        const isAuth = isAuthenticated();
         const lang = localStorage.getItem("preferredLanguage");
-        if (!lang) {
+        const alreadyPrompted = localStorage.getItem("bytebox_lang_prompt_shown");
+        if (isAuth && !lang && !alreadyPrompted) {
             setShowLangModal(true);
+            localStorage.setItem("bytebox_lang_prompt_shown", "true");
         }
     }, []);
 
