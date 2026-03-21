@@ -1,6 +1,6 @@
 
 import { Zap, Trophy, Clock, BookOpen } from "lucide-react";
-import { SiPython, SiJavascript, SiCplusplus } from "react-icons/si";
+import { SiPython, SiCplusplus } from "react-icons/si";
 import { FaJava, FaC } from "react-icons/fa6";
 
 export const avatars = [
@@ -14,7 +14,6 @@ export const langs = [
     { name: "C++", Icon: SiCplusplus },
     { name: "Java", Icon: FaJava },
     { name: "Python", Icon: SiPython },
-    { name: "JavaScript", Icon: SiJavascript },
 ];
 
 export const features = [

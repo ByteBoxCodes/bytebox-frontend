@@ -22,14 +22,7 @@ export const languageOptions: LanguageOption[] = [
   {
     label: "Python",
     value: "python",
-    snippet:
-      "# Write your Python solution here\ndef main():\n    # code here\n    pass\n\nif __name__ == '__main__':\n    main()\n",
-  },
-  {
-    label: "JavaScript",
-    value: "javascript",
-    snippet:
-      "// Write your JavaScript solution here\nfunction main() {\n    // code here\n\n}\n\nmain();\n",
+    snippet: "# Write your Python solution here\n",
   },
 ];
 
@@ -43,5 +36,4 @@ export const PREFERRED_LANGUAGE_OPTIONS: {
   { label: "C++", value: "cpp" },
   { label: "Java", value: "java" },
   { label: "Python", value: "python" },
-  { label: "JavaScript", value: "javascript" },
 ];
