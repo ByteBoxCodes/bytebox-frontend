@@ -17,6 +17,7 @@ import { useSubmitSolutions } from "@/hooks/useSubmitSolutions";
 import { useGetMySubmissions } from "@/hooks/useGetMySubmissions";
 import { useRunSolution } from "@/hooks/useRunSolution";
 import { isAuthenticated } from "@/utils/isAuthenticated";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function SubmissionPage() {
     const { questionId } = useParams<{ questionId: string }>();
@@ -24,6 +25,7 @@ export default function SubmissionPage() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [lastAction, setLastAction] = useState<"run" | "submit" | null>(null);
     const isAuth = isAuthenticated();
+    const isMobile = useMediaQuery("(max-width: 1023px)");
 
     const { mutate: runMutate, isPending: isRunPending, error: runError, data: runResult } = useRunSolution();
     const { mutate: submitMutate, isPending: isSubmitPending, error: submitError, data: submitResult } = useSubmitSolutions();
@@ -106,9 +108,10 @@ export default function SubmissionPage() {
     };
 
     return (
-        <div className="relative h-full flex flex-col overflow-hidden transition-colors duration-200
+        <div className={`relative flex flex-col transition-colors duration-200
                         bg-(--bg-secondary) border-(--bg-secondary)
-                        dark:border-(--bg-secondary)">
+                        dark:border-(--bg-secondary)
+                        ${isMobile ? 'min-h-screen' : 'h-full overflow-hidden'}`}>
 
             {/* Dark mode gradient overlay */}
             <div className="absolute inset-0 hidden dark:block pointer-events-none"
@@ -122,23 +125,16 @@ export default function SubmissionPage() {
                     style={{ background: "var(--dk-blob-b)" }} />
             </div>
 
-            <ResizablePanelGroup
-                orientation="horizontal"
-                className="relative z-10 flex-1 w-full border-t border-(--border-primary) dark:border-(--dk-border)"
-            >
-                {/* Left Panel: Question Details */}
-                <ResizablePanel defaultSize={50} minSize={30}>
-                    <div className="h-full bg-(--bg-primary) dark:bg-(--bg-secondary) transition-colors duration-200">
+            {isMobile ? (
+                /* ── Mobile: scrollable stacked layout ── */
+                <div className="relative z-10 flex-1 flex flex-col border-t border-(--border-primary) dark:border-(--dk-border)">
+                    {/* Question Panel */}
+                    <div className="bg-(--bg-primary) dark:bg-(--bg-secondary) transition-colors duration-200">
                         {data && <QuestionPanel question={data} isSolved={isSolved} />}
                     </div>
-                </ResizablePanel>
 
-                <ResizableHandle withHandle
-                    className="dark:bg-(--dk-border) dark:hover:bg-(--dk-border-light) transition-colors" />
-
-                {/* Right Panel: Code Editor */}
-                <ResizablePanel defaultSize={50} minSize={30} className="relative">
-                    <div className={`h-full bg-(--bg-secondary) transition-colors duration-200 ${!isAuth ? "blur-[3px] pointer-events-none select-none opacity-60" : ""}`}>
+                    {/* Code Editor */}
+                    <div className={`relative min-h-[60vh] flex flex-col bg-(--bg-secondary) transition-colors duration-200 ${!isAuth ? "blur-[3px] pointer-events-none select-none opacity-60" : ""}`}>
                         <SubmissionPanel
                             problemId={questionId}
                             question={data!}
@@ -153,14 +149,14 @@ export default function SubmissionPage() {
                     </div>
 
                     {!isAuth && (
-                        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-(--bg-secondary)/40 backdrop-blur-[1px]">
-                            <div className="flex flex-col items-center text-center max-w-sm px-4">
-                                <div className="p-3 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-2xl mb-4">
-                                    <Layers className="w-8 h-8" />
+                        <div className="sticky bottom-0 z-50 flex flex-col items-center justify-center bg-(--bg-secondary)/90 backdrop-blur-sm py-6 px-4 border-t border-(--border-primary)">
+                            <div className="flex flex-col items-center text-center max-w-sm">
+                                <div className="p-3 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-2xl mb-3">
+                                    <Layers className="w-6 h-6" />
                                 </div>
-                                <h3 className="text-xl font-semibold tracking-tight text-(--text-primary) dark:text-(--dk-text) mb-2">Login to Code</h3>
-                                <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-dim) mb-6 leading-relaxed">
-                                    Join to write, run, and save your solutions. Track your progress with detailed submission history.
+                                <h3 className="text-lg font-semibold tracking-tight text-(--text-primary) dark:text-(--dk-text) mb-1">Login to Code</h3>
+                                <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-dim) mb-4 leading-relaxed">
+                                    Join to write, run, and save your solutions.
                                 </p>
                                 <Link to="/login" className="px-6 py-2.5 text-sm bg-(--text-primary) text-(--bg-primary) dark:bg-(--dk-text) dark:text-(--bg-secondary) font-semibold rounded-full hover:opacity-90 transition-opacity active:scale-95 shadow-md">
                                     Sign In to Continue
@@ -176,8 +172,64 @@ export default function SubmissionPage() {
                         totalTestCases={submitResult?.totalTestCases}
                         problemTitle={data?.title}
                     />
-                </ResizablePanel>
-            </ResizablePanelGroup>
+                </div>
+            ) : (
+                /* ── Desktop: resizable horizontal panels ── */
+                <ResizablePanelGroup
+                    orientation="horizontal"
+                    className="relative z-10 flex-1 w-full border-t border-(--border-primary) dark:border-(--dk-border)"
+                >
+                    <ResizablePanel defaultSize={50} minSize={30}>
+                        <div className="h-full bg-(--bg-primary) dark:bg-(--bg-secondary) transition-colors duration-200">
+                            {data && <QuestionPanel question={data} isSolved={isSolved} />}
+                        </div>
+                    </ResizablePanel>
+
+                    <ResizableHandle withHandle
+                        className="dark:bg-(--dk-border) dark:hover:bg-(--dk-border-light) transition-colors" />
+
+                    <ResizablePanel defaultSize={50} minSize={30} className="relative">
+                        <div className={`h-full bg-(--bg-secondary) transition-colors duration-200 ${!isAuth ? "blur-[3px] pointer-events-none select-none opacity-60" : ""}`}>
+                            <SubmissionPanel
+                                problemId={questionId}
+                                question={data!}
+                                onRunTest={handleRunTest}
+                                onSubmit={handleSubmit}
+                                isRunning={isRunPending}
+                                isSubmitting={isSubmitPending}
+                                submissionResult={activeResult}
+                                submissionError={activeError}
+                                submissions={submissions}
+                            />
+                        </div>
+
+                        {!isAuth && (
+                            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-(--bg-secondary)/40 backdrop-blur-[1px]">
+                                <div className="flex flex-col items-center text-center max-w-sm px-4">
+                                    <div className="p-3 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-2xl mb-4">
+                                        <Layers className="w-8 h-8" />
+                                    </div>
+                                    <h3 className="text-xl font-semibold tracking-tight text-(--text-primary) dark:text-(--dk-text) mb-2">Login to Code</h3>
+                                    <p className="text-sm text-(--text-secondary) dark:text-(--dk-text-dim) mb-6 leading-relaxed">
+                                        Join to write, run, and save your solutions. Track your progress with detailed submission history.
+                                    </p>
+                                    <Link to="/login" className="px-6 py-2.5 text-sm bg-(--text-primary) text-(--bg-primary) dark:bg-(--dk-text) dark:text-(--bg-secondary) font-semibold rounded-full hover:opacity-90 transition-opacity active:scale-95 shadow-md">
+                                        Sign In to Continue
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+
+                        <SuccessModal
+                            isOpen={showSuccessModal}
+                            onClose={() => setShowSuccessModal(false)}
+                            passedTestCases={submitResult?.passedTestCases}
+                            totalTestCases={submitResult?.totalTestCases}
+                            problemTitle={data?.title}
+                        />
+                    </ResizablePanel>
+                </ResizablePanelGroup>
+            )}
         </div>
     );
 }

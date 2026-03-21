@@ -15,6 +15,7 @@ import { useCodeStorage } from "@/hooks/useCodeStorage";
 import EditorToolbar from "./EditorToolbar";
 import TestCasesTab from "./TestCasesTab";
 import TestResultTab from "./TestResultTab";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 interface SubmissionPanelProps {
     problemId?: string;
@@ -69,6 +70,7 @@ export default function SubmissionPanel({
         submissions
     );
     const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
+    const isMobile = useMediaQuery("(max-width: 1023px)");
 
     // Mark as solved when submission is ACCEPTED
     useEffect(() => {
@@ -116,11 +118,12 @@ export default function SubmissionPanel({
             />
 
             {/* Editor & Bottom Panel */}
-            <div className="flex-1 min-h-0 relative flex flex-col bg-(--bg-secondary)">
-                <ResizablePanelGroup orientation="vertical">
-                    {/* Monaco Editor */}
-                    <ResizablePanel defaultSize={60} minSize={30}>
-                        <div className="h-full relative border-b border-(--dk-border) bg-(--bg-secondary)">
+            <div className={`${isMobile ? '' : 'flex-1 min-h-0'} relative flex flex-col bg-(--bg-secondary)`}>
+                {isMobile ? (
+                    /* ── Mobile: stacked layout with fixed editor height ── */
+                    <>
+                        {/* Monaco Editor */}
+                        <div className="h-[50vh] relative border-b border-(--dk-border) bg-(--bg-secondary)">
                             <Editor
                                 theme="vs-dark"
                                 height="100%"
@@ -129,26 +132,19 @@ export default function SubmissionPanel({
                                 value={code}
                                 onChange={(value) => setCode(value || "")}
                                 options={{
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     minimap: { enabled: false },
                                     scrollBeyondLastLine: false,
                                     automaticLayout: true,
-                                    padding: { top: 16, bottom: 16 },
+                                    padding: { top: 12, bottom: 12 },
                                 }}
                             />
                         </div>
-                    </ResizablePanel>
 
-                    <ResizableHandle
-                        withHandle
-                        className="bg-(--border-primary) hover:bg-(--text-tertiary)/30 transition-colors h-1.5 flex items-center justify-center"
-                    />
-
-                    {/* Bottom Panel: Test Cases / Results */}
-                    <ResizablePanel defaultSize={40} minSize={15}>
-                        <div className="h-full bg-(--bg-secondary) flex flex-col font-pj">
+                        {/* Bottom Panel: Test Cases / Results */}
+                        <div className="bg-(--bg-secondary) flex flex-col font-pj">
                             {/* Tab Header */}
-                            <div className="px-4 py-[6px] border-b border-(--border-primary) flex items-center gap-4 bg-(--bg-tertiary)/30">
+                            <div className="px-2 sm:px-4 py-[6px] border-b border-(--border-primary) flex items-center gap-4 bg-(--bg-tertiary)/30">
                                 <button
                                     onClick={() => setActiveTab("testcases")}
                                     className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] flex items-center gap-2 transition-colors ${activeTab === "testcases"
@@ -171,7 +167,7 @@ export default function SubmissionPanel({
                             </div>
 
                             {/* Tab Body */}
-                            <div className="flex-1 overflow-auto p-5">
+                            <div className="overflow-auto p-3 min-h-[120px]">
                                 {activeTab === "testcases" ? (
                                     displayTestCases.length > 0 ? (
                                         <TestCasesTab testCases={displayTestCases} />
@@ -181,7 +177,7 @@ export default function SubmissionPanel({
                                         </div>
                                     )
                                 ) : (
-                                    <div className="h-full">
+                                    <div>
                                         <TestResultTab
                                             isSubmitting={isSubmitting}
                                             isRunning={isRunning}
@@ -192,8 +188,87 @@ export default function SubmissionPanel({
                                 )}
                             </div>
                         </div>
-                    </ResizablePanel>
-                </ResizablePanelGroup>
+                    </>
+                ) : (
+                    /* ── Desktop: resizable vertical split ── */
+                    <ResizablePanelGroup orientation="vertical">
+                        {/* Monaco Editor */}
+                        <ResizablePanel defaultSize={60} minSize={30}>
+                            <div className="h-full relative border-b border-(--dk-border) bg-(--bg-secondary)">
+                                <Editor
+                                    theme="vs-dark"
+                                    height="100%"
+                                    defaultLanguage={initialLang}
+                                    language={language}
+                                    value={code}
+                                    onChange={(value) => setCode(value || "")}
+                                    options={{
+                                        fontSize: 14,
+                                        minimap: { enabled: false },
+                                        scrollBeyondLastLine: false,
+                                        automaticLayout: true,
+                                        padding: { top: 16, bottom: 16 },
+                                    }}
+                                />
+                            </div>
+                        </ResizablePanel>
+
+                        <ResizableHandle
+                            withHandle
+                            className="bg-(--border-primary) hover:bg-(--text-tertiary)/30 transition-colors h-1.5 flex items-center justify-center"
+                        />
+
+                        {/* Bottom Panel: Test Cases / Results */}
+                        <ResizablePanel defaultSize={40} minSize={15}>
+                            <div className="h-full bg-(--bg-secondary) flex flex-col font-pj">
+                                {/* Tab Header */}
+                                <div className="px-4 py-[6px] border-b border-(--border-primary) flex items-center gap-4 bg-(--bg-tertiary)/30">
+                                    <button
+                                        onClick={() => setActiveTab("testcases")}
+                                        className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] flex items-center gap-2 transition-colors ${activeTab === "testcases"
+                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                            }`}
+                                    >
+                                        <TerminalSquare className="w-4 h-4" />
+                                        Testcases
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab("test-result")}
+                                        className={`text-[13px] font-bold tracking-wide pb-1.5 -mb-[7px] transition-colors ${activeTab === "test-result"
+                                            ? "text-(--text-primary) border-b-2 border-emerald-500"
+                                            : "text-(--text-tertiary) hover:text-(--text-secondary) border-b-2 border-transparent"
+                                            }`}
+                                    >
+                                        Test Result
+                                    </button>
+                                </div>
+
+                                {/* Tab Body */}
+                                <div className="flex-1 overflow-auto p-5">
+                                    {activeTab === "testcases" ? (
+                                        displayTestCases.length > 0 ? (
+                                            <TestCasesTab testCases={displayTestCases} />
+                                        ) : (
+                                            <div className="flex h-full items-center justify-center text-sm font-medium text-(--text-tertiary)">
+                                                No test cases available for this
+                                            </div>
+                                        )
+                                    ) : (
+                                        <div className="h-full">
+                                            <TestResultTab
+                                                isSubmitting={isSubmitting}
+                                                isRunning={isRunning}
+                                                submissionResult={submissionResult}
+                                                submissionError={submissionError}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                )}
             </div>
         </div>
     );

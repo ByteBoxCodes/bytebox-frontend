@@ -49,9 +49,9 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
 
     // Reverse find highest unlocked badge to map styling
     return (
-        <aside className="relative w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5 ">
+        <aside className="relative w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5">
             {/* Avatar + Info */}
-            <div className="flex items-center gap-4 pt-2 pl-2">
+            <div className="flex items-center gap-4 pt-2 sm:pl-2">
                 {/* Left: Avatar with Progress */}
                 <div className="relative shrink-0 flex items-center justify-center">
                     <svg
@@ -102,7 +102,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
 
                     {/* Level / Points Block */}
                     <div className="mt-2.5 flex flex-col gap-1.5 w-full">
-                        <div className="flex items-center justify-between w-full max-w-[140px]">
+                        <div className="flex items-center justify-between w-full max-w-[180px] sm:max-w-[140px]">
                             <div className="flex items-center gap-1">
                                 <BadgeIcon size={12} className={`${currentBadge.color} ${currentBadge.fill}`} />
                                 <span className="text-xs font-semibold text-(--text-primary) dark:text-(--dk-text)">
@@ -115,7 +115,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                         </div>
 
                         {/* Mini Linear Progress Bar */}
-                        <div className="h-1.5 w-full max-w-[140px] bg-border/40 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full max-w-[180px] sm:max-w-[140px] bg-border/40 rounded-full overflow-hidden">
                             <div
                                 className={`h-full rounded-full transition-all duration-1000 ${currentBadge.bg.replace('/10', '')}`}
                                 style={{ width: `${Math.min(100, Math.max(0, points < (levelInfo.level * 15) ? (points / (levelInfo.level * 15)) * 100 : 100))}%` }}

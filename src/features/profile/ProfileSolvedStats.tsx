@@ -57,20 +57,21 @@ export default function ProfileSolvedStats({ stats, user }: ProfileSolvedStatsPr
     const BadgeIcon = currentBadge.icon;
 
     return (
-        <section className="relative rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">
-            {/* Dynamic Rank badge mapped to journey colors - Top Right Absolute */}
-            <div className={`absolute top-5 right-5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${currentBadge.bg} ${currentBadge.color} border ${currentBadge.tagBorder} shadow-xs transition-colors duration-300`}>
-                <BadgeIcon size={12} className="opacity-80" />
-                <span className="tracking-wide uppercase">{levelInfo.title}</span>
+        <section className="relative rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5 overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) flex items-center gap-2">
+                    <CheckCircle2 size={15} className="text-emerald-500" />
+                    Problems Solved
+                </h2>
+                {/* Dynamic Rank badge */}
+                <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${currentBadge.bg} ${currentBadge.color} border ${currentBadge.tagBorder} shadow-xs transition-colors duration-300`}>
+                    <BadgeIcon size={12} className="opacity-80" />
+                    <span className="tracking-wide uppercase">{levelInfo.title}</span>
+                </div>
             </div>
 
-            <h2 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-4 flex items-center gap-2">
-                <CheckCircle2 size={15} className="text-emerald-500" />
-                Problems Solved
-            </h2>
-
             {/* Summary row */}
-            <div className="flex items-end gap-5 mb-5">
+            <div className="flex flex-wrap items-end gap-5 mb-5">
                 <div>
                     <p className="text-4xl font-extrabold text-(--text-primary) dark:text-(--dk-text) leading-none">
                         {solved}

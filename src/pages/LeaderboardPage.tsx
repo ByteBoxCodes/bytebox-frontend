@@ -64,13 +64,13 @@ export default function LeaderboardPage() {
                                 </p>
                             </div>
 
-                            <div className="rounded-lg border-y border-border overflow-hidden">
+                            <div className="rounded-lg border-y border-border overflow-x-auto">
                                     <Table>
                                         <TableHeader className="bg-transparent border-b border-border">
                                             <TableRow className="hover:bg-transparent border-0 [&_th]:h-10">
                                                 <TableHead className="w-[80px] text-center font-semibold text-muted-foreground">Rank</TableHead>
                                                 <TableHead className="font-semibold text-muted-foreground">User</TableHead>
-                                                <TableHead className="w-[120px] text-right font-semibold text-muted-foreground">Solved</TableHead>
+                                                <TableHead className="w-[120px] text-right font-semibold text-muted-foreground hidden sm:table-cell">Solved</TableHead>
                                                 <TableHead className="w-[120px] text-right font-semibold text-muted-foreground">XP</TableHead>
                                             </TableRow>
                                         </TableHeader>
@@ -135,7 +135,7 @@ export default function LeaderboardPage() {
                                                                     </div>
                                                                 </div>
                                                             </TableCell>
-                                                            <TableCell className="py-3 text-right">
+                                                            <TableCell className="py-3 text-right hidden sm:table-cell">
                                                                 <span className="font-medium text-muted-foreground">
                                                                     {user.totalProblemsolved}
                                                                 </span>

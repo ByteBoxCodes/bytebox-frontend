@@ -41,22 +41,22 @@ function SubmissionRow({ submission, onClick }: { submission: ISubmissionRespons
     return (
         <div
             onClick={onClick}
-            className="flex items-center justify-between py-2.5 border-b border-border/40 last:border-0 cursor-pointer hover:bg-(--bg-tertiary)/50 dark:hover:bg-white/3 transition-colors px-2 -mx-2 rounded"
+            className="flex items-center justify-between py-2.5 border-b border-border/40 last:border-0 cursor-pointer hover:bg-(--bg-tertiary)/50 dark:hover:bg-white/3 transition-colors px-2 -mx-2 rounded gap-2"
         >
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
                 <Code2 size={13} className="shrink-0 text-(--text-tertiary) dark:text-(--dk-text-faint)" />
                 <span className="text-sm font-medium text-(--text-primary) dark:text-(--dk-text) truncate" title={submission.problemTitle}>
                     {submission.problemTitle}
                 </span>
             </div>
-            <div className="flex items-center gap-3 shrink-0 ml-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                 <span className="text-xs text-(--text-tertiary) dark:text-(--dk-text-faint) hidden sm:block">
                     {submission.language.charAt(0).toUpperCase() + submission.language.slice(1).toLowerCase()}
                 </span>
-                <span className={`text-xs font-semibold ${STATUS_COLOR[submission.status] || "text-gray-500"}`}>
+                <span className={`text-xs font-semibold whitespace-nowrap ${STATUS_COLOR[submission.status] || "text-gray-500"}`}>
                     {STATUS_LABEL[submission.status] || submission.status}
                 </span>
-                <span className="text-xs text-(--text-tertiary) dark:text-(--dk-text-faint)">
+                <span className="text-xs text-(--text-tertiary) dark:text-(--dk-text-faint) hidden xs:block">
                     {formatTimeAgo(submission.submittedAt)}
                 </span>
             </div>

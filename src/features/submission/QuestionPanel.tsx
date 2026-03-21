@@ -20,7 +20,7 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
     return (
         <Tabs defaultValue="description" className="h-full flex flex-col">
             {/* Top Navigation Tabs */}
-            <div className="px-3 shrink-0 flex items-center h-10 border border-(--dk-border)">
+            <div className="px-2 sm:px-3 shrink-0 flex items-center h-10 border border-(--dk-border)">
                 <TabsList className="bg-transparent h-full p-0 flex items-center justify-start gap-1 ">
                     <TabsTrigger
                         value="description"
@@ -50,13 +50,13 @@ export default function QuestionPanel({ question, isSolved }: { question: IProbl
             {/* Description Tab */}
             <TabsContent value="description" className="flex-1 overflow-hidden m-0 p-0 border-none outline-none bg-(--bg-secondary)">
                 <ScrollArea className="h-full">
-                    <div className="p-6 space-y-6 pb-12">
+                    <div className="p-4 sm:p-6 space-y-6 pb-12">
                         {/* Header */}
                         <div className="space-y-2">
                             <h1 className="text-[22px] font-bold text-(--text-primary) tracking-tight">
                                 {question.orderIndex ? `${question.orderIndex}. ` : ''}{question.title}
                             </h1>
-                            <div className="flex items-center gap-3 mt-2">
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2">
                                 {/* Difficulty Badge */}
                                 <Badge
                                     variant="outline"

@@ -94,7 +94,7 @@ export default function ProblemList({ problems, topicName, isLoading }: { proble
 
 
             {/* Table Area (Striped, Cardless style) */}
-            <div className="flex-1 flex flex-col rounded-lg border border-border overflow-hidden min-h-0">
+            <div className="flex-1 flex flex-col rounded-lg border border-border overflow-hidden min-h-0 overflow-x-auto">
                 <Table className="hidden">
                     {/* Hack to keep Table styles load, using manual structure below for scrolling */}
                 </Table>
@@ -105,10 +105,10 @@ export default function ProblemList({ problems, topicName, isLoading }: { proble
                     <table className="w-full text-sm text-left">
                         <thead className="[&_tr]:border-b">
                             <tr className="hover:bg-transparent border-0 [&_th]:h-10">
-                                <th className="h-10 px-4 w-[80px] text-center align-middle font-semibold text-muted-foreground">Status</th>
-                                <th className="h-10 px-4 w-[60px] align-middle font-semibold text-muted-foreground">No.</th>
-                                <th className="h-10 px-4 align-middle font-semibold text-muted-foreground">Title</th>
-                                <th className="h-10 px-4 w-[120px] align-middle font-semibold text-muted-foreground">Difficulty</th>
+                                <th className="h-10 px-2 sm:px-4 w-[50px] sm:w-[80px] text-center align-middle font-semibold text-muted-foreground">Status</th>
+                                <th className="h-10 px-2 sm:px-4 w-[40px] sm:w-[60px] align-middle font-semibold text-muted-foreground hidden sm:table-cell">No.</th>
+                                <th className="h-10 px-2 sm:px-4 align-middle font-semibold text-muted-foreground">Title</th>
+                                <th className="h-10 px-2 sm:px-4 w-[90px] sm:w-[120px] align-middle font-semibold text-muted-foreground">Difficulty</th>
                             </tr>
                         </thead>
                     </table>
@@ -137,7 +137,7 @@ export default function ProblemList({ problems, topicName, isLoading }: { proble
                                             className={`group transition-colors cursor-pointer border-0 ${isEven ? "bg-muted/50 hover:bg-muted/80" : "bg-(--bg-secondary) hover:bg-muted/10"
                                                 }`}
                                         >
-                                            <td className="w-[80px] p-4 text-center align-middle py-3">
+                                            <td className="w-[50px] sm:w-[80px] p-2 sm:p-4 text-center align-middle py-3">
                                                 <div className="flex justify-center">
                                                     {solved ? (
                                                         <CheckCircle2 size={18} className="text-emerald-500" />
@@ -146,18 +146,18 @@ export default function ProblemList({ problems, topicName, isLoading }: { proble
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="w-[60px] p-4 align-middle font-medium text-muted-foreground py-3">
+                                            <td className="w-[40px] sm:w-[60px] p-2 sm:p-4 align-middle font-medium text-muted-foreground py-3 hidden sm:table-cell">
                                                 {index + 1}
                                             </td>
-                                            <td className="p-4 align-middle py-3">
+                                            <td className="p-2 sm:p-4 align-middle py-3">
                                                 <Link
                                                     to={`/problem/${problem.id}`}
-                                                    className="font-medium text-foreground hover:text-primary transition-colors block w-full outline-none"
+                                                    className="font-medium text-foreground hover:text-primary transition-colors block w-full outline-none truncate"
                                                 >
                                                     {problem.title}
                                                 </Link>
                                             </td>
-                                            <td className="w-[120px] p-4 align-middle py-3">
+                                            <td className="w-[90px] sm:w-[120px] p-2 sm:p-4 align-middle py-3">
                                                 <Badge
                                                     variant="secondary"
                                                     className={`font-medium ${getDifficultyColor(problem.difficulty)}`}

@@ -17,7 +17,7 @@ interface ActivityStatProps {
 function ActivityStat({ label, value, icon: Icon, color }: ActivityStatProps) {
     return (
         <div className="flex items-center gap-3">
-            <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-(--bg-secondary) dark:bg-(--dk-surface) border border-border/40`}>
+            <div className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-(--bg-secondary) dark:bg-(--dk-surface) border border-border/40`}>
                 <Icon size={18} className={color} />
             </div>
             <div>
@@ -145,13 +145,13 @@ export default function ProfileActivity({ stats }: ProfileActivityProps) {
     ];
 
     return (
-        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5 space-y-6">
+        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5 space-y-6 overflow-hidden">
             <div>
                 <h2 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-4 flex items-center gap-2">
                     <Flame size={15} className="text-orange-500" />
                     Activity
                 </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3">
                     {activityStats.map((s) => (
                         <ActivityStat key={s.label} {...s} />
                     ))}

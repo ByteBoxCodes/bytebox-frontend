@@ -17,7 +17,7 @@ export default function LoginPage() {
                 <AuthPanel mode="login" />
 
                 {/* ── Right Column ── */}
-                <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 relative overflow-hidden z-10">
+                <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-4 sm:p-8 relative overflow-hidden z-10">
 
                     <div className="w-full max-w-md space-y-8 z-10">
                         {/* Mobile brand text removed since Header is now globally available */}

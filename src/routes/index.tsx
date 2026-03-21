@@ -11,6 +11,7 @@ import ProtectedRoutes from "@/components/common/ProtectedRoutes";
 import GuestRoute from "@/components/common/GuestRoute";
 import LeaderboardPage from "../pages/LeaderboardPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export const router = createBrowserRouter([
     {
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
             {
                 path: "/leaderboard",
                 element: <LeaderboardPage />,
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />,
             },
         ],
     },

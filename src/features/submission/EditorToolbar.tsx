@@ -30,16 +30,16 @@ export default function EditorToolbar({
     saveStatus = "idle",
 }: EditorToolbarProps) {
     return (
-        <div className="flex items-center justify-between px-4 py-2 border-b border-(--border-primary) bg-(--bg-tertiary)/50">
+        <div className="flex items-center justify-between px-2 sm:px-4 py-2 border-b border-(--border-primary) bg-(--bg-tertiary)/50 gap-2">
             <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-(--text-secondary) uppercase tracking-wider">
+                <span className="text-xs font-medium text-(--text-secondary) uppercase tracking-wider hidden sm:inline">
                     Language:
                 </span>
                 <Select
                     value={language}
                     onValueChange={(val) => onLanguageChange(val as Language)}
                 >
-                    <SelectTrigger className="w-[120px] h-8 text-xs bg-(--bg-primary)">
+                    <SelectTrigger className="w-[100px] sm:w-[120px] h-8 text-xs bg-(--bg-primary)">
                         <SelectValue placeholder="Language" />
                     </SelectTrigger>
                     <SelectContent>
@@ -53,7 +53,7 @@ export default function EditorToolbar({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
                 {/* Save Status Indicator */}
                 <span
                     className={`text-[11px] font-medium flex items-center gap-1 transition-all duration-300 ${saveStatus === "saving"
@@ -85,11 +85,11 @@ export default function EditorToolbar({
                     className="font-medium bg-(--bg-primary) hover:bg-(--bg-secondary) text-(--text-primary) border border-(--border-primary) h-8 cursor-pointer"
                 >
                     {isRunning ? (
-                        <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin text-(--text-tertiary)" />
+                        <Loader2 className="w-3.5 h-3.5 sm:mr-1.5 animate-spin text-(--text-tertiary)" />
                     ) : (
-                        <Play className="w-3.5 h-3.5 mr-1.5" />
+                        <Play className="w-3.5 h-3.5 sm:mr-1.5" />
                     )}
-                    Run Code
+                    <span className="hidden sm:inline">Run Code</span>
                 </Button>
 
                 <Button
@@ -99,11 +99,11 @@ export default function EditorToolbar({
                     className="font-medium bg-emerald-600 hover:bg-emerald-700 text-white h-8 border-none cursor-pointer"
                 >
                     {isSubmitting ? (
-                        <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 sm:mr-1.5 animate-spin" />
                     ) : (
-                        <Send className="w-3.5 h-3.5 mr-1.5" />
+                        <Send className="w-3.5 h-3.5 sm:mr-1.5" />
                     )}
-                    Submit
+                    <span className="hidden sm:inline">Submit</span>
                 </Button>
             </div>
         </div>

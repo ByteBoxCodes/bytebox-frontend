@@ -285,14 +285,6 @@ export default function Header() {
                   {" "}
                   Leaderboard{" "}
                 </Link>
-                <Link
-                  to="#"
-                  onClick={toggleMobileMenu}
-                  className="px-3 py-2 rounded-lg text-base font-medium text-(--text-primary) dark:text-white hover:bg-(--bg-tertiary) transition-colors cursor-not-allowed opacity-70"
-                >
-                  {" "}
-                  Challenges{" "}
-                </Link>
               </nav>
 
               {/* Mobile Auth Actions */}
