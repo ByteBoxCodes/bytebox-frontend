@@ -5,19 +5,19 @@ export const languageOptions: LanguageOption[] = [
     label: "C",
     value: "c",
     snippet:
-      "// Write your C solution here\n#include <stdio.h>\n\nint main() {\n    // code here\n\n    return 0;\n}\n",
+      "// Write your C solution here\n// Note: You must include necessary headers (e.g., #include <stdio.h>)\n// and define an int main() function to execute your code.\n\n",
   },
   {
     label: "C++",
     value: "cpp",
     snippet:
-      "// Write your C++ solution here\n#include <iostream>\n\nusing namespace std;\n\nint main() {\n    // code here\n\n    return 0;\n}\n",
+      "// Write your C++ solution here\n// Note: You must include necessary headers (e.g., #include <iostream>)\n// and define an int main() function to execute your code.\n\n",
   },
   {
     label: "Java",
     value: "java",
     snippet:
-      "// Write your Java solution here\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // code here\n\n    }\n}\n",
+      "// Write your Java solution here\n// Note: You must define a public class named Main\n// containing a public static void main(String[] args) method.\n\n",
   },
   {
     label: "Python",

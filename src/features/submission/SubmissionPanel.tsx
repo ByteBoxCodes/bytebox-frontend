@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import type { Language, ISubmissionResponse } from "@/types/submission";
 import {
@@ -72,6 +72,34 @@ export default function SubmissionPanel({
     const [activeTab, setActiveTab] = useState<"testcases" | "test-result">("testcases");
     const isMobile = useMediaQuery("(max-width: 1023px)");
 
+    const editorRef = useRef<any>(null);
+
+    const handleEditorDidMount = (editor: any) => {
+        editorRef.current = editor;
+    };
+
+    const handleCodeChange = (value: string | undefined) => {
+        const val = value || "";
+        const snippet = defaultSnippets[language];
+        
+        if (!val.startsWith(snippet)) {
+            // Prevent deleting or editing the boilerplate snippet
+            if (editorRef.current) {
+                const currentPosition = editorRef.current.getPosition();
+                editorRef.current.setValue(code);
+                
+                const snippetLines = snippet.split("\n").length;
+                if (currentPosition.lineNumber < snippetLines) {
+                    editorRef.current.setPosition({ lineNumber: snippetLines, column: 1 });
+                } else {
+                    editorRef.current.setPosition(currentPosition);
+                }
+            }
+            return;
+        }
+        setCode(val);
+    };
+
     // Mark as solved when submission is ACCEPTED
     useEffect(() => {
         if (
@@ -130,7 +158,8 @@ export default function SubmissionPanel({
                                 defaultLanguage={initialLang}
                                 language={language}
                                 value={code}
-                                onChange={(value) => setCode(value || "")}
+                                onMount={handleEditorDidMount}
+                                onChange={handleCodeChange}
                                 options={{
                                     fontSize: 13,
                                     minimap: { enabled: false },
@@ -201,7 +230,8 @@ export default function SubmissionPanel({
                                     defaultLanguage={initialLang}
                                     language={language}
                                     value={code}
-                                    onChange={(value) => setCode(value || "")}
+                                    onMount={handleEditorDidMount}
+                                    onChange={handleCodeChange}
                                     options={{
                                         fontSize: 14,
                                         minimap: { enabled: false },
