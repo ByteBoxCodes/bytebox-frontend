@@ -12,6 +12,7 @@ import GuestRoute from "@/components/common/GuestRoute";
 import LeaderboardPage from "../pages/LeaderboardPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
 
 export const router = createBrowserRouter([
     {
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
             {
                 path: "/leaderboard",
                 element: <LeaderboardPage />,
+            },
+            {
+                path: "/privacy-policy",
+                element: <PrivacyPolicy />,
             },
             {
                 path: "*",
