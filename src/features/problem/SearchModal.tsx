@@ -22,7 +22,7 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
   const debouncedQuery = useDebounce(query, 300);
   const navigate = useNavigate();
 
-  // Reset query when modal closes
+  // Reset query when modal closes done
   useEffect(() => {
     if (!open) {
       setQuery("");
