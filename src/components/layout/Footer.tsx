@@ -18,7 +18,7 @@ export default function Footer() {
             to="/terms"
             className="text-xs text-(--text-tertiary) hover:text-(--btn-primary-bg) dark:hover:text-white transition-colors"
           >
-            Terms
+            Terms & Conditions
           </Link>
           <Link
             to="/about"

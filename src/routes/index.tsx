@@ -13,56 +13,82 @@ import LeaderboardPage from "../pages/LeaderboardPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
+import TermsPage from "../pages/TermsPage";
+import AboutPage from "@/pages/AboutPage";
 
 export const router = createBrowserRouter([
-    {
-        path: "/login",
-        element: <GuestRoute><LoginPage /></GuestRoute>,
-    },
-    {
-        path: "/signup",
-        element: <GuestRoute><RegisterPage /></GuestRoute>,
-    },
-    {
-        path: "/reset-password",
-        element: <GuestRoute><ResetPasswordPage /></GuestRoute>,
-    },
-    {
-        path: "/verify",
-        element: <VerifyPage />,
-    },
-    {
+  {
+    path: "/login",
+    element: (
+      <GuestRoute>
+        <LoginPage />
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <GuestRoute>
+        <RegisterPage />
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/reset-password",
+    element: (
+      <GuestRoute>
+        <ResetPasswordPage />
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/verify",
+    element: <VerifyPage />,
+  },
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
         path: "/",
-        element: <App />,
-        children: [
-            {
-                path: "/",
-                element: <HomePage />,
-            },
-            {
-                path: "/problems",
-                element: <ProblemPage />,
-            },
-            {
-                path: "/problem/:questionId",
-                element: <SubmissionPage />,
-            },
-            {
-                path: "/profile",
-                element: (<ProtectedRoutes><UserProfilePage /></ProtectedRoutes>),
-            },
-            {
-                path: "/leaderboard",
-                element: <LeaderboardPage />,
-            },
-            {
-                path: "/privacy-policy",
-                element: <PrivacyPolicy />,
-            },
-            {
-                path: "*",
-                element: <NotFoundPage />,
-            },
-        ],
-    },
+        element: <HomePage />,
+      },
+      {
+        path: "/problems",
+        element: <ProblemPage />,
+      },
+      {
+        path: "/problem/:questionId",
+        element: <SubmissionPage />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoutes>
+            <UserProfilePage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "/leaderboard",
+        element: <LeaderboardPage />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms",
+        element: <TermsPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+    ],
+  },
 ]);

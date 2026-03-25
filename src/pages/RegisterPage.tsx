@@ -1,7 +1,6 @@
 import Register from "../features/auth/Register";
 import AuthPanel from "../components/common/AuthPanel";
 import Header from "../components/layout/Header";
-import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
     return (
@@ -23,21 +22,6 @@ export default function RegisterPage() {
                         {/* Mobile brand text removed since Header is now globally available */}
 
                         <Register />
-
-                        <p className="text-center text-xs text-(--text-secondary) dark:text-(--dk-text-faint)">
-                            By continuing, you agree to our{" "}
-                            <Link to="/terms"
-                                className="underline underline-offset-4 hover:opacity-80 transition-opacity
-                                         text-(--text-primary) dark:text-(--dk-text-muted)">
-                                Terms of Service
-                            </Link>{" "}
-                            and{" "}
-                            <Link to="/privacy"
-                                className="underline underline-offset-4 hover:opacity-80 transition-opacity
-                                         text-(--text-primary) dark:text-(--dk-text-muted)">
-                                Privacy Policy
-                            </Link>.
-                        </p>
                     </div>
                 </div>
             </div>

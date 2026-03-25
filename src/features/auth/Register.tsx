@@ -17,6 +17,8 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showVerificationModal, setShowVerificationModal] = useState(false);
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const [isOver13, setIsOver13] = useState(false);
 
     const { mutate, isPending } = useRegisterUser(() => {
         setShowVerificationModal(true);
@@ -174,13 +176,58 @@ export default function Register() {
                     </div>
                 </div>
 
+                {/* Checkboxes */}
+                <div className="space-y-2.5 pt-1">
+                    <label className="flex items-start gap-2.5 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={acceptedTerms}
+                            onChange={(e) => setAcceptedTerms(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 rounded border border-(--border-primary) dark:border-(--dk-border-muted) accent-(--btn-primary-bg) cursor-pointer shrink-0"
+                        />
+                        <span className="text-xs text-(--text-secondary) dark:text-(--dk-text-faint) leading-relaxed">
+                            I agree to the{" "}
+                            <a
+                                href="/terms"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline underline-offset-2 text-(--text-primary) dark:text-(--dk-text-muted) hover:opacity-80 transition-opacity"
+                            >
+                                Terms &amp; Conditions
+                            </a>{" "}
+                            and{" "}
+                            <a
+                                href="/privacy-policy"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline underline-offset-2 text-(--text-primary) dark:text-(--dk-text-muted) hover:opacity-80 transition-opacity"
+                            >
+                                Privacy Policy
+                            </a>
+                        </span>
+                    </label>
+
+                    <label className="flex items-start gap-2.5 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={isOver13}
+                            onChange={(e) => setIsOver13(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 rounded border border-(--border-primary) dark:border-(--dk-border-muted) accent-(--btn-primary-bg) cursor-pointer shrink-0"
+                        />
+                        <span className="text-xs text-(--text-secondary) dark:text-(--dk-text-faint) leading-relaxed">
+                            I confirm that I am 13 years of age or older
+                        </span>
+                    </label>
+                </div>
+
                 {/* Submit */}
                 <Button
                     type="submit"
-                    disabled={isPending}
+                    disabled={isPending || !acceptedTerms || !isOver13}
                     className="w-full h-11 rounded-xl font-semibold mt-1 transition-colors
                                bg-(--btn-primary-bg) text-(--btn-primary-text) hover:bg-(--btn-primary-hover)
-                               dark:bg-(--dk-btn-bg) dark:text-(--dk-btn-text) dark:hover:bg-(--dk-btn-hover)"
+                               dark:bg-(--dk-btn-bg) dark:text-(--dk-btn-text) dark:hover:bg-(--dk-btn-hover)
+                               disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create Account
