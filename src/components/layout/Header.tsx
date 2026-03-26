@@ -18,8 +18,6 @@ export default function Header() {
   const { data, isLoading } = useGetHeaderProfile();
   const user = token ? (data?.data ?? data) : null;
 
-  console.log(user);
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
 
