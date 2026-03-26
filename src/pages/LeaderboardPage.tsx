@@ -3,15 +3,111 @@ import LeaderboardSkeleton from "@/fallback/LeaderboardSkeleton";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trophy, Medal, Award, Flame, User } from "lucide-react";
+import { Crown, Medal, Flame, User, Trophy, Award } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { getLevelInfo } from "@/utils/levelUtils";
 import { BADGES } from "@/constants/badges";
+function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number; isFirst?: boolean }) {
+    if (!user) return null;
+
+    const levelInfo = getLevelInfo(user.points, user.level, user.levelXp);
+    const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
+    const BadgeIcon = currentBadge.icon;
+
+    const rankConfig = {
+        1: {
+            color: "text-yellow-600 dark:text-yellow-500",
+            icon: <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 drop-shadow-sm mb-1" />,
+            avatarRing: "ring-2 ring-yellow-400 dark:ring-yellow-500 ring-offset-2 ring-offset-background",
+            badge: "border-yellow-500/50 text-yellow-600 dark:text-yellow-500",
+        },
+        2: {
+            color: "text-slate-500 dark:text-slate-400",
+            icon: <Medal className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 drop-shadow-sm mb-1" />,
+            avatarRing: "ring-2 ring-slate-300 dark:ring-slate-500 ring-offset-2 ring-offset-background",
+            badge: "border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-400",
+        },
+        3: {
+            color: "text-orange-600 dark:text-orange-500",
+            icon: <Medal className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 drop-shadow-sm mb-1" />,
+            avatarRing: "ring-2 ring-orange-400 dark:ring-orange-600 ring-offset-2 ring-offset-background",
+            badge: "border-orange-500/50 text-orange-600 dark:text-orange-500",
+        }
+    };
+
+    const s = rankConfig[rank as keyof typeof rankConfig];
+
+    return (
+        <div className={`relative flex flex-col items-center justify-end transition-all pb-2 ${isFirst ? 'scale-105 z-10' : 'opacity-90 hover:opacity-100'} w-full max-w-[140px] sm:max-w-[180px]`}>
+            {s.icon}
+
+            <div className="relative mb-2 mt-1 w-full flex justify-center items-center">
+                {/* Background Rank Number Overlay */}
+                <span className={`absolute -top-2 -right-4 sm:-top-4 sm:-right-6 font-black text-[4rem] sm:text-[5rem] italic leading-none ${isFirst ? 'text-yellow-500/5 dark:text-yellow-500/10' : 'text-muted-foreground/10 dark:text-muted-foreground/15'} select-none z-0 pointer-events-none tracking-tighter`}>
+                    0{rank}
+                </span>
+
+                <Avatar className={`relative z-10 ${isFirst ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-12 h-12 sm:w-16 sm:h-16'} ${s.avatarRing}`}>
+                    <AvatarImage src={user.avatarUrl} alt={user.name} />
+                    <AvatarFallback className="font-bold bg-muted text-foreground">{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div className={`absolute -bottom-2 sm:-bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold text-background bg-foreground shadow-sm z-20`}>
+                    {rank}
+                </div>
+            </div>
+
+            <div className="flex flex-col flex-1 mt-2 sm:mt-3 items-center w-full z-10">
+                {/* Subtle Username and Level Header */}
+                <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5 w-full justify-center">
+                    <span className="uppercase tracking-wider font-semibold">Lv {levelInfo.level}</span>
+                    <span className="text-muted-foreground/40">•</span>
+                    <span className="hover:text-foreground transition-colors cursor-default truncate max-w-[80px] sm:max-w-[100px]">
+                        @{user.username}
+                    </span>
+                </div>
+
+                {/* Prominent Name */}
+                <h3 className={`font-black text-sm sm:text-base text-center truncate w-full mb-2.5 ${isFirst ? 'text-yellow-600 dark:text-yellow-500' : 'text-foreground'}`}>
+                    {user.name}
+                </h3>
+
+                {/* Badge and Stats Row */}
+                <div className="flex flex-col items-center gap-2 w-full">
+                    {/* Badge Pill */}
+                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-background shadow-xs ${currentBadge.color}`}>
+                        <BadgeIcon size={14} className={currentBadge.fill} />
+                        <span className="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider">
+                            {currentBadge.title}
+                        </span>
+                    </div>
+
+                    {/* Stats pills */}
+                    <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] mt-0.5 text-muted-foreground font-medium w-full">
+                        <div className="flex items-center gap-1">
+                            <span className="font-bold text-foreground">
+                                {user.totalProblemsolved || 0}
+                            </span>
+                            <span className="hidden sm:inline">Solved</span>
+                            <span className="sm:hidden">Slvd</span>
+                        </div>
+                        <span className="text-muted-foreground/30">|</span>
+                        <div className={`flex items-center gap-1 font-bold ${s.color}`}>
+                            {user.points} XP
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function LeaderboardPage() {
     const { data: rawUsers, isLoading } = useGetLeaderboard();
     const users = rawUsers?.data || rawUsers;
     const token = localStorage.getItem("token");
+    
+    const topUsers = (!users || !Array.isArray(users)) ? [] : users.slice(0, 3);
+    const remainingUsers = (!users || !Array.isArray(users)) ? [] : users.slice(3);
     const { data: profileData } = useGetHeaderProfile();
     const currentUser = token ? (profileData?.data ?? profileData) : null;
 
@@ -64,7 +160,25 @@ export default function LeaderboardPage() {
                                 </p>
                             </div>
 
-                            <div className="rounded-lg border-y border-border overflow-x-auto">
+                            <div className="rounded-2xl border border-border bg-(--bg-secondary) overflow-hidden flex flex-col">
+                                {topUsers.length > 0 && (
+                                    <div className="relative flex items-center justify-center pt-8 pb-10 px-4 bg-muted/10 border-b border-border overflow-hidden">
+                                        {/* Background Decorative Icons */}
+                                        <Trophy className="absolute -left-12 sm:-left-6 top-1/2 -translate-y-1/2 w-48 h-48 sm:w-72 sm:h-72 text-foreground/3 dark:text-foreground/2 -rotate-12 pointer-events-none select-none z-0" />
+                                        <Award className="absolute -right-12 sm:-right-6 top-1/2 -translate-y-1/2 w-48 h-48 sm:w-72 sm:h-72 text-foreground/3 dark:text-foreground/2 rotate-12 pointer-events-none select-none z-0" />
+
+                                        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-6 lg:gap-8 w-full">
+                                            {/* 2nd Place */}
+                                            {topUsers[1] && <TopUserCard user={topUsers[1]} rank={2} />}
+                                            {/* 1st Place */}
+                                            {topUsers[0] && <TopUserCard user={topUsers[0]} rank={1} isFirst />}
+                                            {/* 3rd Place */}
+                                            {topUsers[2] && <TopUserCard user={topUsers[2]} rank={3} />}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="overflow-x-auto w-full">
                                     <Table>
                                         <TableHeader className="bg-transparent border-b border-border">
                                             <TableRow className="hover:bg-transparent border-0 [&_th]:h-10">
@@ -75,14 +189,14 @@ export default function LeaderboardPage() {
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
-                                            {(!users || users.length === 0) ? (
+                                            {(!remainingUsers || remainingUsers.length === 0) ? (
                                                 <TableRow>
                                                     <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
-                                                        No rankings available.
+                                                        {topUsers.length === 0 ? "No rankings available." : "No more players to display."}
                                                     </TableCell>
                                                 </TableRow>
                                             ) : (
-                                                users.map((user: any, index: number) => {
+                                                remainingUsers.map((user: any, index: number) => {
                                                     const isCurrentUser = currentUser?.username === user.username;
                                                     const isEven = index % 2 !== 0;
 
@@ -90,10 +204,8 @@ export default function LeaderboardPage() {
                                                     const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
                                                     const BadgeIcon = currentBadge.icon;
 
-                                                    let rankDisplay = <span className="text-muted-foreground">{index + 1}</span>;
-                                                    if (index === 0) rankDisplay = <Trophy className="w-5 h-5 mx-auto text-yellow-500" />;
-                                                    else if (index === 1) rankDisplay = <Medal className="w-5 h-5 mx-auto text-gray-400" />;
-                                                    else if (index === 2) rankDisplay = <Award className="w-5 h-5 mx-auto text-amber-600" />;
+                                                    const actualRank = index + 1 + topUsers.length;
+                                                    const rankDisplay = <span className="text-muted-foreground font-semibold px-2">{actualRank}</span>;
 
                                                     return (
                                                         <TableRow
@@ -151,6 +263,7 @@ export default function LeaderboardPage() {
                                             )}
                                         </TableBody>
                                     </Table>
+                                </div>
                             </div>
                         </div>
                     </div>
