@@ -11,6 +11,7 @@ import { TerminalSquare } from "lucide-react";
 
 import type { IProblem } from "@/types/problems";
 import { languageOptions } from "./languageOptions";
+import { BOILERPLATES } from "@/constants/boilerplates";
 import { useCodeStorage } from "@/hooks/useCodeStorage";
 import EditorToolbar from "./EditorToolbar";
 import TestCasesTab from "./TestCasesTab";
@@ -132,6 +133,10 @@ export default function SubmissionPanel({
             ? question.testCases
             : [];
 
+    const handleInsertBoilerplate = () => {
+        setCode(BOILERPLATES[language]);
+    };
+
     return (
         <div className="flex flex-col h-full bg-(--bg-secondary)">
             {/* Top Bar */}
@@ -140,6 +145,7 @@ export default function SubmissionPanel({
                 onLanguageChange={handleLanguageChange}
                 onSubmit={handleSubmitClick}
                 onRunTest={handleRunTestClick}
+                onInsertBoilerplate={handleInsertBoilerplate}
                 isRunning={isRunning}
                 isSubmitting={isSubmitting}
                 saveStatus={saveStatus}
