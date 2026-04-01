@@ -70,6 +70,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/profile/:username",
+        element: <UserProfilePage />,
+      },
+      {
         path: "/leaderboard",
         element: <LeaderboardPage />,
       },

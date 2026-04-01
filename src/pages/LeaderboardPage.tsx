@@ -7,6 +7,7 @@ import { Crown, Medal, Flame, User, Trophy, Award } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { getLevelInfo } from "@/utils/levelUtils";
 import { BADGES } from "@/constants/badges";
+import { Link } from "react-router-dom";
 function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number; isFirst?: boolean }) {
     if (!user) return null;
 
@@ -47,10 +48,12 @@ function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number;
                     0{rank}
                 </span>
 
-                <Avatar className={`relative z-10 ${isFirst ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-12 h-12 sm:w-16 sm:h-16'} ${s.avatarRing}`}>
-                    <AvatarImage src={user.avatarUrl} alt={user.name} />
-                    <AvatarFallback className="font-bold bg-muted text-foreground">{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
-                </Avatar>
+                <Link to={`/profile/${user.username}`} className="relative z-10 transition-transform hover:scale-105">
+                    <Avatar className={`${isFirst ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-12 h-12 sm:w-16 sm:h-16'} ${s.avatarRing}`}>
+                        <AvatarImage src={user.avatarUrl} alt={user.name} />
+                        <AvatarFallback className="font-bold bg-muted text-foreground">{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                </Link>
                 <div className={`absolute -bottom-2 sm:-bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold text-background bg-foreground shadow-sm z-20`}>
                     {rank}
                 </div>
@@ -61,15 +64,17 @@ function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number;
                 <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5 w-full justify-center">
                     <span className="uppercase tracking-wider font-semibold">Lv {levelInfo.level}</span>
                     <span className="text-muted-foreground/40">•</span>
-                    <span className="hover:text-foreground transition-colors cursor-default truncate max-w-[80px] sm:max-w-[100px]">
+                    <Link to={`/profile/${user.username}`} className="hover:text-primary hover:underline transition-colors truncate max-w-[80px] sm:max-w-[100px]">
                         @{user.username}
-                    </span>
+                    </Link>
                 </div>
 
                 {/* Prominent Name */}
-                <h3 className={`font-black text-sm sm:text-base text-center truncate w-full mb-2.5 ${isFirst ? 'text-yellow-600 dark:text-yellow-500' : 'text-foreground'}`}>
-                    {user.name}
-                </h3>
+                <Link to={`/profile/${user.username}`} className={`truncate w-full hover:underline ${isFirst ? 'text-yellow-600 dark:text-yellow-500 hover:text-yellow-700 dark:hover:text-yellow-400' : 'text-foreground hover:text-primary'}`}>
+                    <h3 className={`font-black text-sm sm:text-base text-center w-full mb-2.5`}>
+                        {user.name}
+                    </h3>
+                </Link>
 
                 {/* Badge and Stats Row */}
                 <div className="flex flex-col items-center gap-2 w-full">
@@ -217,22 +222,24 @@ export default function LeaderboardPage() {
                                                             </TableCell>
                                                             <TableCell className="py-3">
                                                                 <div className="flex items-center gap-3">
-                                                                    <Avatar className="h-8 w-8 rounded-md">
-                                                                        <AvatarImage src={user.avatarUrl} alt={user.name} />
-                                                                        <AvatarFallback className="rounded-md bg-muted text-foreground text-xs font-medium">
-                                                                            {user.name?.charAt(0).toUpperCase()}
-                                                                        </AvatarFallback>
-                                                                    </Avatar>
-                                                                    <div className="flex flex-col">
-                                                                        <span className="font-medium text-foreground flex items-center gap-2">
-                                                                            {user.name}
+                                                                    <Link to={`/profile/${user.username}`} className="shrink-0 transition-transform hover:scale-105">
+                                                                        <Avatar className="h-8 w-8 rounded-md">
+                                                                            <AvatarImage src={user.avatarUrl} alt={user.name} />
+                                                                            <AvatarFallback className="rounded-md bg-muted text-foreground text-xs font-medium">
+                                                                                {user.name?.charAt(0).toUpperCase()}
+                                                                            </AvatarFallback>
+                                                                        </Avatar>
+                                                                    </Link>
+                                                                    <div className="flex flex-col min-w-0">
+                                                                        <Link to={`/profile/${user.username}`} className="font-medium text-foreground hover:text-primary hover:underline flex items-center gap-2 truncate">
+                                                                            <span className="truncate">{user.name}</span>
                                                                             {isCurrentUser && (
-                                                                                <span className="text-[10px] px-1.5 py-0 rounded text-primary bg-primary/10 font-bold uppercase tracking-wider">You</span>
+                                                                                <span className="text-[10px] px-1.5 py-0 rounded text-primary bg-primary/10 font-bold uppercase tracking-wider shrink-0 no-underline">You</span>
                                                                             )}
-                                                                        </span>
-                                                                        <span className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                                                                            <span>@{user.username}</span>
-                                                                            <span className="text-[10px] text-muted-foreground/40">•</span>
+                                                                        </Link>
+                                                                        <span className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5 truncate">
+                                                                            <Link to={`/profile/${user.username}`} className="hover:text-primary hover:underline truncate">@{user.username}</Link>
+                                                                            <span className="text-[10px] text-muted-foreground/40 shrink-0">•</span>
                                                                             <div className="flex items-center gap-1">
                                                                                 <BadgeIcon size={12} className={`${currentBadge.color} ${currentBadge.fill}`} />
                                                                                 <span className={`font-bold text-[10px] uppercase tracking-wider ${currentBadge.color}`}>

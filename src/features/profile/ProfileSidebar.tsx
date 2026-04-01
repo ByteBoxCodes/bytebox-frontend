@@ -25,14 +25,16 @@ import { RankJourney } from "@/components/common/RankJourney";
 interface ProfileSidebarProps {
     user: IUserProfile;
     languages: string[];
+    isOwnProfile?: boolean;
 }
 
-function formatDate(d?: string) {
+function formatDate(d1?: string, d2?: string) {
+    const d = d1 || d2;
     if (!d) return "—";
     return new Date(d).toLocaleDateString("en-IN", { year: "numeric", month: "long" });
 }
 
-export default function ProfileSidebar({ user, languages }: ProfileSidebarProps) {
+export default function ProfileSidebar({ user, languages, isOwnProfile = true }: ProfileSidebarProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isLangModalOpen, setIsLangModalOpen] = useState(false);
 
@@ -187,12 +189,14 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                 );
             })()}
 
-            <Button
-                className="w-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 font-semibold shadow-none"
-                onClick={() => setIsEditModalOpen(true)}
-            >
-                Edit Profile
-            </Button>
+            {isOwnProfile && (
+                <Button
+                    className="w-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 font-semibold shadow-none"
+                    onClick={() => setIsEditModalOpen(true)}
+                >
+                    Edit Profile
+                </Button>
+            )}
 
             <hr className="border-border/40" />
 
@@ -217,7 +221,7 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
 
                 <div className="flex items-center gap-2.5 text-(--text-secondary) dark:text-(--dk-text-muted)">
                     <Calendar size={14} className="shrink-0" />
-                    <span className="text-xs">Joined {formatDate(user.createdAt)}</span>
+                    <span className="text-xs">Joined {formatDate(user.createdAt, user.memberSince)}</span>
                 </div>
             </div>
 
@@ -233,14 +237,16 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
                         <Languages size={14} className="shrink-0" />
                         <span className="text-xs font-medium">{currentLangLabel}</span>
                     </div>
-                    <button
-                        type="button"
-                        onClick={() => setIsLangModalOpen(true)}
-                        className="p-1 rounded-md text-(--text-secondary) dark:text-(--dk-text-muted) hover:text-(--text-primary) dark:hover:text-(--dk-text) hover:bg-(--bg-tertiary) transition-colors"
-                        title="Edit preferred language"
-                    >
-                        <Pencil size={12} />
-                    </button>
+                    {isOwnProfile && (
+                        <button
+                            type="button"
+                            onClick={() => setIsLangModalOpen(true)}
+                            className="p-1 rounded-md text-(--text-secondary) dark:text-(--dk-text-muted) hover:text-(--text-primary) dark:hover:text-(--dk-text) hover:bg-(--bg-tertiary) transition-colors"
+                            title="Edit preferred language"
+                        >
+                            <Pencil size={12} />
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -269,8 +275,12 @@ export default function ProfileSidebar({ user, languages }: ProfileSidebarProps)
             {/* Skills & Languages */}
             <ProfileSkills languages={languages} />
 
-            <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} user={user} />
-            <LanguagePickerModal isOpen={isLangModalOpen} onClose={() => setIsLangModalOpen(false)} currentLanguage={user.preferredLanguage} />
+            {isOwnProfile && (
+                <>
+                    <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} user={user} />
+                    <LanguagePickerModal isOpen={isLangModalOpen} onClose={() => setIsLangModalOpen(false)} currentLanguage={user.preferredLanguage} />
+                </>
+            )}
         </aside>
     );
 }

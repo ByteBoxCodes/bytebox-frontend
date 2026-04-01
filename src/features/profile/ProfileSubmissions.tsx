@@ -67,9 +67,17 @@ function SubmissionRow({ submission, onClick }: { submission: ISubmissionRespons
 import SubmissionModal from "../submission/SubmissionModal";
 import { useState } from "react";
 
-export default function ProfileSubmissions() {
-    const { data: submissions, isLoading, isError } = useGetMySubmissionByUserId();
+interface ProfileSubmissionsProps {
+    submissions?: ISubmissionResponse[];
+}
+
+export default function ProfileSubmissions({ submissions: publicSubmissions }: ProfileSubmissionsProps) {
+    const { data: fetchedSubmissions, isLoading: isFetchLoading, isError: isFetchError } = useGetMySubmissionByUserId(!publicSubmissions);
     const [selectedSubmission, setSelectedSubmission] = useState<ISubmissionResponse | null>(null);
+
+    const submissions = publicSubmissions || fetchedSubmissions;
+    const isLoading = !publicSubmissions && isFetchLoading;
+    const isError = !publicSubmissions && isFetchError;
 
     return (
         <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-5">

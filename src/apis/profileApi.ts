@@ -41,3 +41,8 @@ export const uploadAvatar = async (file: File) => {
 
   return response.data;
 };
+
+export const getPublicProfile = async (username: string) => {
+  const response = await api.get(`/profile/${username}`);
+  return response.data;
+};

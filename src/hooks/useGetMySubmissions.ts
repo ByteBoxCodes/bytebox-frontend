@@ -12,9 +12,10 @@ export const useGetMySubmissions = (problemId: string) => {
   });
 };
 
-export const useGetMySubmissionByUserId = () => {
+export const useGetMySubmissionByUserId = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ["mySubmissions"],
     queryFn: () => getMySubmissionByUserId(),
+    enabled,
   });
 };
