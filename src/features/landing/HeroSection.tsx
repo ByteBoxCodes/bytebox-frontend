@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import { useGetPlatformStats } from "@/hooks/useGetPlatformStats";
 
 import { avatars, langs, features } from "./data/heroData";
 import Counter from "./components/Counter";
@@ -10,6 +11,9 @@ import Spotlight from "./components/Spotlight";
 import TechBackgroundPatterns from "./components/TechBackgroundPatterns";
 
 const HeroSection = () => {
+  const { data: statsRaw } = useGetPlatformStats();
+  const stats = statsRaw?.data || statsRaw;
+
   const up = (delay = 0) => ({
     initial: { opacity: 0, y: 16 },
     animate: { opacity: 1, y: 0 },
@@ -80,7 +84,7 @@ const HeroSection = () => {
               animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }}
               transition={{ duration: 1.8, repeat: Infinity }}
             />
-            Join 100+ developers already coding
+            Join {stats?.totalUsers || 100}+ developers already coding
           </motion.span>
         </motion.div>
 
@@ -93,9 +97,9 @@ const HeroSection = () => {
           className="text-sm sm:text-base leading-relaxed max-w-xl mb-2"
           style={{ color: "var(--text-tertiary)" }}
         >
-          Solve curated coding challenges across 100+ problems — from basic
-          conditionals to advanced algorithms. Instant feedback. Real-time
-          judge. Track your progress.
+          Solve curated coding challenges across {stats?.totalProblems || 100}+
+          problems — from basic conditionals to advanced algorithms. Instant
+          feedback. Real-time judge. Track your progress.
         </motion.p>
 
         {/* CTAs */}
@@ -161,10 +165,10 @@ const HeroSection = () => {
           style={{ borderColor: "var(--border-primary)" }}
         >
           {[
-            { n: 100, s: "+", l: "Problems" },
-            { n: 10, s: "+", l: "Topics" },
-            { n: 100, s: "+", l: "Devs" },
-            { n: 5, s: "+", l: "Languages" },
+            { n: stats?.totalProblems || 100, s: "+", l: "Problems" },
+            { n: stats?.totalTopics || 10, s: "+", l: "Topics" },
+            { n: stats?.totalUsers || 100, s: "+", l: "Devs" },
+            { n: 4, s: "+", l: "Languages" },
           ].map(({ n, s, l }, i) => (
             <motion.div
               key={l}
