@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
 import { cleanupExpiredStorage } from "./utils/storageCleanup";
 
 function App() {
@@ -15,7 +14,6 @@ function App() {
       <Header />
       <main className="flex-1 min-h-0 overflow-y-auto relative scroll-smooth">
         <Outlet />
-        <Footer />
       </main>
     </div>
   );
