@@ -58,12 +58,12 @@ export default function ProfilePageContent() {
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
 
                     {/* Left sidebar */}
-                    <ProfileSidebar user={user} languages={stats?.languages || []} isOwnProfile={isOwnProfile} />
+                    <ProfileSidebar user={user} stats={stats} isOwnProfile={isOwnProfile} />
 
                     {/* Right content */}
                     <div className="flex-1 min-w-0 w-full space-y-5">
                         <ProfileSolvedStats stats={stats} user={user} />
-                        <ProfileActivity stats={stats} />
+                        <ProfileActivity stats={stats} user={user} />
                         <ProfileSubmissions submissions={recentSubmissions} />
                     </div>
 

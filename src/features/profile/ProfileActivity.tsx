@@ -1,32 +1,16 @@
-import { Flame, Zap, Trophy, BookOpen } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Flame, Trophy, Lock } from "lucide-react";
 import { useMemo } from "react";
-import type { IUserStats, IHeatmapData } from "@/types/auth";
+import type { IUserStats, IHeatmapData, IUserProfile } from "@/types/auth";
+import { BADGES } from "@/constants/badges";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import RankBadge from "@/components/common/RankBadge";
 
 interface ProfileActivityProps {
     stats: IUserStats;
+    user: IUserProfile;
 }
 
-interface ActivityStatProps {
-    label: string;
-    value: string | number;
-    icon: LucideIcon;
-    color: string;
-}
 
-function ActivityStat({ label, value, icon: Icon, color }: ActivityStatProps) {
-    return (
-        <div className="flex items-center gap-3">
-            <div className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-(--bg-secondary) dark:bg-(--dk-surface) border border-border/40`}>
-                <Icon size={18} className={color} />
-            </div>
-            <div>
-                <p className="text-sm font-bold text-(--text-primary) dark:text-(--dk-text)">{value}</p>
-                <p className="text-[11px] text-(--text-secondary) dark:text-(--dk-text-muted) leading-tight">{label}</p>
-            </div>
-        </div>
-    );
-}
 
 function ContributionHeatmap({ data }: { data: IHeatmapData[] }) {
     const monthsData = useMemo(() => {
@@ -97,7 +81,7 @@ function ContributionHeatmap({ data }: { data: IHeatmapData[] }) {
                     <div className="flex gap-[8px] sm:gap-[12px]">
                         {monthsData.map((month, mIdx) => (
                             <div key={mIdx} className="flex flex-col">
-                                <span className="text-[10px] sm:text-[11px] text-(--text-secondary) dark:text-(--dk-text-muted) h-[16px] sm:h-[18px] mb-[1px]">
+                                <span className="text-[10px] sm:text-[11px] text-(--text-secondary) dark:text-(--dk-text-muted) h-[16px] sm:h-[18px] mb-px">
                                     {month.label}
                                 </span>
                                 <div className={`grid grid-rows-7 grid-flow-col ${gapClass}`}>
@@ -136,30 +120,60 @@ function ContributionHeatmap({ data }: { data: IHeatmapData[] }) {
     );
 }
 
-export default function ProfileActivity({ stats }: ProfileActivityProps) {
-    const activityStats: ActivityStatProps[] = [
-        { label: "Current Streak", value: `${stats.currentStreak} days`, icon: Flame, color: "text-orange-500" },
-        { label: "Longest Streak", value: `${stats.maxStreak} days`, icon: Zap, color: "text-yellow-500" },
-        { label: "Submissions", value: stats.totalSubmissions, icon: Trophy, color: "text-blue-500" },
-        { label: "Languages Used", value: stats.languages.length, icon: BookOpen, color: "text-purple-500" },
-    ];
+export default function ProfileActivity({ stats, user }: ProfileActivityProps) {
+    const userLevel = user.level || 1;
 
     return (
-        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5 space-y-6 overflow-hidden">
+        <section className="rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5 space-y-8 overflow-hidden">
+            
+            {/* Achievements Section */}
             <div>
-                <h2 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-4 flex items-center gap-2">
-                    <Flame size={15} className="text-orange-500" />
-                    Activity
-                </h2>
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3">
-                    {activityStats.map((s) => (
-                        <ActivityStat key={s.label} {...s} />
-                    ))}
-                </div>
+                <h3 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-3 flex items-center gap-2">
+                    <Trophy size={15} className="text-yellow-500" />
+                    Achievements
+                </h3>
+                <TooltipProvider delayDuration={150}>
+                    <div className="flex flex-wrap items-center gap-2">
+                        {BADGES.map((badge, idx) => {
+                            const isUnlocked = userLevel >= badge.req;
+                            
+                            return (
+                                <Tooltip key={idx}>
+                                    <TooltipTrigger asChild>
+                                        <div className="relative inline-flex cursor-help">
+                                            <RankBadge 
+                                                badge={{ ...badge, level: badge.req } as any} 
+                                                variant="pill"
+                                                className={`transition-all ${!isUnlocked ? "opacity-50 grayscale" : "hover:scale-105"}`} 
+                                            />
+                                            {!isUnlocked && (
+                                                <div className="absolute -top-1.5 -right-1.5 z-10 bg-background border border-border rounded-full p-[2px] shadow-sm">
+                                                    <Lock size={10} className="text-muted-foreground" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        <div className="flex flex-col gap-0.5 text-xs text-center py-0.5">
+                                            <span className="font-bold">{badge.title} Rank</span>
+                                            <span className="text-muted-foreground">
+                                                {isUnlocked ? `Unlocked at Lv ${badge.req}` : `Unlocks at Lv ${badge.req}`}
+                                            </span>
+                                        </div>
+                                    </TooltipContent>
+                                </Tooltip>
+                            );
+                        })}
+                    </div>
+                </TooltipProvider>
             </div>
 
-            <div className="mt-8">
-                <h3 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-3">
+            <hr className="border-border/40" />
+
+            {/* Heatmap Section */}
+            <div>
+                <h3 className="text-sm font-semibold text-(--text-primary) dark:text-(--dk-text) mb-4 flex items-center gap-2">
+                    <Flame size={16} className="text-orange-500" />
                     Submissions in {new Date().getFullYear()}
                 </h3>
                 <ContributionHeatmap data={stats.heatmap} />
