@@ -16,6 +16,7 @@ import PrivacyPolicy from "../pages/PrivacyPolicy";
 import TermsPage from "../pages/TermsPage";
 import AboutPage from "@/pages/AboutPage";
 import RewardsPage from "@/pages/RewardsPage";
+import PricingPage from "@/pages/PricingPage";
 
 export const router = createBrowserRouter([
   {
@@ -93,6 +94,10 @@ export const router = createBrowserRouter([
       {
         path: "/rewards",
         element: <RewardsPage />,
+      },
+      {
+        path: "/pricing",
+        element: <PricingPage />,
       },
       {
         path: "*",

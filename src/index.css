@@ -262,3 +262,13 @@
   --dk-bg-via: #18181b; /* zinc-900   */
   --dk-bg-to: #111113;
 }
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+}
