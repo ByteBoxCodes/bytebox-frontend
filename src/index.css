@@ -272,3 +272,30 @@
       scrollbar-width: none;
   }
 }
+
+@property --badge-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes badge-spin {
+  to {
+    --badge-angle: 360deg;
+  }
+}
+
+@keyframes badge-float-1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(8deg); }
+}
+
+@keyframes badge-float-2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(3px) rotate(-6deg); }
+}
+
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 0 16px rgba(139, 92, 246, 0.5); }
+}
