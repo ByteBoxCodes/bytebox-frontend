@@ -24,10 +24,9 @@ export function RankJourney({ levelInfo, className = "" }: RankJourneyProps) {
                         className="h-full bg-linear-to-r from-emerald-500 via-purple-500 to-amber-500 transition-all duration-1000 relative"
                         style={{
                             width: `${Math.min(100, Math.max(0,
-                                levelInfo.level < 15 ? ((levelInfo.level - 1) / 14) * 25 :
-                                    levelInfo.level < 30 ? 25 + ((levelInfo.level - 15) / 15) * 25 :
-                                        levelInfo.level < 40 ? 50 + ((levelInfo.level - 30) / 10) * 25 :
-                                            levelInfo.level < 50 ? 75 + ((levelInfo.level - 40) / 10) * 25 : 100
+                                levelInfo.level < 15 ? ((levelInfo.level - 1) / 14) * 33.33 :
+                                    levelInfo.level < 30 ? 33.33 + ((levelInfo.level - 15) / 15) * 33.33 :
+                                        levelInfo.level < 50 ? 66.66 + ((levelInfo.level - 30) / 20) * 33.34 : 100
                             ))}%`
                         }}
                     >
@@ -38,7 +37,7 @@ export function RankJourney({ levelInfo, className = "" }: RankJourneyProps) {
                 <div className="relative flex justify-between">
                     {BADGES.map((badge, idx) => {
                         const isUnlocked = levelInfo.level >= badge.req;
-                        const isCurrent = levelInfo.level >= badge.req && (idx === 4 || levelInfo.level < BADGES[idx + 1].req);
+                        const isCurrent = levelInfo.level >= badge.req && (idx === BADGES.length - 1 || levelInfo.level < BADGES[idx + 1].req);
                         const Icon = badge.icon;
 
                         return (

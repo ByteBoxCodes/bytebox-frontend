@@ -41,11 +41,11 @@ export default function ProblemList({
   const getXP = (diff: IProblemList["difficulty"]) => {
     switch (diff) {
       case "EASY":
-        return 10;
+        return 25;
       case "MEDIUM":
-        return 15;
+        return 50;
       case "HARD":
-        return 20;
+        return 75;
       default:
         return 0;
     }

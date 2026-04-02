@@ -1,4 +1,4 @@
-import { Trophy } from "lucide-react";
+import { Trophy, Gift, CheckCircle2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { ITopic } from "@/types/topics";
 import type { IProblemList } from "@/types/problems";
@@ -155,6 +155,46 @@ export default function RightSidebar({
               );
             },
           )}
+        </div>
+      </div>
+
+      {/* Topic Mastery Reward Widget */}
+      <div
+        className={`relative overflow-hidden rounded-xl p-5 border shadow-sm transition-all duration-500 ${
+          progressPercent === 100
+            ? "bg-emerald-500/10 border-emerald-500/30 dark:bg-emerald-500/5 dark:border-emerald-500/20"
+            : "bg-primary/5 border-primary/20"
+        }`}
+      >
+        <div className="absolute -right-6 -bottom-6 opacity-[0.08] pointer-events-none">
+          {progressPercent === 100 ? (
+            <Trophy className="w-28 h-28 text-emerald-500" />
+          ) : (
+            <Gift className="w-28 h-28 text-primary" />
+          )}
+        </div>
+
+        <div className="relative z-10 flex flex-col gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="text-sm font-bold text-foreground">
+              Topic Mastery Reward
+            </h3>
+            {progressPercent === 100 ? (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                <CheckCircle2 size={12} className="stroke-3" />
+                Claimed
+              </span>
+            ) : (
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider">
+                100 XP
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed pr-4">
+            {progressPercent === 100
+              ? "Incredible work! You've solved every problem in this topic and claimed your 100 XP mastery bonus."
+              : "Solve all problems in this topic to prove your mastery and earn an automatic bonus of 100 XP!"}
+          </p>
         </div>
       </div>
 

@@ -17,7 +17,7 @@ export const getLevelInfo = (
   levelXp: number = 0,
 ): LevelInfo => {
   // Required XP for the current level to advance to the next level
-  const pointsForNextLevel = level * 5 + 10;
+  const pointsForNextLevel = level * 3 + 10;
 
   const rawProgress =
     pointsForNextLevel > 0 ? (levelXp / pointsForNextLevel) * 100 : 0;
@@ -26,9 +26,8 @@ export const getLevelInfo = (
   // Determine Title based on level
   let title = "Newbie";
   if (level >= 50) title = "Champion";
-  else if (level >= 40) title = "Expert";
-  else if (level >= 30) title = "Builder";
-  else if (level >= 15) title = "Explorer";
+  else if (level >= 30) title = "Expert";
+  else if (level >= 15) title = "Thinker";
 
   return {
     level,
