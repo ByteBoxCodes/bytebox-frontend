@@ -167,18 +167,17 @@ export default function RewardsSidebar({
               problems to unlock these rewards:
             </p>
             <div className="space-y-2 mb-5">
-              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/40 border border-border/50">
-                <milestone.basic.icon
-                  className={`w-4 h-4 shrink-0 ${milestone.basic.color}`}
-                />
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-muted/40 border border-border/50">
                 <span className="text-[12px] font-semibold text-foreground/90">
                   {milestone.basic.title}
                 </span>
               </div>
-              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-amber-500/5 border border-amber-500/20">
-                <Sparkles className="w-4 h-4 shrink-0 text-amber-500" />
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-amber-500/5 border border-amber-500/20">
                 <span className="text-[12px] font-bold text-amber-600 dark:text-amber-500">
                   {milestone.premium.title}
+                </span>
+                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-linear-to-r from-amber-500 to-orange-500 text-white shrink-0">
+                  PRO
                 </span>
               </div>
             </div>
