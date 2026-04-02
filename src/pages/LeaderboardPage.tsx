@@ -5,15 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Crown, Medal, Flame, User, Trophy, Award } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { getLevelInfo } from "@/utils/levelUtils";
-import { BADGES } from "@/constants/badges";
+import RankBadge from "@/components/common/RankBadge";
 import { Link } from "react-router-dom";
 function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number; isFirst?: boolean }) {
     if (!user) return null;
-
-    const levelInfo = getLevelInfo(user.points, user.level, user.levelXp);
-    const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
-    const BadgeIcon = currentBadge.icon;
 
     const rankConfig = {
         1: {
@@ -62,7 +57,7 @@ function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number;
             <div className="flex flex-col flex-1 mt-2 sm:mt-3 items-center w-full z-10">
                 {/* Subtle Username and Level Header */}
                 <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground font-medium mb-0.5 w-full justify-center">
-                    <span className="uppercase tracking-wider font-semibold">Lv {levelInfo.level}</span>
+                    <span className="uppercase tracking-wider font-semibold">Lv {user.level || 1}</span>
                     <span className="text-muted-foreground/40">•</span>
                     <Link to={`/profile/${user.username}`} className="hover:text-primary hover:underline transition-colors truncate max-w-[80px] sm:max-w-[100px]">
                         @{user.username}
@@ -79,12 +74,14 @@ function TopUserCard({ user, rank, isFirst = false }: { user: any; rank: number;
                 {/* Badge and Stats Row */}
                 <div className="flex flex-col items-center gap-2 w-full">
                     {/* Badge Pill */}
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-background shadow-xs ${currentBadge.color}`}>
-                        <BadgeIcon size={14} className={currentBadge.fill} />
-                        <span className="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider">
-                            {currentBadge.title}
-                        </span>
-                    </div>
+                    <RankBadge
+                        points={user.points}
+                        level={user.level}
+                        levelXp={user.levelXp}
+                        variant="pill"
+                        size="md"
+                        className="bg-background border-border shadow-xs"
+                    />
 
                     {/* Stats pills */}
                     <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] mt-0.5 text-muted-foreground font-medium w-full">
@@ -205,10 +202,6 @@ export default function LeaderboardPage() {
                                                     const isCurrentUser = currentUser?.username === user.username;
                                                     const isEven = index % 2 !== 0;
 
-                                                    const levelInfo = getLevelInfo(user.points, user.level, user.levelXp);
-                                                    const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
-                                                    const BadgeIcon = currentBadge.icon;
-
                                                     const actualRank = index + 1 + topUsers.length;
                                                     const rankDisplay = <span className="text-muted-foreground font-semibold px-2">{actualRank}</span>;
 
@@ -241,13 +234,15 @@ export default function LeaderboardPage() {
                                                                             <Link to={`/profile/${user.username}`} className="hover:text-primary hover:underline truncate">@{user.username}</Link>
                                                                             <span className="text-[10px] text-muted-foreground/40 shrink-0">•</span>
                                                                             <div className="flex items-center gap-1">
-                                                                                <BadgeIcon size={12} className={`${currentBadge.color} ${currentBadge.fill}`} />
-                                                                                <span className={`font-bold text-[10px] uppercase tracking-wider ${currentBadge.color}`}>
-                                                                                    {currentBadge.title}
-                                                                                </span>
+                                                                                <RankBadge
+                                                                                    points={user.points}
+                                                                                    level={user.level}
+                                                                                    levelXp={user.levelXp}
+                                                                                    variant="inline"
+                                                                                />
                                                                                 <span className="text-[10px] text-muted-foreground/40 leading-none pb-px">•</span>
                                                                                 <span className="font-medium text-[10px] uppercase tracking-wider text-muted-foreground">
-                                                                                    Lvl {levelInfo.level}
+                                                                                    Lvl {user.level || 1}
                                                                                 </span>
                                                                             </div>
                                                                         </span>

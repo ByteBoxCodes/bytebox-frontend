@@ -5,7 +5,8 @@ import type { IProblemList } from "@/types/problems";
 import { useMemo } from "react";
 import { getLevelInfo } from "@/utils/levelUtils";
 import { useProfile } from "@/hooks/useProfile";
-import { BADGES } from "@/constants/badges";
+import { getRankBadge } from "@/utils/rankBadge";
+import RankBadge from "@/components/common/RankBadge";
 import { RankJourney } from "@/components/common/RankJourney";
 
 interface RightSidebarProps {
@@ -95,9 +96,7 @@ export default function RightSidebar({
     },
   ];
 
-  const currentBadge =
-    [...BADGES].reverse().find((b) => levelInfo.level >= b.req) || BADGES[0];
-  const BadgeIcon = currentBadge.icon;
+  const badge = getRankBadge(points, user?.level, user?.levelXp);
 
   return (
     <div className="space-y-6">
@@ -163,11 +162,12 @@ export default function RightSidebar({
       <div className="relative overflow-hidden w-full">
         <div className="relative z-10 flex items-center justify-between mb-5">
           <div className="flex items-center gap-3.5">
-            <div
-              className={`p-2.5 rounded-xl border shadow-inner ${currentBadge.bg} ${currentBadge.border} ${currentBadge.color}`}
-            >
-              <BadgeIcon className={`w-5 h-5 ${currentBadge.fill}`} />
-            </div>
+            <RankBadge
+              badge={badge}
+              variant="icon"
+              size="md"
+              className={`border shadow-inner ${badge.border}`}
+            />
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-0.5">
                 Current Rank
@@ -177,9 +177,9 @@ export default function RightSidebar({
                   Level {levelInfo.level}
                 </span>
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${currentBadge.color} ${currentBadge.bg} ${currentBadge.border}`}
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badge.color} ${badge.bg} ${badge.border}`}
                 >
-                  {currentBadge.title}
+                  {badge.title}
                 </span>
               </div>
             </div>
@@ -189,7 +189,7 @@ export default function RightSidebar({
               Total XP
             </p>
             <p
-              className={`text-lg font-extrabold ${currentBadge.color} tracking-tight leading-none`}
+              className={`text-lg font-extrabold ${badge.color} tracking-tight leading-none`}
             >
               {levelInfo.currentPoints}
             </p>
@@ -198,7 +198,7 @@ export default function RightSidebar({
 
         <div className="relative z-10">
           <div className="flex justify-between items-center text-xs font-semibold mb-2">
-            <span className={`tracking-tight ${currentBadge.color}`}>
+            <span className={`tracking-tight ${badge.color}`}>
               {levelInfo.levelXp}{" "}
               <span className="text-[10px] uppercase">XP</span>
             </span>
@@ -209,7 +209,7 @@ export default function RightSidebar({
           </div>
           <div className="h-2 w-full bg-border/40 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-1000 relative overflow-hidden ${currentBadge.bg.replace("/10", "")}`}
+              className={`h-full rounded-full transition-all duration-1000 relative overflow-hidden ${badge.bg.replace("/10", "")}`}
               style={{ width: `${levelInfo.progressPercent}%` }}
             >
               <div className="absolute inset-0 bg-white/20 w-1/2 -skew-x-12 translate-x-[-150%] animate-[shimmer_2s_infinite]" />

@@ -19,8 +19,9 @@ import { Button } from "@/components/ui/button";
 import ProfileAvatar from "./ProfileAvatar";
 import { PREFERRED_LANGUAGE_OPTIONS } from "@/features/submission/languageOptions";
 import LanguagePickerModal from "./LanguagePickerModal";
-import { BADGES } from "@/constants/badges";
 import { RankJourney } from "@/components/common/RankJourney";
+import RankBadge from "@/components/common/RankBadge";
+import { getRankBadge } from "@/utils/rankBadge";
 
 interface ProfileSidebarProps {
     user: IUserProfile;
@@ -44,12 +45,9 @@ export default function ProfileSidebar({ user, languages, isOwnProfile = true }:
 
     const points = user.points ?? 0;
     const levelInfo = getLevelInfo(points, user.level, user.levelXp);
-
-    // Reverse find highest unlocked badge to map styling
-    const currentBadge = [...BADGES].reverse().find(b => levelInfo.level >= b.req) || BADGES[0];
-    const BadgeIcon = currentBadge.icon;
-
-    // Reverse find highest unlocked badge to map styling
+    
+    // Get badge properties for styling other elements (like the progress bar)
+    const badge = getRankBadge(points, user.level, user.levelXp);
     return (
         <aside className="relative w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5">
             {/* Avatar + Info */}
@@ -101,27 +99,24 @@ export default function ProfileSidebar({ user, languages, isOwnProfile = true }:
                     <div className="flex items-center gap-1.5 mt-0.5 text-xs text-(--text-secondary) dark:text-(--dk-text-muted) truncate">
                         <span>@{user.username}</span>
                         <span className="text-[10px] opacity-40">•</span>
-                        <span className={`font-semibold ${currentBadge.color}`}>{levelInfo.currentPoints} XP</span>
+                        <span className={`font-semibold ${badge.color}`}>{levelInfo.currentPoints} XP</span>
                     </div>
 
                     {/* Level / Points Block */}
                     <div className="mt-2.5 flex flex-col gap-1.5 w-full">
                         <div className="flex items-center justify-between w-full max-w-[180px] sm:max-w-[140px]">
                             <div className="flex items-center gap-1">
-                                <BadgeIcon size={12} className={`${currentBadge.color} ${currentBadge.fill}`} />
-                                <span className="text-xs font-semibold text-(--text-primary) dark:text-(--dk-text)">
-                                    Level {levelInfo.level}
-                                </span>
+                                <RankBadge badge={badge} variant="inline" size="sm" />
                             </div>
                             <p className="text-[10px] text-(--text-secondary) dark:text-(--dk-text-muted) font-medium font-mono">
-                                <span className={`font-bold ${currentBadge.color}`}>{levelInfo.levelXp}</span> / {levelInfo.pointsForNextLevel}
+                                <span className={`font-bold ${badge.color}`}>{levelInfo.levelXp}</span> / {levelInfo.pointsForNextLevel}
                             </p>
                         </div>
 
                         {/* Mini Linear Progress Bar */}
                         <div className="h-1.5 w-full max-w-[180px] sm:max-w-[140px] bg-border/40 rounded-full overflow-hidden">
                             <div
-                                className={`h-full rounded-full transition-all duration-1000 ${currentBadge.bg.replace('/10', '')}`}
+                                className={`h-full rounded-full transition-all duration-1000 ${badge.bg.replace('/10', '')}`}
                                 style={{ width: `${levelInfo.progressPercent}%` }}
                             />
                         </div>

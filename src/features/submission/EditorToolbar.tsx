@@ -12,8 +12,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Check, Loader2, Play, Send, Braces } from "lucide-react";
+import { Check, Loader2, Play, Send, Braces, RotateCcw } from "lucide-react";
 import { languageOptions } from "./languageOptions";
 
 interface EditorToolbarProps {
@@ -22,6 +33,7 @@ interface EditorToolbarProps {
   onSubmit: () => void;
   onRunTest: () => void;
   onInsertBoilerplate: () => void;
+  onResetCode: () => void;
   isRunning: boolean;
   isSubmitting: boolean;
   saveStatus?: "idle" | "saving" | "saved";
@@ -33,6 +45,7 @@ export default function EditorToolbar({
   onSubmit,
   onRunTest,
   onInsertBoilerplate,
+  onResetCode,
   isRunning,
   isSubmitting,
   saveStatus = "idle",
@@ -85,6 +98,44 @@ export default function EditorToolbar({
             </>
           )}
         </span>
+
+        <AlertDialog>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={isRunning || isSubmitting}
+                    className="w-8 h-8 p-0 text-(--text-tertiary) hover:text-(--text-primary) hover:bg-(--bg-secondary) cursor-pointer"
+                    aria-label="Reset Code to Default"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                Reset Code to Default
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Reset Code?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to reset your code to the default state?
+                This action will replace your current code with the default
+                comment block.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onResetCode}>Reset</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <TooltipProvider delayDuration={200}>
           <Tooltip>

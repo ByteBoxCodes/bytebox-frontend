@@ -137,6 +137,10 @@ export default function SubmissionPanel({
         setCode(BOILERPLATES[language]);
     };
 
+    const handleResetCode = () => {
+        setCode(defaultSnippets[language]);
+    };
+
     return (
         <div className="flex flex-col h-full bg-(--bg-secondary)">
             {/* Top Bar */}
@@ -146,6 +150,7 @@ export default function SubmissionPanel({
                 onSubmit={handleSubmitClick}
                 onRunTest={handleRunTestClick}
                 onInsertBoilerplate={handleInsertBoilerplate}
+                onResetCode={handleResetCode}
                 isRunning={isRunning}
                 isSubmitting={isSubmitting}
                 saveStatus={saveStatus}
