@@ -4,7 +4,6 @@ import type { ITopic } from "@/types/topics";
 import type { IProblemList } from "@/types/problems";
 import { useMemo } from "react";
 import { getLevelInfo } from "@/utils/levelUtils";
-import { REWARD_MAP } from "@/constants/rewards";
 import { useProfile } from "@/hooks/useProfile";
 import { getRankBadge } from "@/utils/rankBadge";
 import { RankJourney } from "@/components/common/RankJourney";

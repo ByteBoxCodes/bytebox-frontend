@@ -23,7 +23,6 @@ import ProfileAvatar from "./ProfileAvatar";
 import { PREFERRED_LANGUAGE_OPTIONS } from "@/features/submission/languageOptions";
 import LanguagePickerModal from "./LanguagePickerModal";
 import { RankJourney } from "@/components/common/RankJourney";
-import RankBadge from "@/components/common/RankBadge";
 import { getRankBadge } from "@/utils/rankBadge";
 import { REWARD_MAP } from "@/constants/rewards";
 
