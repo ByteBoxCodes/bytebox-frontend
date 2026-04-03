@@ -4,9 +4,9 @@ import type { ITopic } from "@/types/topics";
 import type { IProblemList } from "@/types/problems";
 import { useMemo } from "react";
 import { getLevelInfo } from "@/utils/levelUtils";
+import { REWARD_MAP } from "@/constants/rewards";
 import { useProfile } from "@/hooks/useProfile";
 import { getRankBadge } from "@/utils/rankBadge";
-import RankBadge from "@/components/common/RankBadge";
 import { RankJourney } from "@/components/common/RankJourney";
 
 interface RightSidebarProps {
@@ -202,12 +202,6 @@ export default function RightSidebar({
       <div className="relative overflow-hidden w-full">
         <div className="relative z-10 flex items-center justify-between mb-5">
           <div className="flex items-center gap-3.5">
-            <RankBadge
-              badge={badge}
-              variant="icon"
-              size="md"
-              className={`border shadow-inner ${badge.border}`}
-            />
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-(--text-secondary) dark:text-(--dk-text-muted) mb-0.5">
                 Current Rank
@@ -215,11 +209,6 @@ export default function RightSidebar({
               <div className="flex items-center gap-2">
                 <span className="text-xl font-extrabold text-(--text-primary) dark:text-(--dk-text) tracking-tight leading-none">
                   Level {levelInfo.level}
-                </span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badge.color} ${badge.bg} ${badge.border}`}
-                >
-                  {badge.title}
                 </span>
               </div>
             </div>

@@ -1,26 +1,26 @@
 import React from "react";
-import {
-  type LucideIcon,
-} from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 import {
   RisingCoderIcon,
   RisingCoderProIcon,
-} from "@/components/rewards/RisingCoderBadge";
+} from "@/features/rewards/components/RisingCoderBadge";
 import {
   LeaderboardFrameIcon,
   LeaderboardFrameProIcon,
-} from "@/components/rewards/AnimatedBadge";
+} from "@/features/rewards/components/AnimatedBadge";
 import {
   AvatarFrameIcon,
   AvatarFrameProIcon,
-} from "@/components/rewards/AvatarFrame";
+} from "@/features/rewards/components/AvatarFrame";
 import {
   EliteBadgeIcon,
   PremiumRenewalIcon,
-} from "@/components/rewards/EliteBadge";
+} from "@/features/rewards/components/EliteBadge";
 
 // Custom XP Icon Component
-const XpIcon: React.FC<React.SVGProps<SVGSVGElement> & { className?: string }> = ({ className, ...props }) => (
+const XpIcon: React.FC<
+  React.SVGProps<SVGSVGElement> & { className?: string }
+> = ({ className, ...props }) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -28,7 +28,15 @@ const XpIcon: React.FC<React.SVGProps<SVGSVGElement> & { className?: string }> =
     className={className}
     {...props}
   >
-    <text x="12" y="16" textAnchor="middle" fontSize="12" fontWeight="900" fill="currentColor" fontFamily="system-ui, sans-serif">
+    <text
+      x="12"
+      y="16"
+      textAnchor="middle"
+      fontSize="12"
+      fontWeight="900"
+      fill="currentColor"
+      fontFamily="system-ui, sans-serif"
+    >
       XP
     </text>
   </svg>
@@ -80,7 +88,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     problemsRequired: 25,
     basic: {
       title: '"Rising Coder" Title',
-      description: 'Unlock the exclusive "Rising Coder" title to display on your profile',
+      description:
+        'Unlock the exclusive "Rising Coder" title to display on your profile',
       icon: RisingCoderIcon,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
@@ -89,7 +98,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     },
     premium: {
       title: '"Rising Coder" Animated Title',
-      description: 'An animated "Rising Coder" title with a vivid rainbow border effect',
+      description:
+        'An animated "Rising Coder" title with a vivid rainbow border effect',
       icon: RisingCoderProIcon,
       color: "text-indigo-500",
       bg: "bg-indigo-500/10",
@@ -102,7 +112,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     problemsRequired: 50,
     basic: {
       title: "Avatar Border Frame",
-      description: "A stylish gradient border frame to make your avatar stand out",
+      description:
+        "A stylish gradient border frame to make your avatar stand out",
       icon: AvatarFrameIcon,
       color: "text-pink-500",
       bg: "bg-pink-500/10",
@@ -111,7 +122,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     },
     premium: {
       title: "Animated Avatar Frame",
-      description: "A premium animated avatar frame with a spinning glow effect",
+      description:
+        "A premium animated avatar frame with a spinning glow effect",
       icon: AvatarFrameProIcon,
       color: "text-violet-500",
       bg: "bg-violet-500/10",
@@ -124,7 +136,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     problemsRequired: 80,
     basic: {
       title: "Leaderboard Style Frame",
-      description: "A custom frame to make your row stand out on the leaderboard",
+      description:
+        "A custom frame to make your row stand out on the leaderboard",
       icon: LeaderboardFrameIcon,
       color: "text-indigo-500",
       bg: "bg-indigo-500/10",
@@ -133,7 +146,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     },
     premium: {
       title: "Animated Leaderboard Frame",
-      description: "A premium animated frame with rainbow border effects on the leaderboard",
+      description:
+        "A premium animated frame with rainbow border effects on the leaderboard",
       icon: LeaderboardFrameProIcon,
       color: "text-rose-500",
       bg: "bg-rose-500/10",
@@ -146,7 +160,8 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     problemsRequired: 120,
     basic: {
       title: "ByteBox Elite Badge",
-      description: "An animated elite badge with layered icons — the ultimate mark of a champion",
+      description:
+        "An animated elite badge with layered icons — the ultimate mark of a champion",
       icon: EliteBadgeIcon,
       color: "text-emerald-500",
       bg: "bg-emerald-500/10",
@@ -165,3 +180,16 @@ export const MILESTONE_REWARDS: MilestoneReward[] = [
     },
   },
 ];
+
+export const REWARD_MAP: Record<string, Reward> = {
+  "100": MILESTONE_REWARDS[0].basic,
+  "300": MILESTONE_REWARDS[0].premium,
+  "rising-coder": MILESTONE_REWARDS[1].basic,
+  "animated-rising-coder": MILESTONE_REWARDS[1].premium,
+  "border-frame-1": MILESTONE_REWARDS[2].basic,
+  "animated-border-frame": MILESTONE_REWARDS[2].premium,
+  "leaderboard-frame-basic": MILESTONE_REWARDS[3].basic,
+  "animated-leaderboard-frame": MILESTONE_REWARDS[3].premium,
+  "bytebox-elite": MILESTONE_REWARDS[4].basic,
+  "free-1-month": MILESTONE_REWARDS[4].premium,
+};

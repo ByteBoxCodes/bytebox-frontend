@@ -30,6 +30,12 @@ export interface IUserProfile {
   twitterUsername?: string | null;
   instagramUsername?: string | null;
   preferredLanguage?: string | null;
+  premium?: boolean;
+  isPremiumUser?: boolean;
+  totalProblemsolved?: number;
+  activeTitle?: string | null;
+  activeAvatar?: string | null;
+  activeCard?: string | null;
 }
 
 export interface IHeatmapData {
@@ -73,4 +79,7 @@ export interface IHeaderProfile {
   avatarUrl: string;
   currentStreak: number;
   maxStreak: number;
+  activeTitle?: string | null;
+  activeAvatar?: string | null;
+  activeCard?: string | null;
 }

@@ -13,7 +13,6 @@ import { Link } from "react-router-dom";
 // ─── Sidebar ────────────────────────────────────────────────────
 export default function RewardsSidebar({
   nextMilestone,
-  currentLevel,
   currentSolved,
   isAuth,
   currentUser,
@@ -24,7 +23,6 @@ export default function RewardsSidebar({
   isPremiumUser,
 }: {
   nextMilestone?: number;
-  currentLevel: number;
   currentSolved: number;
   isAuth: boolean;
   currentUser: any;

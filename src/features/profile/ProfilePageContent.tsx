@@ -63,7 +63,7 @@ export default function ProfilePageContent() {
                     {/* Right content */}
                     <div className="flex-1 min-w-0 w-full space-y-5">
                         <ProfileSolvedStats stats={stats} user={user} />
-                        <ProfileActivity stats={stats} user={user} />
+                        <ProfileActivity stats={stats} user={user} isOwnProfile={isOwnProfile} username={username} />
                         <ProfileSubmissions submissions={recentSubmissions} />
                     </div>
 

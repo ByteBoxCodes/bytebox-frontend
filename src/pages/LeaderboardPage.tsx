@@ -1,5 +1,6 @@
 import { useGetLeaderboard } from "@/hooks/useGetLeaderboard";
 import LeaderboardSkeleton from "@/fallback/LeaderboardSkeleton";
+import { REWARD_MAP } from "@/constants/rewards";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -54,6 +55,12 @@ function TopUserCard({
 
   const s = rankConfig[rank as keyof typeof rankConfig];
 
+  const activeAvatarConfig = user.activeAvatar ? REWARD_MAP[user.activeAvatar] : null;
+  const AvatarComponent = activeAvatarConfig?.icon as React.ElementType;
+
+  const activeTitleConfig = user.activeTitle ? REWARD_MAP[user.activeTitle] : null;
+  const TitleComponent = activeTitleConfig?.icon as React.ElementType;
+
   return (
     <div
       className={`relative flex flex-col items-center transition-all p-4 pt-6 mt-4 rounded-2xl border backdrop-blur-md shadow-sm ${s.bgClass} ${isFirst ? "scale-105 shadow-xl top-0 z-20 w-[140px] sm:w-[170px]" : "w-[130px] sm:w-[150px] opacity-90 hover:opacity-100 mt-8"} `}
@@ -74,14 +81,30 @@ function TopUserCard({
         to={`/profile/${user.username}`}
         className="relative z-10 transition-transform hover:scale-105"
       >
-        <Avatar
-          className={`${isFirst ? "w-16 h-16 sm:w-20 sm:h-20" : "w-12 h-12 sm:w-16 sm:h-16"} ${s.avatarRing}`}
-        >
-          <AvatarImage src={user.avatarUrl} alt={user.name} />
-          <AvatarFallback className="font-bold bg-muted text-foreground">
-            {user.name?.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        {AvatarComponent ? (
+          <AvatarComponent className="scale-110 z-10">
+            <Avatar className={`${isFirst ? "w-16 h-16 sm:w-20 sm:h-20" : "w-12 h-12 sm:w-16 sm:h-16"} ${s.avatarRing} !ring-0`}>
+              <AvatarImage src={user.avatarUrl} alt={user.name} />
+              <AvatarFallback className="font-bold bg-muted text-foreground">
+                {user.name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </AvatarComponent>
+        ) : (
+          <Avatar className={`${isFirst ? "w-16 h-16 sm:w-20 sm:h-20" : "w-12 h-12 sm:w-16 sm:h-16"} ${s.avatarRing}`}>
+            <AvatarImage src={user.avatarUrl} alt={user.name} />
+            <AvatarFallback className="font-bold bg-muted text-foreground">
+              {user.name?.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        )}
+        {(user?.premium || user?.isPremiumUser || user?.isPremium) && (
+          <div className="absolute -bottom-1 -right-2 z-20">
+            <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-linear-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-orange-500/30 leading-none">
+              PRO
+            </span>
+          </div>
+        )}
       </Link>
 
       <div className="flex flex-col flex-1 mt-3 items-center w-full z-10">
@@ -103,14 +126,18 @@ function TopUserCard({
         </div>
 
         <div className="flex flex-col items-center gap-2 w-full">
-          <RankBadge
-            points={user.points}
-            level={user.level}
-            levelXp={user.levelXp}
-            variant="pill"
-            size="md"
-            className="bg-background/80 border-border shadow-xs backdrop-blur-sm"
-          />
+          {TitleComponent ? (
+            <TitleComponent className="scale-90" />
+          ) : (
+            <RankBadge
+              points={user.points}
+              level={user.level}
+              levelXp={user.levelXp}
+              variant="pill"
+              size="md"
+              className="bg-background/80 border-border shadow-xs backdrop-blur-sm"
+            />
+          )}
 
           <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-muted-foreground font-bold w-full uppercase tracking-wide">
             <div className="flex items-center gap-1 group relative">
@@ -260,6 +287,12 @@ export default function LeaderboardPage() {
                             </span>
                           );
 
+                          const RowAvatarConfig = user.activeAvatar ? REWARD_MAP[user.activeAvatar] : null;
+                          const RowAvatarComponent = RowAvatarConfig?.icon as React.ElementType;
+
+                          const RowTitleConfig = user.activeTitle ? REWARD_MAP[user.activeTitle] : null;
+                          const RowTitleComponent = RowTitleConfig?.icon as React.ElementType;
+
                           return (
                             <TableRow
                               key={user.username}
@@ -274,15 +307,31 @@ export default function LeaderboardPage() {
                                     to={`/profile/${user.username}`}
                                     className="shrink-0 transition-transform hover:scale-105"
                                   >
-                                    <Avatar className="h-8 w-8 rounded-md">
-                                      <AvatarImage
-                                        src={user.avatarUrl}
-                                        alt={user.name}
-                                      />
-                                      <AvatarFallback className="rounded-md bg-muted text-foreground text-xs font-medium">
-                                        {user.name?.charAt(0).toUpperCase()}
-                                      </AvatarFallback>
-                                    </Avatar>
+                                    {RowAvatarComponent ? (
+                                      <div className="-m-2 pointer-events-none">
+                                        <RowAvatarComponent className="scale-[0.55] pointer-events-auto">
+                                          <Avatar className="h-16 w-16 !ring-0">
+                                            <AvatarImage
+                                              src={user.avatarUrl}
+                                              alt={user.name}
+                                            />
+                                            <AvatarFallback className="bg-muted text-foreground font-medium">
+                                              {user.name?.charAt(0).toUpperCase()}
+                                            </AvatarFallback>
+                                          </Avatar>
+                                        </RowAvatarComponent>
+                                      </div>
+                                    ) : (
+                                      <Avatar className="h-8 w-8 rounded-md">
+                                        <AvatarImage
+                                          src={user.avatarUrl}
+                                          alt={user.name}
+                                        />
+                                        <AvatarFallback className="rounded-md bg-muted text-foreground text-xs font-medium">
+                                          {user.name?.charAt(0).toUpperCase()}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                    )}
                                   </Link>
                                   <div className="flex flex-col min-w-0">
                                     <Link
@@ -292,6 +341,11 @@ export default function LeaderboardPage() {
                                       <span className="truncate">
                                         {user.name}
                                       </span>
+                                      {(user?.premium || user?.isPremiumUser || user?.isPremium) && (
+                                        <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-linear-to-r from-amber-500 to-orange-500 text-white shrink-0 shadow-sm leading-none mt-px">
+                                          PRO
+                                        </span>
+                                      )}
                                       {isCurrentUser && (
                                         <span className="text-[10px] px-1.5 py-0 rounded text-primary bg-primary/10 font-bold uppercase tracking-wider shrink-0 no-underline">
                                           You
@@ -309,12 +363,16 @@ export default function LeaderboardPage() {
                                         •
                                       </span>
                                       <div className="flex items-center gap-1">
-                                        <RankBadge
-                                          points={user.points}
-                                          level={user.level}
-                                          levelXp={user.levelXp}
-                                          variant="inline"
-                                        />
+                                        {RowTitleComponent ? (
+                                          <RowTitleComponent className="scale-[0.60] origin-left -my-2.5" />
+                                        ) : (
+                                          <RankBadge
+                                            points={user.points}
+                                            level={user.level}
+                                            levelXp={user.levelXp}
+                                            variant="inline"
+                                          />
+                                        )}
                                         <span className="text-[10px] text-muted-foreground/40 leading-none pb-px">
                                           •
                                         </span>

@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { getLevelInfo } from "@/utils/levelUtils";
 import { getRankBadge } from "@/utils/rankBadge";
 import { MILESTONE_LEVELS, MILESTONE_REWARDS } from "@/constants/rewards";
 import { useGetHeaderProfile } from "@/hooks/useGetHeaderProfile";
 import { useUserStats } from "@/hooks/useUserStats";
 import { isAuthenticated } from "@/utils/isAuthenticated";
+import { useIsPremium } from "@/hooks/useIsPremium";
+import { useGetMyRewards } from "@/hooks/useRewardHooks";
 
 import MilestoneSection from "@/features/rewards/MilestoneSection";
 import ProgressDots from "@/features/rewards/ProgressDots";
@@ -14,31 +15,25 @@ export default function RewardsPage() {
   const isAuth = isAuthenticated();
   const { data: profileData } = useGetHeaderProfile();
   const { data: statsRaw } = useUserStats();
+  const { data: rewardsData } = useGetMyRewards();
+
   const token = localStorage.getItem("token");
   const currentUser = token ? (profileData?.data ?? profileData) : null;
   const stats = statsRaw?.data ?? statsRaw;
-  console.log(stats);
-  console.log(currentUser);
-  console.log(statsRaw);
 
   const userLevel = currentUser?.level ?? 1;
   const totalPoints = currentUser?.points ?? 0;
   const levelXp = currentUser?.levelXp ?? 0;
   const userSolved = stats?.totalSolvedProblems ?? 0;
-  const isPremiumUser = false;
+
+  // Use the new hook for dynamic premium status
+  const isPremiumUser = useIsPremium();
 
   const levelInfo = getLevelInfo(totalPoints, userLevel, levelXp);
   const badge = getRankBadge(totalPoints, userLevel, levelXp);
 
-  const [claimedBasic, setClaimedBasic] = useState<Set<string>>(new Set());
-  const [claimedPremium, setClaimedPremium] = useState<Set<string>>(new Set());
-
-  const handleClaimBasic = (level: number) => {
-    setClaimedBasic((prev) => new Set(prev).add(String(level)));
-  };
-  const handleClaimPremium = (level: number) => {
-    setClaimedPremium((prev) => new Set(prev).add(String(level)));
-  };
+  // Build the API rewards list
+  const myRewards = rewardsData?.data ?? [];
 
   const nextMilestone = MILESTONE_LEVELS.find((m) => {
     const r = MILESTONE_REWARDS.find((mr) => mr.level === m)!;
@@ -78,11 +73,8 @@ export default function RewardsPage() {
                     milestone={milestone}
                     userLevel={userLevel}
                     userSolved={userSolved}
-                    claimedBasic={claimedBasic}
-                    claimedPremium={claimedPremium}
+                    myRewards={myRewards}
                     isPremiumUser={isPremiumUser}
-                    onClaimBasic={handleClaimBasic}
-                    onClaimPremium={handleClaimPremium}
                     isLast={idx === MILESTONE_REWARDS.length - 1}
                   />
                   {/* Inter-milestone dots */}
@@ -108,7 +100,6 @@ export default function RewardsPage() {
         <div className="lg:w-[340px] shrink-0 w-full mx-auto lg:mx-0">
           <RewardsSidebar
             nextMilestone={nextMilestone}
-            currentLevel={userLevel}
             currentSolved={userSolved}
             isAuth={isAuth}
             currentUser={currentUser}

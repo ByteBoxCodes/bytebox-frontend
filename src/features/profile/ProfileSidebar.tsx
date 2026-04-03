@@ -25,6 +25,7 @@ import LanguagePickerModal from "./LanguagePickerModal";
 import { RankJourney } from "@/components/common/RankJourney";
 import RankBadge from "@/components/common/RankBadge";
 import { getRankBadge } from "@/utils/rankBadge";
+import { REWARD_MAP } from "@/constants/rewards";
 
 interface ProfileSidebarProps {
   user: IUserProfile;
@@ -59,6 +60,12 @@ export default function ProfileSidebar({
 
   // Get badge properties for styling other elements (like the progress bar)
   const badge = getRankBadge(points, user.level, user.levelXp);
+
+  const activeAvatarConfig = user.activeAvatar
+    ? REWARD_MAP[user.activeAvatar]
+    : null;
+  const AvatarComponent = activeAvatarConfig?.icon as React.ElementType;
+
   return (
     <aside className="relative w-full lg:w-72 lg:shrink-0 space-y-5 rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5">
       {/* Avatar + Info */}
@@ -113,12 +120,22 @@ export default function ProfileSidebar({
               </linearGradient>
             </defs>
           </svg>
-          <ProfileAvatar
-            name={user.name}
-            imageUrl={user.avatarUrl}
-            size="lg"
-            className="z-10 bg-background w-[72px] h-[72px]"
-          />
+          {AvatarComponent ? (
+            <AvatarComponent className="z-10">
+              <ProfileAvatar
+                name={user.name}
+                imageUrl={user.avatarUrl}
+                className="w-full h-full text-base bg-background !ring-0"
+              />
+            </AvatarComponent>
+          ) : (
+            <ProfileAvatar
+              name={user.name}
+              imageUrl={user.avatarUrl}
+              size="lg"
+              className="z-10 bg-background w-[72px] h-[72px]"
+            />
+          )}
         </div>
 
         {/* Right: Info */}
@@ -128,18 +145,15 @@ export default function ProfileSidebar({
           </h1>
           <div className="flex items-center gap-1.5 mt-0.5 text-xs text-(--text-secondary) dark:text-(--dk-text-muted) truncate">
             <span>@{user.username}</span>
-            <span className="text-[10px] opacity-40">•</span>
-            <span className={`font-semibold ${badge.color}`}>
-              {levelInfo.currentPoints} XP
-            </span>
           </div>
 
           {/* Level / Points Block */}
           <div className="mt-2.5 flex flex-col gap-1.5 w-full">
             <div className="flex items-center justify-between w-full max-w-[180px] sm:max-w-[140px]">
-              <div className="flex items-center gap-1">
-                <RankBadge badge={badge} variant="inline" size="sm" />
-              </div>
+              <span className={`font-semibold text-xs ${badge.color}`}>
+                {levelInfo.currentPoints} XP
+              </span>
+
               <p className="text-[10px] text-(--text-secondary) dark:text-(--dk-text-muted) font-medium font-mono">
                 <span className={`font-bold ${badge.color}`}>
                   {levelInfo.levelXp}

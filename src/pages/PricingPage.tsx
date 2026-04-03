@@ -1,8 +1,63 @@
-import { Link } from "react-router-dom";
-import { Check, X, Sparkles, Trophy, Rocket, Shield, Gift } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Check, X, Sparkles, Trophy, Rocket, Shield, Gift, Loader2 } from "lucide-react";
 import Footer from "@/components/layout/Footer";
+import { useCreateSubscription, useVerifyPayment } from "@/hooks/usePaymentHooks";
+import { isAuthenticated } from "@/utils/isAuthenticated";
+import { useIsPremium } from "@/hooks/useIsPremium";
+import { toast } from "sonner";
 
 export default function PricingPage() {
+  const navigate = useNavigate();
+  const { mutateAsync: createSub, isPending: isCreating } = useCreateSubscription();
+  const { mutateAsync: verifyPay, isPending: isVerifying } = useVerifyPayment();
+  const isPremiumUser = useIsPremium();
+  const isLoading = isCreating || isVerifying;
+
+  const handleUpgrade = async () => {
+    if (!isAuthenticated()) {
+      toast.info("Please login to upgrade to PRO");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const data = await createSub();
+      
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Ensure this is set in .env
+        subscription_id: data.subscriptionId,
+        name: "ByteBox Codes",
+        description: "PRO Monthly Subscription",
+        handler: async function (response: any) {
+          try {
+            await verifyPay({
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySubscriptionId: response.razorpay_subscription_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+            toast.success("PRO Subscription activated successfully! Welcome to the Elite.");
+            navigate("/rewards"); // Redirect to rewards to see the benefits
+          } catch (err) {
+            toast.error("Payment verification failed. Please contact support.");
+          }
+        },
+        theme: {
+          color: "#f59e0b",
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        toast.error("Payment failed", {
+          description: response.error.description,
+        });
+      });
+      rzp.open();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to initiate secure checkout");
+    }
+  };
+
   return (
     <>
       <div className="min-h-[85vh] bg-background text-foreground py-10 px-4 sm:px-6 flex flex-col items-center justify-center">
@@ -137,11 +192,23 @@ export default function PricingPage() {
             </ul>
 
             <div className="space-y-3 mt-auto">
-              <button className="w-full py-3.5 px-4 text-center rounded-xl text-sm font-bold text-white bg-linear-to-r from-amber-500 to-orange-500 hover:opacity-90 transition-opacity shadow-lg shadow-orange-500/25 active:scale-[0.98]">
-                Upgrade to Premium
+              <button
+                onClick={handleUpgrade}
+                disabled={isLoading || isPremiumUser}
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 text-center rounded-xl text-sm font-bold text-white bg-linear-to-r from-amber-500 to-orange-500 hover:opacity-90 transition-opacity shadow-lg shadow-orange-500/25 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Processing...
+                  </>
+                ) : isPremiumUser ? (
+                  "Currently Active"
+                ) : (
+                  "Upgrade to Premium"
+                )}
               </button>
               <p className="text-center text-[11px] font-medium text-muted-foreground/80">
-                Billed monthly. Cancel anytime.
+                {isPremiumUser ? "You are a PRO member." : "Billed monthly. Cancel anytime."}
               </p>
             </div>
           </div>

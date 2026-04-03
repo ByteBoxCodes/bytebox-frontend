@@ -1,48 +1,36 @@
-import {
-  Lock,
-  Check,
-  Gift,
-  Eye,
-  Sparkles,
-} from "lucide-react";
+import { Lock, Check, Gift, Eye } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import type { Reward } from "@/constants/rewards";
-
-// ─── Types ──────────────────────────────────────────────────────
-export type RewardState = "locked" | "unlocked" | "claimed";
-
-export function getRewardState(
-  milestoneLevel: number,
-  problemsRequired: number,
-  userLevel: number,
-  userSolved: number,
-  claimedSet: Set<string>,
-): RewardState {
-  if (claimedSet.has(String(milestoneLevel))) return "claimed";
-  if (userLevel >= milestoneLevel && userSolved >= problemsRequired)
-    return "unlocked";
-  return "locked";
-}
+import type { IUserReward } from "@/types/rewards";
+import { useClaimReward } from "@/hooks/useRewardHooks";
 
 // ─── Compact Reward Card ────────────────────────────────────────
 export default function RewardCard({
   reward,
-  state,
+  apiReward,
   isPremium,
   isPremiumUser,
-  onClaim,
 }: {
   reward: Reward;
-  state: RewardState;
+  apiReward?: IUserReward;
   isPremium: boolean;
   isPremiumUser: boolean;
-  onClaim: () => void;
 }) {
   const Icon = reward.icon;
+  const { mutate: claimReward, isPending: isClaimPending } = useClaimReward();
+
   const premiumLocked = isPremium && !isPremiumUser;
-  const isClaimable = state === "unlocked" && !premiumLocked;
-  const isClaimed = state === "claimed";
-  const isLocked = state === "locked" || premiumLocked;
+
+  // Derive state from the API reward data
+  const isEligible = apiReward?.eligible ?? false;
+  const isClaimed = apiReward?.claimed ?? false;
+  const isClaimable = isEligible && !isClaimed && !premiumLocked;
+  const isLocked = !isEligible || premiumLocked;
+
+  const handleClaim = () => {
+    if (!apiReward) return;
+    claimReward(apiReward.id);
+  };
 
   return (
     <div
@@ -70,7 +58,9 @@ export default function RewardCard({
       {/* Product Icon / Title Display */}
       <div className="relative mb-5 mt-2 transform transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-2">
         {reward.type === "title" ? (
-          <div className={`relative z-10 ${isLocked ? "grayscale opacity-50" : ""}`}>
+          <div
+            className={`relative z-10 ${isLocked && !isClaimed ? "grayscale opacity-50" : ""}`}
+          >
             {isClaimed ? (
               <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-500">
                 <Check className="w-8 h-8 drop-shadow-sm" />
@@ -82,7 +72,7 @@ export default function RewardCard({
         ) : (
           <>
             <div
-              className={`absolute inset-0 blur-xl scale-125 rounded-full transition-opacity duration-500 ${isClaimable ? "opacity-80" : "opacity-0"} ${reward.bg} ${isLocked ? "grayscale opacity-0" : ""}`}
+              className={`absolute inset-0 blur-xl scale-125 rounded-full transition-opacity duration-500 ${isClaimable ? "opacity-80" : "opacity-0"} ${reward.bg} ${isLocked && !isClaimed ? "grayscale opacity-0" : ""}`}
             />
             <div
               className={`relative z-10 w-16 h-16 flex items-center justify-center rounded-2xl shadow-xl transition-all duration-500 ${
@@ -127,14 +117,16 @@ export default function RewardCard({
           </div>
         ) : isClaimable ? (
           <button
-            onClick={onClaim}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs transition-all active:scale-95 shadow-lg ${
+            onClick={handleClaim}
+            disabled={isClaimPending}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs transition-all active:scale-95 shadow-lg disabled:opacity-60 ${
               isPremium
                 ? "bg-linear-to-r from-amber-500 to-orange-500 text-white shadow-orange-500/30 hover:shadow-orange-500/50"
                 : "bg-foreground text-background hover:opacity-90 shadow-foreground/20 hover:shadow-foreground/30"
             }`}
           >
-            <Gift className="w-4 h-4" /> Claim Reward
+            <Gift className="w-4 h-4" />{" "}
+            {isClaimPending ? "Claiming..." : "Claim Reward"}
           </button>
         ) : (
           <Dialog>

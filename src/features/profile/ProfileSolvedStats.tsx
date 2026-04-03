@@ -1,6 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import type { IUserProfile, IUserStats } from "@/types/auth";
 import RankBadge from "@/components/common/RankBadge";
+import { REWARD_MAP } from "@/constants/rewards";
 
 interface ProfileSolvedStatsProps {
   stats: IUserStats;
@@ -60,6 +61,9 @@ export default function ProfileSolvedStats({
 
   const rate = Math.round(acceptanceRate);
 
+  const activeTitleConfig = user.activeTitle ? REWARD_MAP[user.activeTitle] : null;
+  const TitleComponent = activeTitleConfig?.icon as React.ElementType;
+
   return (
     <section className="relative rounded-2xl border border-border/60 bg-(--bg-secondary) dark:bg-(--dk-surface) p-4 sm:p-5 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
@@ -67,13 +71,24 @@ export default function ProfileSolvedStats({
           <CheckCircle2 size={15} className="text-emerald-500" />
           Problems Solved
         </h2>
-        {/* Dynamic Rank badge */}
-        <RankBadge
-          points={user.points}
-          level={user.level}
-          levelXp={user.levelXp}
-          variant="pill"
-        />
+        {/* Dynamic Rank badge & PRO badge */}
+        <div className="flex items-center gap-2">
+          {TitleComponent ? (
+            <TitleComponent className="origin-right scale-90" />
+          ) : (
+            <RankBadge
+              points={user.points}
+              level={user.level}
+              levelXp={user.levelXp}
+              variant="pill"
+            />
+          )}
+          {(user?.premium || user?.isPremiumUser) && (
+            <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md bg-linear-to-r from-amber-500 to-orange-500 text-white shrink-0  shadow-md shadow-orange-500/20 leading-none">
+              PRO
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Summary row */}

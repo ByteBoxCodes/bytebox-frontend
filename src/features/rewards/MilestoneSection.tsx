@@ -9,46 +9,41 @@ import {
 import {
   MILESTONE_LEVELS,
   MILESTONE_REWARDS,
+  REWARD_MAP,
   type MilestoneReward,
 } from "@/constants/rewards";
-import RewardCard, { getRewardState } from "./RewardCard";
+import RewardCard from "./RewardCard";
+import type { IUserReward } from "@/types/rewards";
+
+// Find the REWARD_MAP key for a given milestone reward config
+function findRewardMapKey(rewardTitle: string): string | undefined {
+  return Object.entries(REWARD_MAP).find(
+    ([, config]) => config.title === rewardTitle,
+  )?.[0];
+}
 
 // ─── Milestone Section ──────────────────────────────────────────
 export default function MilestoneSection({
   milestone,
   userLevel,
   userSolved,
-  claimedBasic,
-  claimedPremium,
+  myRewards,
   isPremiumUser,
-  onClaimBasic,
-  onClaimPremium,
   isLast,
 }: {
   milestone: MilestoneReward;
   userLevel: number;
   userSolved: number;
-  claimedBasic: Set<string>;
-  claimedPremium: Set<string>;
+  myRewards: IUserReward[];
   isPremiumUser: boolean;
-  onClaimBasic: (level: number) => void;
-  onClaimPremium: (level: number) => void;
   isLast: boolean;
 }) {
-  const basicState = getRewardState(
-    milestone.level,
-    milestone.problemsRequired,
-    userLevel,
-    userSolved,
-    claimedBasic,
-  );
-  const premiumState = getRewardState(
-    milestone.level,
-    milestone.problemsRequired,
-    userLevel,
-    userSolved,
-    claimedPremium,
-  );
+  // Find matching API rewards by value key
+  const basicKey = findRewardMapKey(milestone.basic.title);
+  const premiumKey = findRewardMapKey(milestone.premium.title);
+
+  const basicApiReward = myRewards.find((r) => r.value === basicKey);
+  const premiumApiReward = myRewards.find((r) => r.value === premiumKey);
 
   const levelMet = userLevel >= milestone.level;
   const problemsMet = userSolved >= milestone.problemsRequired;
@@ -196,10 +191,9 @@ export default function MilestoneSection({
             </h5>
             <RewardCard
               reward={milestone.basic}
-              state={basicState}
+              apiReward={basicApiReward}
               isPremium={false}
               isPremiumUser={isPremiumUser}
-              onClaim={() => onClaimBasic(milestone.level)}
             />
           </div>
           <div className="flex flex-col gap-2.5">
@@ -208,10 +202,9 @@ export default function MilestoneSection({
             </h5>
             <RewardCard
               reward={milestone.premium}
-              state={premiumState}
+              apiReward={premiumApiReward}
               isPremium={true}
               isPremiumUser={isPremiumUser}
-              onClaim={() => onClaimPremium(milestone.level)}
             />
           </div>
         </div>

@@ -3,18 +3,22 @@ import { User } from "lucide-react";
 
 // ─── Basic Avatar Frame ─────────────────────────────────────────
 // A stylish static border around an avatar placeholder
-const BasicAvatarFrame: React.FC<{ className?: string }> = ({ className }) => (
+const BasicAvatarFrame: React.FC<{ className?: string; children?: React.ReactNode }> = ({ className, children }) => (
   <div className={`relative inline-flex items-center justify-center ${className ?? ""}`}>
     {/* Static gradient ring */}
     <div className="absolute inset-0 rounded-full bg-linear-to-br from-pink-500 to-violet-500 p-[3px]">
       <div className="w-full h-full rounded-full bg-card" />
     </div>
 
-    {/* Avatar placeholder */}
+    {/* Avatar placeholder or children */}
     <div className="relative z-10 w-16 h-16 rounded-full bg-linear-to-br from-pink-500/15 to-violet-500/15 flex items-center justify-center ring-[3px] ring-transparent">
-      <div className="w-[52px] h-[52px] rounded-full bg-card flex items-center justify-center">
-        <User className="w-6 h-6 text-pink-400/70" />
-      </div>
+      {children ? (
+        children
+      ) : (
+        <div className="w-[52px] h-[52px] rounded-full bg-card flex items-center justify-center">
+          <User className="w-6 h-6 text-pink-400/70" />
+        </div>
+      )}
     </div>
 
     {/* Decorative corner dots */}
@@ -25,7 +29,7 @@ const BasicAvatarFrame: React.FC<{ className?: string }> = ({ className }) => (
 
 // ─── Pro Animated Avatar Frame ──────────────────────────────────
 // Spinning gradient border with glow
-const ProAvatarFrame: React.FC<{ className?: string }> = ({ className }) => (
+const ProAvatarFrame: React.FC<{ className?: string; children?: React.ReactNode }> = ({ className, children }) => (
   <div className={`relative inline-flex items-center justify-center ${className ?? ""}`}>
     {/* Outer glow — beam sweep */}
     <div
@@ -46,11 +50,15 @@ const ProAvatarFrame: React.FC<{ className?: string }> = ({ className }) => (
       }}
     />
 
-    {/* Avatar placeholder */}
+    {/* Avatar placeholder or children */}
     <div className="relative z-10 w-16 h-16 rounded-full bg-linear-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-      <div className="w-[52px] h-[52px] rounded-full bg-linear-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-        <User className="w-6 h-6 text-pink-300/80 animate-pulse" />
-      </div>
+      {children ? (
+        children
+      ) : (
+        <div className="w-[52px] h-[52px] rounded-full bg-linear-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+          <User className="w-6 h-6 text-pink-300/80 animate-pulse" />
+        </div>
+      )}
     </div>
 
     {/* Decorative corner dots with pulse */}
@@ -60,12 +68,14 @@ const ProAvatarFrame: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 // Icon-compatible wrappers
-export const AvatarFrameIcon: React.FC<{ className?: string }> = ({
+export const AvatarFrameIcon: React.FC<{ className?: string; children?: React.ReactNode }> = ({
   className,
-}) => <BasicAvatarFrame className={className} />;
+  children,
+}) => <BasicAvatarFrame className={className}>{children}</BasicAvatarFrame>;
 
-export const AvatarFrameProIcon: React.FC<{ className?: string }> = ({
+export const AvatarFrameProIcon: React.FC<{ className?: string; children?: React.ReactNode }> = ({
   className,
-}) => <ProAvatarFrame className={className} />;
+  children,
+}) => <ProAvatarFrame className={className}>{children}</ProAvatarFrame>;
 
 export default BasicAvatarFrame;
