@@ -83,7 +83,10 @@ export default function SubmissionPanel({
         const val = value || "";
         const snippet = defaultSnippets[language];
         
-        if (!val.startsWith(snippet)) {
+        const normalizedVal = val.replace(/\r\n/g, '\n');
+        const normalizedSnippet = snippet.replace(/\r\n/g, '\n');
+        
+        if (!normalizedVal.startsWith(normalizedSnippet)) {
             // Prevent deleting or editing the boilerplate snippet
             if (editorRef.current) {
                 const currentPosition = editorRef.current.getPosition();
