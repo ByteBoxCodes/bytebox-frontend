@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import Editor from "@monaco-editor/react";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { cpp } from "@codemirror/lang-cpp";
+import { java } from "@codemirror/lang-java";
+import { python } from "@codemirror/lang-python";
+import { EditorView } from "@codemirror/view";
+import { EditorState } from "@codemirror/state";
 import {
     Dialog,
     DialogContent,
@@ -10,6 +16,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Copy, CheckCircle2, XCircle, AlertTriangle, Clock, Check } from "lucide-react";
 import type { ISubmissionResponse } from "@/types/submission";
+
+/* ── language → CodeMirror extension mapping ── */
+function getLanguageExtension(lang: string) {
+    switch (lang) {
+        case "c":
+        case "cpp":
+        case "c++":
+            return cpp();
+        case "java":
+            return java();
+        case "python":
+            return python();
+        default:
+            return cpp();
+    }
+}
 
 interface SubmissionModalProps {
     isOpen: boolean;
@@ -72,6 +94,23 @@ export default function SubmissionModal({ isOpen, onClose, submission }: Submiss
             setTimeout(() => setIsCopied(false), 2000);
         }
     };
+
+    const readOnlyExtensions = [
+        getLanguageExtension(submission.language),
+        EditorView.lineWrapping,
+        EditorView.editable.of(false),
+        EditorState.readOnly.of(true),
+        EditorView.theme({
+            "&": { fontSize: "14px" },
+            ".cm-content": {
+                fontFamily:
+                    "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                padding: "24px 0",
+            },
+            ".cm-scroller": { overflow: "auto" },
+            ".cm-cursor": { display: "none" },
+        }),
+    ];
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -149,23 +188,18 @@ export default function SubmissionModal({ isOpen, onClose, submission }: Submiss
                 <div className="flex-1 w-full bg-[#1e1e1e] relative min-h-0">
 
                     {submission.code ? (
-                        <Editor
-                            theme="vs-dark"
-                            height="100%"
-                            language={submission.language === "c++" ? "cpp" : submission.language}
+                        <CodeMirror
                             value={submission.code}
-                            options={{
-                                readOnly: true,
-                                fontSize: 14,
-                                minimap: { enabled: false },
-                                scrollBeyondLastLine: false,
-                                padding: { top: 24, bottom: 24 },
-                                wordWrap: "on",
-                                domReadOnly: true,
-                                fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-                                fontLigatures: true,
-                                renderLineHighlight: "none",
+                            theme={vscodeDark}
+                            extensions={readOnlyExtensions}
+                            basicSetup={{
+                                lineNumbers: true,
+                                highlightActiveLineGutter: false,
+                                highlightActiveLine: false,
+                                foldGutter: true,
                             }}
+                            editable={false}
+                            style={{ height: "100%", overflow: "auto" }}
                         />
                     ) : (
                         <div className="flex items-center justify-center h-full w-full text-sm text-(--text-tertiary) italic bg-(--bg-primary)">

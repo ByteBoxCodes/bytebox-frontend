@@ -1,5 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import Editor from "@monaco-editor/react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { cpp } from "@codemirror/lang-cpp";
+import { java } from "@codemirror/lang-java";
+import { python } from "@codemirror/lang-python";
+import { EditorView } from "@codemirror/view";
+import { closeBrackets } from "@codemirror/autocomplete";
 import type { Language, ISubmissionResponse } from "@/types/submission";
 import {
   ResizableHandle,
@@ -17,6 +23,40 @@ import TestCasesTab from "./TestCasesTab";
 import TestResultTab from "./TestResultTab";
 import { useTheme } from "@/context/ThemeContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+
+/* ── language → CodeMirror extension mapping ── */
+function getLanguageExtension(lang: Language) {
+  switch (lang) {
+    case "c":
+    case "cpp":
+      return cpp();
+    case "java":
+      return java();
+    case "python":
+      return python();
+    default:
+      return cpp();
+  }
+}
+
+/* ── custom light theme (matches VS Code light feel) ── */
+const lightTheme = EditorView.theme(
+  {
+    "&": {
+      backgroundColor: "var(--bg-secondary)",
+      color: "var(--text-primary)",
+    },
+    ".cm-gutters": {
+      backgroundColor: "var(--bg-secondary)",
+      color: "var(--text-tertiary)",
+      border: "none",
+    },
+    ".cm-activeLineGutter": {
+      backgroundColor: "transparent",
+    },
+  },
+  { dark: false },
+);
 
 interface SubmissionPanelProps {
   problemId?: string;
@@ -72,16 +112,12 @@ export default function SubmissionPanel({
   const isMobile = useMediaQuery("(max-width: 1023px)");
   const { theme } = useTheme();
 
-  const editorRef = useRef<any>(null);
-
-  const handleEditorDidMount = (editor: any) => {
-    editorRef.current = editor;
-    editorRef.current.focus();
-  };
-
-  const handleCodeChange = (value: string | undefined) => {
-    setCode(value || "");
-  };
+  const handleCodeChange = useCallback(
+    (value: string) => {
+      setCode(value || "");
+    },
+    [setCode],
+  );
 
   // Mark as solved when submission is ACCEPTED
   useEffect(() => {
@@ -108,9 +144,7 @@ export default function SubmissionPanel({
 
   const handleLanguageChange = (value: Language) => {
     changeLanguage(value);
-
     const newCode = defaultSnippets[value];
-    editorRef.current?.setValue(newCode);
     setCode(newCode);
   };
 
@@ -122,15 +156,64 @@ export default function SubmissionPanel({
 
   const handleInsertBoilerplate = () => {
     const newCode = BOILERPLATES[language];
-    editorRef.current?.setValue(newCode);
     setCode(newCode);
   };
 
   const handleResetCode = () => {
     const newCode = defaultSnippets[language];
-    editorRef.current?.setValue(newCode);
     setCode(newCode);
   };
+
+  /* ── Shared editor extensions (memoized to prevent re-init) ── */
+  const editorFontSize = isMobile ? 13 : 14;
+  const editorPadding = isMobile ? 12 : 16;
+
+  const extensions = useMemo(
+    () => [
+      getLanguageExtension(language),
+      closeBrackets(),
+      EditorView.lineWrapping,
+      EditorView.theme({
+        "&": { fontSize: `${editorFontSize}px` },
+        ".cm-content": {
+          fontFamily:
+            "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+          padding: `${editorPadding}px 0`,
+        },
+        ".cm-scroller": { overflow: "auto" },
+      }),
+    ],
+    [language, editorFontSize, editorPadding],
+  );
+
+  const editorTheme = theme === "light" ? lightTheme : vscodeDark;
+
+  const basicSetup = useMemo(
+    () => ({
+      lineNumbers: true,
+      highlightActiveLineGutter: true,
+      highlightActiveLine: true,
+      foldGutter: true,
+      autocompletion: true,
+      bracketMatching: true,
+      indentOnInput: true,
+      tabSize: 4,
+    }),
+    [],
+  );
+
+  /* ── Reusable editor component ── */
+  const renderEditor = () => (
+    <CodeMirror
+      value={code}
+      onChange={handleCodeChange}
+      theme={editorTheme}
+      extensions={extensions}
+      basicSetup={basicSetup}
+      style={{ height: "100%", overflow: "auto" }}
+      autoFocus
+    />
+  );
 
   return (
     <div className="flex flex-col h-full bg-(--bg-secondary)">
@@ -154,27 +237,9 @@ export default function SubmissionPanel({
         {isMobile ? (
           /* ── Mobile: stacked layout with fixed editor height ── */
           <>
-            {/* Monaco Editor */}
+            {/* Code Editor */}
             <div className="h-[50vh] relative border-b border-(--dk-border) bg-(--bg-secondary)">
-              <Editor
-                theme={theme === "light" ? "light" : "vs-dark"}
-                height="100%"
-                defaultLanguage={initialLang}
-                language={language}
-                defaultValue={code}
-                onMount={handleEditorDidMount}
-                onChange={handleCodeChange}
-                options={{
-                  accessibilitySupport: "off",
-                  autoClosingBrackets: "always",
-                  formatOnType: false,
-                  fontSize: 13,
-                  minimap: { enabled: false },
-                  scrollBeyondLastLine: false,
-                  automaticLayout: true,
-                  padding: { top: 12, bottom: 12 },
-                }}
-              />
+              {renderEditor()}
             </div>
 
             {/* Bottom Panel: Test Cases / Results */}
@@ -230,28 +295,10 @@ export default function SubmissionPanel({
         ) : (
           /* ── Desktop: resizable vertical split ── */
           <ResizablePanelGroup orientation="vertical">
-            {/* Monaco Editor */}
+            {/* Code Editor */}
             <ResizablePanel defaultSize={60} minSize={30}>
               <div className="h-full relative border-b border-(--dk-border) bg-(--bg-secondary)">
-                <Editor
-                  theme={theme === "light" ? "light" : "vs-dark"}
-                  height="100%"
-                  defaultLanguage={initialLang}
-                  language={language}
-                  defaultValue={code}
-                  onMount={handleEditorDidMount}
-                  onChange={handleCodeChange}
-                  options={{
-                    accessibilitySupport: "off",
-                    autoClosingBrackets: "always",
-                    formatOnType: false,
-                    fontSize: 14,
-                    minimap: { enabled: false },
-                    scrollBeyondLastLine: false,
-                    automaticLayout: true,
-                    padding: { top: 16, bottom: 16 },
-                  }}
-                />
+                {renderEditor()}
               </div>
             </ResizablePanel>
 
