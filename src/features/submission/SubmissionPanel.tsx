@@ -76,6 +76,7 @@ export default function SubmissionPanel({
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
+    editorRef.current.focus();
   };
 
   const handleCodeChange = (value: string | undefined) => {
@@ -164,6 +165,9 @@ export default function SubmissionPanel({
                 onMount={handleEditorDidMount}
                 onChange={handleCodeChange}
                 options={{
+                  accessibilitySupport: "off",
+                  autoClosingBrackets: "always",
+                  formatOnType: false,
                   fontSize: 13,
                   minimap: { enabled: false },
                   scrollBeyondLastLine: false,
@@ -238,6 +242,9 @@ export default function SubmissionPanel({
                   onMount={handleEditorDidMount}
                   onChange={handleCodeChange}
                   options={{
+                    accessibilitySupport: "off",
+                    autoClosingBrackets: "always",
+                    formatOnType: false,
                     fontSize: 14,
                     minimap: { enabled: false },
                     scrollBeyondLastLine: false,
