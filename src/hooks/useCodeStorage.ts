@@ -3,242 +3,227 @@ import type { Language, ISubmissionResponse } from "@/types/submission";
 import { touchLocalStorageKey } from "@/utils/storageCleanup";
 
 const DRAFT_PREFIX = "bytebox_draft_";
-const SOLVED_PREFIX = "bytebox_solved_";
-const DEBOUNCE_MS = 1000;
+const SAVE_DEBOUNCE_MS = 800;
 
-interface StoredCodeState {
+interface StoredDraft {
   codeByLang: Record<string, string>;
   language: Language;
 }
 
+/* ── localStorage helpers ── */
+function readDraft(key: string): StoredDraft | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as StoredDraft;
+    if (parsed?.codeByLang && parsed?.language) return parsed;
+  } catch {
+    /* corrupted */
+  }
+  return null;
+}
+
+function writeDraft(key: string, draft: StoredDraft) {
+  try {
+    localStorage.setItem(key, JSON.stringify(draft));
+    touchLocalStorageKey(key);
+  } catch {
+    /* storage full */
+  }
+}
+
 /**
- * Two-tier code persistence per problem:
+ * Robust code persistence per problem.
  *
- * ── UNSOLVED problems ──
- *   localStorage (debounced 2s) stores draft code per language.
- *   Persists across reloads & navigation. Cleared on ACCEPTED.
- *
- * ── SOLVED problems ──
- *   sessionStorage stores the accepted code (survives reload).
- *   On navigation away → sessionStorage is cleared automatically by the browser
- *   when the tab closes, or explicitly on unmount. On next visit, the latest
- *   accepted submission code is loaded from the `submissions` data.
+ * Stores { codeByLang, language } in localStorage under `bytebox_draft_<problemId>`.
+ * - Debounced save (800ms) on every code/language change
+ * - Synchronous flush on `beforeunload` (survives page reload)
+ * - Synchronous flush on component unmount (survives SPA navigation)
+ * - Guards against saving default/stale state on initial mount
+ * - Language selection persists per problem (falls back to preferred language)
+ * - Code per language persists (switching languages preserves each language's code)
  */
 export function useCodeStorage(
   problemId: string | undefined,
   defaultSnippets: Record<Language, string>,
   defaultLanguage: Language,
-  /** Pass the submissions list so we can pick the latest ACCEPTED code */
   submissions?: ISubmissionResponse[],
 ) {
   const draftKey = problemId ? `${DRAFT_PREFIX}${problemId}` : null;
-  const solvedKey = problemId ? `${SOLVED_PREFIX}${problemId}` : null;
 
-  /* ── Helpers to find latest accepted submission ── */
-  const getAcceptedCode = useCallback((): StoredCodeState | null => {
-    if (!submissions?.length) return null;
-    const accepted = submissions.find((s) => s.status === "ACCEPTED");
-    if (!accepted) return null;
-    // Normalize language: API may return "c++" but our UI uses "cpp"
-    const lang = (
-      accepted.language === "c++" ? "cpp" : accepted.language
-    ) as Language;
-    return {
-      codeByLang: { [lang]: accepted.code },
-      language: lang,
-    };
-  }, [submissions]);
-
-  /* ── Determine if this problem is solved ── */
-  const isSolved = useCallback((): boolean => {
-    if (!submissions?.length) return false;
-    return submissions.some((s) => s.status === "ACCEPTED");
-  }, [submissions]);
-
-  /* ── Read initial state ── */
-  const getInitialState = useCallback((): StoredCodeState => {
-    const defaults: StoredCodeState = {
+  /* ── Compute initial state (runs once per mount) ── */
+  const [state, setState] = useState<StoredDraft>(() => {
+    const defaults: StoredDraft = {
       codeByLang: { ...defaultSnippets },
       language: defaultLanguage,
     };
+    if (!draftKey) return defaults;
 
-    if (!problemId) return defaults;
-
-    // 1. For solved: try sessionStorage first (survives reload)
-    if (isSolved() && solvedKey) {
-      try {
-        const raw = sessionStorage.getItem(solvedKey);
-        if (raw) {
-          const parsed = JSON.parse(raw) as StoredCodeState;
-          if (parsed.codeByLang && parsed.language) return parsed;
-        }
-      } catch {
-        /* ignore */
-      }
-
-      // 2. Fall back to latest accepted submission code
-      const accepted = getAcceptedCode();
-      if (accepted) return accepted;
-    }
-
-    // 3. For unsolved: try localStorage draft
-    if (draftKey) {
-      try {
-        const raw = localStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw) as StoredCodeState;
-          if (parsed.codeByLang && parsed.language) return parsed;
-        }
-      } catch {
-        /* ignore */
-      }
+    // Try reading saved draft from localStorage
+    const saved = readDraft(draftKey);
+    if (saved) {
+      // Merge saved code with default snippets (so new languages have defaults)
+      return {
+        codeByLang: { ...defaultSnippets, ...saved.codeByLang },
+        language: saved.language,
+      };
     }
 
     return defaults;
-  }, [
-    problemId,
-    draftKey,
-    solvedKey,
-    defaultSnippets,
-    defaultLanguage,
-    isSolved,
-    getAcceptedCode,
-  ]);
+  });
 
-  const initial = getInitialState();
-  const [codeByLang, setCodeByLang] = useState<Record<string, string>>(
-    initial.codeByLang,
-  );
-  const [language, setLanguage] = useState<Language>(initial.language);
-  const [solved, setSolved] = useState<boolean>(false);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
-    "idle",
-  );
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
 
-  // The active code for the current language
-  const code = codeByLang[language] ?? defaultSnippets[language] ?? "";
+  // Track whether we've loaded from storage for this problem (prevents overwriting on mount)
+  const hasInitialized = useRef(false);
 
+  // Keep latest state in refs for synchronous access in event handlers
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const draftKeyRef = useRef(draftKey);
+  draftKeyRef.current = draftKey;
+
+  /* ── Derived values ── */
+  const language = state.language;
+  const code = state.codeByLang[language] ?? defaultSnippets[language] ?? "";
+
+  /* ── State updaters ── */
   const setCode = useCallback(
     (newCode: string) => {
-      setCodeByLang((prev) => ({ ...prev, [language]: newCode }));
+      setState((prev) => ({
+        ...prev,
+        codeByLang: { ...prev.codeByLang, [prev.language]: newCode },
+      }));
     },
-    [language],
+    [],
   );
 
   const changeLanguage = useCallback(
     (newLang: Language) => {
-      setLanguage(newLang);
-      setCodeByLang((prev) => {
-        if (prev[newLang] !== undefined) return prev;
-        return { ...prev, [newLang]: defaultSnippets[newLang] ?? "" };
-      });
+      setState((prev) => ({
+        ...prev,
+        language: newLang,
+        codeByLang: {
+          ...prev.codeByLang,
+          // Only add default snippet if this language has no existing code
+          [newLang]: prev.codeByLang[newLang] ?? defaultSnippets[newLang] ?? "",
+        },
+      }));
     },
     [defaultSnippets],
   );
 
-  // Re-initialize when problemId changes
+  /* ── Re-initialize when problemId changes ── */
   useEffect(() => {
-    const state = getInitialState();
-    setCodeByLang(state.codeByLang);
-    setLanguage(state.language);
-    setSolved(isSolved());
-  }, [problemId]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!draftKey) return;
+    const saved = readDraft(draftKey);
+    if (saved) {
+      setState({
+        codeByLang: { ...defaultSnippets, ...saved.codeByLang },
+        language: saved.language,
+      });
+    } else {
+      setState({
+        codeByLang: { ...defaultSnippets },
+        language: defaultLanguage,
+      });
+    }
+    // Mark as initialized after a tick (so the first save effect is skipped)
+    hasInitialized.current = false;
+    requestAnimationFrame(() => {
+      hasInitialized.current = true;
+    });
+  }, [draftKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // When submissions load (async), re-check solved state and load accepted code if needed
+  /* ── Initial mount: mark initialized after first render ── */
   useEffect(() => {
-    const nowSolved = isSolved();
-    if (nowSolved && !solved) {
-      // Problem just became solved (e.g. submissions loaded showing an accepted one)
-      setSolved(true);
-      const accepted = getAcceptedCode();
-      if (accepted && solvedKey) {
-        // Only set from accepted code if there's no sessionStorage entry yet
-        try {
-          const existing = sessionStorage.getItem(solvedKey);
-          if (!existing) {
-            setCodeByLang(accepted.codeByLang);
-            setLanguage(accepted.language);
-            sessionStorage.setItem(solvedKey, JSON.stringify(accepted));
-          }
-        } catch {
-          /* ignore */
-        }
+    // Use rAF to ensure we skip the save triggered by the initial state
+    requestAnimationFrame(() => {
+      hasInitialized.current = true;
+    });
+  }, []);
+
+  /* ── Synchronous flush (for beforeunload & unmount) ── */
+  const flushToStorage = useCallback(() => {
+    const key = draftKeyRef.current;
+    if (!key) return;
+    writeDraft(key, stateRef.current);
+  }, []);
+
+  /* ── beforeunload: save synchronously before page unloads ── */
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      flushToStorage();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [flushToStorage]);
+
+  /* ── Unmount: flush on SPA navigation away ── */
+  useEffect(() => {
+    return () => {
+      // Only flush if we were initialized (prevents StrictMode double-mount from saving defaults)
+      if (hasInitialized.current) {
+        flushToStorage();
       }
-    }
-    if (!nowSolved && solved) {
-      setSolved(false);
-    }
-  }, [submissions]); // eslint-disable-line react-hooks/exhaustive-deps
+    };
+  }, [flushToStorage]);
 
-  /* ── Debounced persistence ── */
+  /* ── Debounced save on state changes ── */
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!problemId) return;
+    if (!draftKey || !hasInitialized.current) return;
 
     setSaveStatus("saving");
     if (timerRef.current) clearTimeout(timerRef.current);
     if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
 
     timerRef.current = setTimeout(() => {
-      const state: StoredCodeState = { codeByLang, language };
-      try {
-        if (solved && solvedKey) {
-          // Solved → persist to sessionStorage (clears on navigation/tab close)
-          sessionStorage.setItem(solvedKey, JSON.stringify(state));
-        } else if (draftKey) {
-          // Unsolved → persist to localStorage (durable draft)
-          localStorage.setItem(draftKey, JSON.stringify(state));
-          touchLocalStorageKey(draftKey);
-        }
-      } catch {
-        /* storage full — ignore */
-      }
+      writeDraft(draftKey, state);
       setSaveStatus("saved");
       savedTimerRef.current = setTimeout(() => setSaveStatus("idle"), 1500);
-    }, DEBOUNCE_MS);
+    }, SAVE_DEBOUNCE_MS);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [codeByLang, language, problemId, draftKey, solvedKey, solved]);
+  }, [state, draftKey]);
 
-  /* ── Mark as solved: called when submission is ACCEPTED ── */
+  /* ── Mark as solved: clear draft, keep code in memory ── */
+  const isSolvedNow = submissions?.some((s) => s.status === "ACCEPTED") ?? false;
+
   const markSolved = useCallback(
     (acceptedCode: string, acceptedLang: Language) => {
-      setSolved(true);
-      // Clear the draft from localStorage
-      if (draftKey) {
-        try {
-          localStorage.removeItem(draftKey);
-        } catch {
-          /* ignore */
-        }
-      }
-      // Save accepted code to sessionStorage
       const lang = (acceptedLang === "c++" ? "cpp" : acceptedLang) as Language;
-      const state: StoredCodeState = {
-        codeByLang: { ...codeByLang, [lang]: acceptedCode },
+      // Update in-memory state with accepted code
+      setState((prev) => ({
+        ...prev,
         language: lang,
-      };
-      if (solvedKey) {
-        try {
-          sessionStorage.setItem(solvedKey, JSON.stringify(state));
-        } catch {
-          /* ignore */
-        }
+        codeByLang: { ...prev.codeByLang, [lang]: acceptedCode },
+      }));
+      // Save immediately (the accepted version)
+      if (draftKey) {
+        const updatedState: StoredDraft = {
+          codeByLang: { ...stateRef.current.codeByLang, [lang]: acceptedCode },
+          language: lang,
+        };
+        writeDraft(draftKey, updatedState);
       }
     },
-    [draftKey, solvedKey, codeByLang],
+    [draftKey],
   );
+
   return {
     code,
     setCode,
     language,
     changeLanguage,
     markSolved,
-    isSolved: solved,
+    isSolved: isSolvedNow,
     saveStatus,
   };
 }

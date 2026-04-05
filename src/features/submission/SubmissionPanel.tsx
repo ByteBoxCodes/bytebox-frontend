@@ -144,8 +144,6 @@ export default function SubmissionPanel({
 
   const handleLanguageChange = (value: Language) => {
     changeLanguage(value);
-    const newCode = defaultSnippets[value];
-    setCode(newCode);
   };
 
   const displayTestCases = question?.sampleTestCases?.length

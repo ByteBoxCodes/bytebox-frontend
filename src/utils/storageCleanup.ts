@@ -24,6 +24,9 @@ const WHITELIST = new Set([
   TIMESTAMPS_KEY,
 ]);
 
+/** Key prefixes that should NEVER be auto-deleted */
+const PROTECTED_PREFIXES = ["bytebox_draft_", "bytebox_solved_"];
+
 type Timestamps = Record<string, number>;
 
 function getTimestamps(): Timestamps {
@@ -66,6 +69,7 @@ export function cleanupExpiredStorage() {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (!key || WHITELIST.has(key)) continue;
+      if (PROTECTED_PREFIXES.some((p) => key.startsWith(p))) continue;
 
       const lastTouched = ts[key];
       if (!lastTouched || now - lastTouched > MAX_AGE_MS) {

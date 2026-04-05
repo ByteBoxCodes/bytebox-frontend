@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
     ResizableHandle,
@@ -41,15 +41,7 @@ export default function SubmissionPage() {
         return submissions.some((s) => s.status === "ACCEPTED");
     }, [submissions, submitResult]);
 
-    // Clear sessionStorage for previous problem when route changes (not on reload)
-    const prevQuestionIdRef = useRef(questionId);
-    useEffect(() => {
-        const prevId = prevQuestionIdRef.current;
-        if (prevId && prevId !== questionId) {
-            try { sessionStorage.removeItem(`bytebox_solved_${prevId}`); } catch { /* ignore */ }
-        }
-        prevQuestionIdRef.current = questionId;
-    }, [questionId]);
+
 
     // Auto-open success modal when all test cases pass
     useEffect(() => {
