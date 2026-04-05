@@ -72,7 +72,9 @@ export function useCodeStorage(
     return defaults;
   });
 
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
+    "idle",
+  );
 
   // Track whether we've loaded from storage for this problem (prevents overwriting on mount)
   const hasInitialized = useRef(false);
@@ -88,15 +90,12 @@ export function useCodeStorage(
   const code = state.codeByLang[language] ?? defaultSnippets[language] ?? "";
 
   /* ── State updaters ── */
-  const setCode = useCallback(
-    (newCode: string) => {
-      setState((prev) => ({
-        ...prev,
-        codeByLang: { ...prev.codeByLang, [prev.language]: newCode },
-      }));
-    },
-    [],
-  );
+  const setCode = useCallback((newCode: string) => {
+    setState((prev) => ({
+      ...prev,
+      codeByLang: { ...prev.codeByLang, [prev.language]: newCode },
+    }));
+  }, []);
 
   const changeLanguage = useCallback(
     (newLang: Language) => {
@@ -194,7 +193,8 @@ export function useCodeStorage(
   }, [state, draftKey]);
 
   /* ── Mark as solved: clear draft, keep code in memory ── */
-  const isSolvedNow = submissions?.some((s) => s.status === "ACCEPTED") ?? false;
+  const isSolvedNow =
+    submissions?.some((s) => s.status === "ACCEPTED") ?? false;
 
   const markSolved = useCallback(
     (acceptedCode: string, acceptedLang: Language) => {
