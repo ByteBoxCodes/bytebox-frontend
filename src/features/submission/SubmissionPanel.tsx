@@ -107,6 +107,10 @@ export default function SubmissionPanel({
 
   const handleLanguageChange = (value: Language) => {
     changeLanguage(value);
+
+    const newCode = defaultSnippets[value];
+    editorRef.current?.setValue(newCode);
+    setCode(newCode);
   };
 
   const displayTestCases = question?.sampleTestCases?.length
@@ -116,11 +120,15 @@ export default function SubmissionPanel({
       : [];
 
   const handleInsertBoilerplate = () => {
-    setCode(BOILERPLATES[language]);
+    const newCode = BOILERPLATES[language];
+    editorRef.current?.setValue(newCode);
+    setCode(newCode);
   };
 
   const handleResetCode = () => {
-    setCode(defaultSnippets[language]);
+    const newCode = defaultSnippets[language];
+    editorRef.current?.setValue(newCode);
+    setCode(newCode);
   };
 
   return (
@@ -152,7 +160,7 @@ export default function SubmissionPanel({
                 height="100%"
                 defaultLanguage={initialLang}
                 language={language}
-                value={code}
+                defaultValue={code}
                 onMount={handleEditorDidMount}
                 onChange={handleCodeChange}
                 options={{
@@ -226,7 +234,7 @@ export default function SubmissionPanel({
                   height="100%"
                   defaultLanguage={initialLang}
                   language={language}
-                  value={code}
+                  defaultValue={code}
                   onMount={handleEditorDidMount}
                   onChange={handleCodeChange}
                   options={{
