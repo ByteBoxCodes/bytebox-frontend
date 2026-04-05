@@ -23,13 +23,16 @@ export default function Header() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setShowSearchModal((open) => !open);
-      }
+      if (!(e.metaKey || e.ctrlKey)) return;
+      if (e.key.toLowerCase() !== "k") return;
+
+      // prevent only when shortcut matches
+      e.preventDefault();
+      setShowSearchModal((open) => !open);
     };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+
+    window.addEventListener("keydown", down);
+    return () => window.removeEventListener("keydown", down);
   }, []);
 
   const toggleMobileMenu = () => {
