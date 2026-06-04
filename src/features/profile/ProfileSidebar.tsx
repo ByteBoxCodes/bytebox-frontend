@@ -71,54 +71,6 @@ export default function ProfileSidebar({
       <div className="flex items-center gap-4 pt-2 sm:pl-2">
         {/* Left: Avatar with Progress */}
         <div className="relative shrink-0 flex items-center justify-center">
-          <svg
-            className="absolute w-[88px] h-[88px] rotate-90 pointer-events-none"
-            viewBox="0 0 96 96"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Background circle */}
-            <circle
-              cx="48"
-              cy="48"
-              r="43"
-              stroke="currentColor"
-              className="text-border/40"
-              strokeWidth="2.5"
-            />
-            {/* Progress circle */}
-            <circle
-              cx="48"
-              cy="48"
-              r="43"
-              stroke="url(#avatar-gray-gradient)"
-              className="transition-all duration-1000 ease-out"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray={2 * Math.PI * 43}
-              strokeDashoffset={
-                2 * Math.PI * 43 * (1 - levelInfo.progressPercent / 100)
-              }
-            />
-            <defs>
-              <linearGradient
-                id="avatar-gray-gradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
-              >
-                <stop
-                  offset="0%"
-                  className="[stop-color:var(--color-zinc-200)]"
-                />
-                <stop
-                  offset="100%"
-                  className="[stop-color:var(--color-zinc-400)] dark:[stop-color:var(--color-zinc-600)]"
-                />
-              </linearGradient>
-            </defs>
-          </svg>
           {AvatarComponent ? (
             <AvatarComponent className="z-10">
               <ProfileAvatar
@@ -159,14 +111,6 @@ export default function ProfileSidebar({
                 </span>{" "}
                 / {levelInfo.pointsForNextLevel}
               </p>
-            </div>
-
-            {/* Mini Linear Progress Bar */}
-            <div className="h-1.5 w-full max-w-[180px] sm:max-w-[140px] bg-border/40 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-1000 ${badge.bg.replace("/10", "")}`}
-                style={{ width: `${levelInfo.progressPercent}%` }}
-              />
             </div>
           </div>
         </div>
